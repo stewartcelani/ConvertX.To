@@ -2,5 +2,5 @@
 
 public interface IUriService
 {
-    Uri GetFileUri(Guid fileId);
+    Uri GetFileUri(Guid conversionId);
 }

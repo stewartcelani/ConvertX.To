@@ -1,21 +1,20 @@
 using System.Reflection;
+using ConvertX.To.API;
 using ConvertX.To.API.Converters;
-using ConvertX.To.API.Logging;
-using ConvertX.To.API.Filters;
-using ConvertX.To.API.Middleware;
+using ConvertX.To.API.Data;
+using ConvertX.To.API.Extensions;
 using ConvertX.To.API.Services;
-using ConvertX.To.API.Settings;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureLogging();
 
-// Add services to the container.
 builder.Services.Configure<ApiBehaviorOptions>(options =>
     {
-        options.SuppressModelStateInvalidFilter = true; // Using ValidationFilter below to do this
+        options.SuppressModelStateInvalidFilter = true; // Using Filters/ValidationFilter.cs to do this
     });
 
 builder.Services.AddControllers(options =>
@@ -27,16 +26,19 @@ builder.Services.AddControllers(options =>
         options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     });
 
-var azureSettings = new AzureSettings();
-builder.Configuration.AddJsonFile("appsettings.secret.json"); // Ignored by .gitignore
-builder.Configuration.GetSection(nameof(AzureSettings)).Bind(azureSettings);
-builder.Services.AddSingleton(azureSettings);
 
-builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddHttpClient();
+
+builder.AddAzureSettings();
+builder.AddLocalFileServiceSettings();
+builder.AddDatabaseSettings();
+
+
+builder.Services.AddScoped<ILocalFileService, LocalFileService>();
+builder.Services.AddScoped<IAzureFileService, SharePointFileService>();
 builder.Services.AddScoped<IConverterFactory, ConverterFactory>();
 builder.Services.AddScoped<IConversionEngine, ConversionEngine>();
 builder.Services.AddScoped<IConversionService, ConversionService>();
-//builder.Services.AddScoped<IConverter, DocxToPdfConverter>();
 
 builder.Services.AddScoped<IUriService>(provider =>
 {
@@ -50,7 +52,16 @@ builder.Services.AddScoped<IUriService>(provider =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<DataContext>();
+
 var app = builder.Build();
+
+await app.RunPendingMigrationsAsync();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -66,5 +77,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();

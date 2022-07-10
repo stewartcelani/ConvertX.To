@@ -5,5 +5,5 @@ namespace ConvertX.To.API.Converters;
 
 public interface IConversionEngine
 {
-    Task<FileInfo> ConvertAsync(string sourceFormat, string targetFormat, FileInfo sourceFile);
+    Task<ConversionResult> ConvertAsync(ConversionTask task);
 }

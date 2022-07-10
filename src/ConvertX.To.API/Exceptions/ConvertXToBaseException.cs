@@ -2,6 +2,9 @@
 
 namespace ConvertX.To.API.Exceptions;
 
+/// <summary>
+/// 
+/// </summary>
 [Serializable]
 [ExcludeFromCodeCoverage]
 public abstract class ConvertXToBaseException : Exception

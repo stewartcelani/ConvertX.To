@@ -4,5 +4,5 @@ namespace ConvertX.To.API.Converters;
 
 public interface IConverter
 {
-    Task<FileInfo> ConvertAsync(FileInfo file);
+    Task<Stream> ConvertAsync(string filePath);
 }

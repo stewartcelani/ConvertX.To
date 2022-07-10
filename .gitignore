@@ -261,7 +261,7 @@ __pycache__/
 *.pyc
 /obj/
 
-# Logs
+# ConvertX.To
 logs/
-
 appsettings.secret.json
+.data

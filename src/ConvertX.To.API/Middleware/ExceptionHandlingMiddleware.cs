@@ -25,11 +25,3 @@ public sealed class ExceptionHandlingMiddleware
         }
     }
 }
-
-public static class AppBuilderExtensions
-{
-    public static void UseCustomExceptionHandlingMiddleware(this IApplicationBuilder app)
-    {
-        app.UseMiddleware<ExceptionHandlingMiddleware>();
-    }
-}

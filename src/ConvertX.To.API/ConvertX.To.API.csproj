@@ -8,6 +8,13 @@
 
     <ItemGroup>
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.1.2" />
+        <PackageReference Include="Mapster" Version="7.3.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
         <PackageReference Include="MimeTypeMap.Core" Version="1.0.0" />
         <PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
@@ -23,8 +30,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="appsettings.json" CopyToPublishDirectory="Always" />
+        <None Include="appsettings.secret.json" CopyToPublishDirectory="Always" />
+        <None Include="appsettings.Development.json" CopyToPublishDirectory="Always" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Folder Include="Contracts" />
-      <Folder Include="Data" />
+      <Folder Include="Contracts\V1\Requests" />
     </ItemGroup>
 
 </Project>

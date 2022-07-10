@@ -1,18 +1,19 @@
-﻿using System.Runtime.CompilerServices;
-using ConvertX.To.API.Exceptions;
-using ConvertX.To.API.Settings;
+﻿using ConvertX.To.API.Exceptions;
+using ConvertX.To.API.Exceptions.Business;
+using ConvertX.To.API.Extensions;
+using ConvertX.To.API.Services;
 
 namespace ConvertX.To.API.Converters;
 
 public class ConverterFactory : IConverterFactory
 {
     private readonly ILogger<ConverterFactory> _logger;
-    private readonly AzureSettings _azureSettings;
+    private readonly IAzureFileService _azureFileService;
 
-    public ConverterFactory(ILogger<ConverterFactory> logger, AzureSettings azureSettings)
+    public ConverterFactory(ILogger<ConverterFactory> logger, IAzureFileService azureFileService)
     {
         _logger = logger;
-        _azureSettings = azureSettings;
+        _azureFileService = azureFileService;
     }
 
     public IConverter Create(string from, string to)
@@ -24,8 +25,9 @@ public class ConverterFactory : IConverterFactory
             var constructorParams = new object[] { _logger };
             if (type?.BaseType == typeof(AzureConverter))
             {
-                constructorParams = new object[] { _azureSettings, _logger };
-            } 
+                constructorParams = new object[] { _azureFileService, _logger };
+            }
+            
             return (IConverter)Activator.CreateInstance(Type.GetType(typeFullName), constructorParams);
         }
         catch
@@ -35,10 +37,3 @@ public class ConverterFactory : IConverterFactory
     }
 }
 
-public static class ProperExtension
-{
-    public static string Proper(this string s)
-    {
-        return s.First().ToString().ToUpper() + s.ToLower()[1..];
-    }
-}

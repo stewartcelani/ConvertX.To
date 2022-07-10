@@ -2,5 +2,5 @@
 
 public class ConversionResponse
 {
-    public string FileId { get; set; }
+    public string Id { get; set; }
 }

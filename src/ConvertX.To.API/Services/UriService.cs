@@ -11,8 +11,8 @@ public class UriService : IUriService
         _baseUri = baseUri;
     }
 
-    public Uri GetFileUri(Guid fileId)
+    public Uri GetFileUri(Guid conversionId)
     {
-        return new Uri(_baseUri + ApiRoutes.Files.Get.Replace("{fileId}", fileId.ToString()));
+        return new Uri(_baseUri + ApiRoutes.Files.Get.Replace("{conversionId}", conversionId.ToString()));
     }
 }

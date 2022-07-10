@@ -1,6 +1,8 @@
-﻿namespace ConvertX.To.API.Entities;
+namespace ConvertX.To.API.Entities;
 
-public class ConversionResult
+public class ConversionResult : ConversionTask
 {
-    public Guid FileId { get; set; }
+    public string ConvertedFilePath { get; set; }
+    public string ConvertedFileName { get; set; }
+    public DateTimeOffset RequestCompleteDate { get; set; } = DateTimeOffset.Now;
 }

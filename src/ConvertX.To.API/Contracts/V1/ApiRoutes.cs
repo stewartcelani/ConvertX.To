@@ -8,11 +8,11 @@ public static class ApiRoutes
     
     public static class Files
     {
-        public const string Get = Base + "/file/{fileId}";
+        public const string Get = Base + "/file/{conversionId}";
     }
 
     public static class Convert
     {
-        public const string Post = Base + "/convert/{from}/{to}";
+        public const string Post = Base + "/convert/{targetFormat}";
     }
 }

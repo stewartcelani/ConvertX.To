@@ -1,19 +1,17 @@
-﻿using ConvertX.To.API.Settings;
+﻿using ConvertX.To.API.Services;
 
 namespace ConvertX.To.API.Converters;
 
 public class DocxToPdfConverter : AzureConverter
 {
-    private const string _sourceFormat = "docx";
-    private const string _targetFormat = "pdf";
-    
-    public DocxToPdfConverter(AzureSettings azureSettings, ILogger logger) : base(_sourceFormat, _targetFormat, azureSettings, logger)
+    public DocxToPdfConverter(IAzureFileService azureFileService, ILogger logger) :
+        base("docx", "pdf", azureFileService, logger)
     {
     }
-    
-    public override async Task<FileInfo> ConvertAsync(FileInfo file)
+
+    public override async Task<Stream> ConvertAsync(string filePath)
     {
         _logger.LogDebug($"{nameof(DocxToPdfConverter)}");
-        return await base.ConvertAsync(file);
+        return await base.ConvertAsync(filePath);
     }
 }

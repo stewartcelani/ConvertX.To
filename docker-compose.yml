@@ -1,0 +1,46 @@
+version: '3.9'
+
+networks:
+  local:
+    name: local
+
+services:
+  api:
+    container_name: api
+    build:
+      context: src/ConvertX.To.API
+      dockerfile: Dockerfile
+      args:
+        - Mode=Debug
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Password1!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_HTTPS_PORT=8001
+    ports:
+      - "8000:80"
+      - "8001:443"
+    depends_on:
+      - mssql
+    networks:
+      - local
+    volumes:
+      - ~/.aspnet/https:/https:ro
+  
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    container_name: mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Password1!
+      - MSSQL_TCP_PORT=1433
+    restart: always
+    ports:
+      - "1433:1433"
+    networks:
+      - local
+    volumes:
+      - .mssql/data:/var/opt/mssql/data
