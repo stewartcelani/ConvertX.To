@@ -56,6 +56,8 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
     {
         var httpClient = await CreateAuthorizedHttpClient();
         var requestUrl = $"{_msGraphSettings.GraphEndpoint}/{fileId}/content?format={targetFormat}";
+        if (targetFormat.Equals("jpg"))
+            requestUrl += "&height=1920&width=1080";
         var response = await httpClient.GetAsync(requestUrl);
         if (!response.IsSuccessStatusCode)
             throw new MsGraphGetFileInTargetFormatException(

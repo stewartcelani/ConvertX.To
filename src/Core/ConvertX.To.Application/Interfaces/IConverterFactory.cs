@@ -2,5 +2,5 @@
 
 public interface IConverterFactory
 {
-    IConverter Create(string from, string to);
+    IConverter Create(string sourceFormat, string targetFormat);
 }

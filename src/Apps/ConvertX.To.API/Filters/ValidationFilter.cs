@@ -23,7 +23,7 @@ public class ValidationFilter : IAsyncActionFilter
             {
                 var errorModel = new ErrorResponseModel
                 {
-                    FieldName = error.Key,
+                    Error = error.Key,
                     Message = subError
                 };
                 errorResponse.Errors.Add(errorModel);

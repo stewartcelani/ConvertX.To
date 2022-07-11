@@ -16,11 +16,11 @@ public class ConverterFactory : IConverterFactory
         _msGraphFileConversionService = msGraphFileConversionService;
     }
 
-    public IConverter Create(string from, string to)
+    public IConverter Create(string sourceFormat, string targetFormat)
     {
         try
         {
-            var typeFullName = typeof(ConverterFactory).Namespace + "." + from.Proper() + "To" + to.Proper() + "Converter";
+            var typeFullName = typeof(ConverterFactory).Namespace + "." + targetFormat.Proper() + "." + sourceFormat.Proper() + "To" + targetFormat.Proper() + "Converter";
             var type = Type.GetType(typeFullName);
             var constructorParams = new object[] { _logger };
             if (type?.BaseType == typeof(MsGraphDriveItemConverterBase))
@@ -32,7 +32,7 @@ public class ConverterFactory : IConverterFactory
         }
         catch
         {
-            throw new UnsupportedConversionException($"Converting from {from.Proper()} to {to.Proper()} is not supported.");
+            throw new UnsupportedConversionException($"Converting from {sourceFormat.Proper()} to {targetFormat.Proper()} is not supported.");
         }
     }
 }

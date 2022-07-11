@@ -32,7 +32,7 @@ public static class ExceptionToHttpTranslator
             {
                 new()
                 {
-                    FieldName = exceptionType,
+                    Error = exceptionType,
                     Message = message
                 }
             }
