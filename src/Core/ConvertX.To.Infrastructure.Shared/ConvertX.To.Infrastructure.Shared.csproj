@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+      <PackageReference Include="MimeTypeMap.Core" Version="1.0.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="Serilog" Version="2.11.0" />
+      <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+      <PackageReference Include="Serilog.Exceptions" Version="8.3.0" />
+      <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+      <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ConvertX.To.Application\ConvertX.To.Application.csproj" />
+      <ProjectReference Include="..\ConvertX.To.Domain\ConvertX.To.Domain.csproj" />
+      <ProjectReference Include="..\ConvertX.To.Infrastructure.Persistence\ConvertX.To.Infrastructure.Persistence.csproj" />
+    </ItemGroup>
+
+</Project>

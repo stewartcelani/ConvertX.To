@@ -8,7 +8,7 @@ services:
   api:
     container_name: api
     build:
-      context: src/ConvertX.To.API
+      context: src/Apps/ConvertX.To.API
       dockerfile: Dockerfile
       args:
         - Mode=Debug
