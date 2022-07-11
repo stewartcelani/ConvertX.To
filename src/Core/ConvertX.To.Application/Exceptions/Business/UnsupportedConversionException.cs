@@ -4,7 +4,7 @@ namespace ConvertX.To.Application.Exceptions.Business;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
-public class UnsupportedConversionException : ConvertXToBusinessBaseException
+public class UnsupportedConversionException : ConvertXToBusinessExceptionBase
 {
     public override string Reason => "Unsupported Conversion Type";
 

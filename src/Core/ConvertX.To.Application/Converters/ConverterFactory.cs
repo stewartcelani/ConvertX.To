@@ -8,12 +8,12 @@ namespace ConvertX.To.Application.Converters;
 public class ConverterFactory : IConverterFactory
 {
     private readonly ILogger<ConverterFactory> _logger;
-    private readonly IGraphFileService _graphFileService;
+    private readonly IMsGraphFileConversionService _msGraphFileConversionService;
 
-    public ConverterFactory(ILogger<ConverterFactory> logger, IGraphFileService graphFileService)
+    public ConverterFactory(ILogger<ConverterFactory> logger, IMsGraphFileConversionService msGraphFileConversionService)
     {
         _logger = logger;
-        _graphFileService = graphFileService;
+        _msGraphFileConversionService = msGraphFileConversionService;
     }
 
     public IConverter Create(string from, string to)
@@ -23,9 +23,9 @@ public class ConverterFactory : IConverterFactory
             var typeFullName = typeof(ConverterFactory).Namespace + "." + from.Proper() + "To" + to.Proper() + "Converter";
             var type = Type.GetType(typeFullName);
             var constructorParams = new object[] { _logger };
-            if (type?.BaseType == typeof(GraphConverter))
+            if (type?.BaseType == typeof(MsGraphDriveItemConverterBase))
             {
-                constructorParams = new object[] { _graphFileService, _logger };
+                constructorParams = new object[] { _msGraphFileConversionService, _logger };
             }
             
             return (IConverter)Activator.CreateInstance(Type.GetType(typeFullName), constructorParams);

@@ -6,9 +6,9 @@ public class Conversion : AuditableBaseEntity<Guid>, ISoftDelete
 {
     public string FileNameWithoutExtension { get; set; }
     public string SourceFormat { get; set; }
-    public string TargetFormat { get; set; }
-    public string SourceFileName { get; set; }
-    public string ConvertedFileName { get; set; }
+    public string ConvertedFormat { get; set; }
+    public string SourceFileName => $"{FileNameWithoutExtension}.{SourceFormat}";
+    public string ConvertedFileName => $"{FileNameWithoutExtension}.{ConvertedFormat}";
     public DateTimeOffset RequestDate { get; set; }
     public DateTimeOffset RequestCompleteDate { get; set; }
     

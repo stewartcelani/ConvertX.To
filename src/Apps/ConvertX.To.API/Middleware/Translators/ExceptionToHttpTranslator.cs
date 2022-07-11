@@ -16,7 +16,7 @@ public static class ExceptionToHttpTranslator
         var exceptionType = "Exception";
         var message = "Internal Server Error";
 
-        if (exception is ConvertXToBusinessBaseException businessException)
+        if (exception is ConvertXToBusinessExceptionBase businessException)
         {
             exceptionType = exception.GetType().Name;
             message = exception.Message;
@@ -52,7 +52,7 @@ public static class ExceptionToHttpTranslator
         {
             UnsupportedConversionException => 415,
             ConversionNotFoundException => 404,
-            ConvertXToBusinessBaseException => 400,
+            ConvertXToBusinessExceptionBase => 400,
             _ => 500
         };
     }

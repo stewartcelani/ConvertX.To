@@ -28,7 +28,7 @@ namespace ConvertX.To.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ConvertedFileName")
+                    b.Property<string>("ConvertedFormat")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -54,15 +54,7 @@ namespace ConvertX.To.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("RequestDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("SourceFileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SourceFormat")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TargetFormat")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

@@ -40,6 +40,7 @@ public class ConversionService : IConversionService
         };
         var conversionResult = await _conversionEngine.ConvertAsync(conversionTask);
         var conversion = conversionResult.Adapt<Conversion>();
+        conversion.ConvertedFormat = conversionResult.TargetFormat;
         conversion.UserIpAddress = _ipAddressService.GetUserIpAddress();
 
         _applicationDbContext.Conversions.Add(conversion);

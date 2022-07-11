@@ -20,7 +20,7 @@ public static class DependencyInjection
             options.Filters.RegisterFiltersFromAssembly(Assembly.GetExecutingAssembly()));
 
         services.AddFluentValidation(options =>
-            options.RegisterValidatorsFromAssemblyContaining<ConvertXToBaseException>());
+            options.RegisterValidatorsFromAssemblyContaining<ConvertXToExceptionBase>());
         
         services.AddTransient<IUriService>(provider =>
         {

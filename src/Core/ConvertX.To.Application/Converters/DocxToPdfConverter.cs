@@ -3,16 +3,11 @@ using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.Application.Converters;
 
-public class DocxToPdfConverter : GraphConverter
+public class DocxToPdfConverter : MsGraphDriveItemConverterBase
 {
-    public DocxToPdfConverter(IGraphFileService graphFileService, ILogger logger) :
-        base("docx", "pdf", graphFileService, logger)
+    public DocxToPdfConverter(IMsGraphFileConversionService msGraphFileConversionService, ILogger logger) :
+        base("pdf", msGraphFileConversionService, logger)
     {
     }
-
-    public override async Task<Stream> ConvertAsync(string filePath)
-    {
-        _logger.LogDebug($"{nameof(DocxToPdfConverter)}");
-        return await base.ConvertAsync(filePath);
-    }
+    
 }

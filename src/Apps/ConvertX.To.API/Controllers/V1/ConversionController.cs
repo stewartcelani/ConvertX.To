@@ -20,6 +20,7 @@ public class ConversionController : ControllerBase
 
     [HttpPost(ApiRoutesV1.Convert.Post)]
     [Consumes("multipart/form-data")]
+    [DisableRequestSizeLimit]
     public async Task<IActionResult> Convert([FromRoute] string targetFormat, [FromForm] IFormFile file)
     {
         var conversion = await _conversionService.ConvertAsync(targetFormat, file.FileName, file.OpenReadStream());

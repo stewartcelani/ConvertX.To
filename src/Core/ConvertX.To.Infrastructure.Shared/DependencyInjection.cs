@@ -28,13 +28,13 @@ public static class DependencyInjection
         services.AddSingleton(fileServiceSettings);
 
         var graphFileServiceSettings =
-            SettingsBinder.BindAndValidate<GraphFileServiceSettings, GraphFileServiceSettingsValidator>(configuration);
+            SettingsBinder.BindAndValidate<MsGraphSettings, MsGraphSettingsValidator>(configuration);
         services.AddSingleton(graphFileServiceSettings);
         
         services.AddHttpClient();
 
         services.AddScoped<IFileService, LocalFileService>();
-        services.AddScoped<IGraphFileService, SharePointService>();
+        services.AddScoped<IMsGraphFileConversionService, MsGraphFileConversionService>();
         services.AddScoped<IConverterFactory, ConverterFactory>();
         services.AddScoped<IConversionEngine, ConversionEngine>();
         services.AddScoped<IConversionService, ConversionService>();

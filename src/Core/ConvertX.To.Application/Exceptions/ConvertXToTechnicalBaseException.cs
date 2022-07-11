@@ -8,12 +8,12 @@ namespace ConvertX.To.Application.Exceptions;
 /// </summary>
 [Serializable]
 [ExcludeFromCodeCoverage]
-public abstract class ConvertXToTechnicalBaseException : ConvertXToBaseException
+public abstract class ConvertXToTechnicalExceptionBase : ConvertXToExceptionBase
 {
-    protected ConvertXToTechnicalBaseException() { }
-    protected ConvertXToTechnicalBaseException(string message) : base(message) { }
-    protected ConvertXToTechnicalBaseException(string message, Exception inner) : base(message, inner) { }
-    protected ConvertXToTechnicalBaseException(
+    protected ConvertXToTechnicalExceptionBase() { }
+    protected ConvertXToTechnicalExceptionBase(string message) : base(message) { }
+    protected ConvertXToTechnicalExceptionBase(string message, Exception inner) : base(message, inner) { }
+    protected ConvertXToTechnicalExceptionBase(
         System.Runtime.Serialization.SerializationInfo info,
         System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 }

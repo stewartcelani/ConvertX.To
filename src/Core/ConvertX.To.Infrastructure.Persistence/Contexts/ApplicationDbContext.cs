@@ -41,7 +41,7 @@ public class ApplicationDbContext : DbContext
                     break;
                 case EntityState.Modified:
                     entry.Entity.DateUpdated = now;
-                    Entry(entry.Entity).Property(x => x.DateUpdated).IsModified = false;
+                    //Entry(entry.Entity).Property(x => x.DateUpdated).IsModified = false;
                     break;
             }
         }

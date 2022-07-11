@@ -4,7 +4,7 @@ namespace ConvertX.To.Application.Exceptions.Business;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
-public class ConversionNotFoundException : ConvertXToBusinessBaseException
+public class ConversionNotFoundException : ConvertXToBusinessExceptionBase
 {
     public override string Reason => "Conversion Not Found";
     

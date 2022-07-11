@@ -4,7 +4,7 @@ namespace ConvertX.To.Application.Exceptions.Business;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
-public class InvalidFileLengthException : ConvertXToBusinessBaseException
+public class InvalidFileLengthException : ConvertXToBusinessExceptionBase
 {
     public override string Reason => "Invalid File Length";
     
