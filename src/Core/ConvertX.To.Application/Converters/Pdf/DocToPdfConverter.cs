@@ -5,7 +5,7 @@ namespace ConvertX.To.Application.Converters.Pdf;
 
 public class DocToPdfConverter : MsGraphDriveItemConverterBase
 {
-    public DocToPdfConverter(IMsGraphFileConversionService msGraphFileConversionService, ILogger logger) : base("pdf", msGraphFileConversionService, logger)
+    public DocToPdfConverter(string sourceFormat, string targetFormat, ILogger logger, IMsGraphFileConversionService msGraphFileConversionService) : base(sourceFormat, targetFormat, logger, msGraphFileConversionService)
     {
     }
 }

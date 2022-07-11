@@ -33,16 +33,15 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         _logger = logger;
     }
     
-    public async Task<string> UploadFileAsync(string filePath)
+    public async Task<string> UploadFileAsync(string sourceFormat, Stream source)
     {
-        var stream = File.Open(filePath, FileMode.Open);
-        if (stream.Length > 3900000) return await UploadLargeFileAsync(filePath, stream); // Using Graph SDK for > 3.9 MB
+        if (source.Length > 3900000) return await UploadLargeFileAsync(sourceFormat, source); // Using Graph SDK for > 3.9 MB
         
         var httpClient = await CreateAuthorizedHttpClient();
-        var tempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{Path.GetExtension(filePath)}";
+        var tempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{sourceFormat}";
         var requestUrl = $"{_msGraphSettings.GraphEndpoint}/root:/{tempFileName}:/content";
-        var requestContent = new StreamContent(stream);
-        requestContent.Headers.ContentType = new MediaTypeHeaderValue(MimeTypeMap.GetMimeType(Path.GetExtension(filePath)));
+        var requestContent = new StreamContent(source);
+        requestContent.Headers.ContentType = new MediaTypeHeaderValue(MimeTypeMap.GetMimeType(sourceFormat));
         var response = await httpClient.PutAsync(requestUrl, requestContent);
         var responseBody = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
@@ -78,10 +77,10 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
     /// <summary>
     /// File sizes >= 4 MB require file sessions so using the Graph SDK for this
     /// </summary>
-    private async Task<string> UploadLargeFileAsync(string filePath, Stream stream)
+    private async Task<string> UploadLargeFileAsync(string sourceFormat, Stream stream)
     {
         var graphServiceClient = CreateGraphServiceClient();
-        var tempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{Path.GetExtension(filePath)}";
+        var tempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{sourceFormat}";
         var requestUrl = $"{_msGraphSettings.GraphEndpoint}/root:/{tempFileName}:/microsoft.graph.createUploadSession";
         var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, requestUrl);
         await graphServiceClient.AuthenticationProvider.AuthenticateRequestAsync(httpRequestMessage);

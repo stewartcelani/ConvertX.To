@@ -5,7 +5,7 @@ namespace ConvertX.To.Application.Converters.Pdf;
 
 public class RtfToPdfConverter : MsGraphDriveItemConverterBase
 {
-    public RtfToPdfConverter(IMsGraphFileConversionService msGraphFileConversionService, ILogger logger) : base("pdf", msGraphFileConversionService, logger)
+    public RtfToPdfConverter(string sourceFormat, string targetFormat, ILogger logger, IMsGraphFileConversionService msGraphFileConversionService) : base(sourceFormat, targetFormat, logger, msGraphFileConversionService)
     {
     }
 }

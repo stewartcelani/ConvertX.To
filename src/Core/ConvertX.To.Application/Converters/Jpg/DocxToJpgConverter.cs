@@ -5,7 +5,7 @@ namespace ConvertX.To.Application.Converters.Jpg;
 
 public class DocxToJpgConverter : MsGraphDriveItemConverterBase
 {
-    public DocxToJpgConverter(IMsGraphFileConversionService msGraphFileConversionService, ILogger logger) : base("jpg", msGraphFileConversionService, logger)
+    public DocxToJpgConverter(string sourceFormat, string targetFormat, ILogger logger, IMsGraphFileConversionService msGraphFileConversionService) : base(sourceFormat, targetFormat, logger, msGraphFileConversionService)
     {
     }
 }

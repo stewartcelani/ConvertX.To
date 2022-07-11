@@ -5,7 +5,7 @@ namespace ConvertX.To.Application.Converters.Pdf;
 
 public class EpubToPdfConverter : MsGraphDriveItemConverterBase
 {
-    public EpubToPdfConverter(IMsGraphFileConversionService msGraphFileConversionService, ILogger logger) : base("pdf", msGraphFileConversionService, logger)
+    public EpubToPdfConverter(string sourceFormat, string targetFormat, ILogger logger, IMsGraphFileConversionService msGraphFileConversionService) : base(sourceFormat, targetFormat, logger, msGraphFileConversionService)
     {
     }
 }

@@ -4,5 +4,5 @@ namespace ConvertX.To.Application.Interfaces;
 
 public interface IConversionEngine
 {
-    Task<ConversionResult> ConvertAsync(ConversionTask task);
+    Task<Stream> ConvertAsync(string sourceFormat, string targetFormat, Stream source);
 }

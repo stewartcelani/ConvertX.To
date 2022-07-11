@@ -2,5 +2,5 @@
 
 public interface IConverter
 {
-    Task<Stream> ConvertAsync(string filePath);
+    Task<Stream> ConvertAsync(Stream source);
 }

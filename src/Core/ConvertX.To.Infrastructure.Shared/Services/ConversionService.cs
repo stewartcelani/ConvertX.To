@@ -25,24 +25,24 @@ public class ConversionService : IConversionService
 
     public async Task<Conversion> ConvertAsync(string targetFormat, string fileName, Stream stream)
     {
-        var conversionTaskId = Guid.NewGuid();
-        var sourceFile = await _fileService.SaveFileAsync(conversionTaskId.ToString(), fileName, stream);
-        var conversionTask = new ConversionTask
+        var sourceFormat = Path.GetExtension(fileName).ToLower().Replace(".","");
+        var requestDate = DateTimeOffset.Now;
+        
+        var convertedStream = await _conversionEngine.ConvertAsync(sourceFormat, targetFormat, stream);
+        
+        var conversion = new Conversion
         {
-            Id = conversionTaskId,
-            FileNameWithoutExtension = Path.GetFileNameWithoutExtension(sourceFile.FullName),
-            SourceFileName = sourceFile.Name,
-            SourceFilePath = sourceFile.FullName,
-            DirectoryName = sourceFile.DirectoryName!,
-            SourceFormat = sourceFile.Extension.ToLower().Replace(".", ""),
-            TargetFormat = targetFormat.ToLower().Replace(".", ""),
-            RequestDate = DateTimeOffset.Now
+            Id = Guid.NewGuid(),
+            FileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName),
+            SourceFormat = sourceFormat,
+            ConvertedFormat = targetFormat,
+            RequestDate = requestDate,
+            RequestCompleteDate = DateTimeOffset.Now,
+            UserIpAddress = _ipAddressService.GetUserIpAddress()
         };
-        var conversionResult = await _conversionEngine.ConvertAsync(conversionTask);
-        var conversion = conversionResult.Adapt<Conversion>();
-        conversion.ConvertedFormat = conversionResult.TargetFormat;
-        conversion.UserIpAddress = _ipAddressService.GetUserIpAddress();
-
+        
+        await _fileService.SaveFileAsync(conversion.Id.ToString(), conversion.ConvertedFileName, convertedStream);
+        
         _applicationDbContext.Conversions.Add(conversion);
         await _applicationDbContext.SaveChangesAsync();
         return conversion;

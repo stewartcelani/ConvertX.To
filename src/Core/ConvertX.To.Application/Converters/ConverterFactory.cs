@@ -22,10 +22,10 @@ public class ConverterFactory : IConverterFactory
         {
             var typeFullName = typeof(ConverterFactory).Namespace + "." + targetFormat.Proper() + "." + sourceFormat.Proper() + "To" + targetFormat.Proper() + "Converter";
             var type = Type.GetType(typeFullName);
-            var constructorParams = new object[] { _logger };
+            var constructorParams = new object[] { sourceFormat, targetFormat, _logger };
             if (type?.BaseType == typeof(MsGraphDriveItemConverterBase))
             {
-                constructorParams = new object[] { _msGraphFileConversionService, _logger };
+                constructorParams = new object[] {  sourceFormat, targetFormat, _logger, _msGraphFileConversionService };
             }
             
             return (IConverter)Activator.CreateInstance(Type.GetType(typeFullName), constructorParams);

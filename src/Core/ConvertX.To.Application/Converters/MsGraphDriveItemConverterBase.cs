@@ -5,20 +5,22 @@ namespace ConvertX.To.Application.Converters;
 
 public abstract class MsGraphDriveItemConverterBase : IConverter
 {
+    private readonly string _sourceFormat;
     private readonly string _targetFormat;
     private readonly IMsGraphFileConversionService _msGraphFileConversionService;
     private readonly ILogger _logger;
     
-    protected MsGraphDriveItemConverterBase(string targetFormat, IMsGraphFileConversionService msGraphFileConversionService, ILogger logger)
+    protected MsGraphDriveItemConverterBase(string sourceFormat, string targetFormat, ILogger logger, IMsGraphFileConversionService msGraphFileConversionService)
     {
+        _sourceFormat = sourceFormat;
         _targetFormat = targetFormat;
         _msGraphFileConversionService = msGraphFileConversionService;
         _logger = logger;
     }
 
-    public virtual async Task<Stream> ConvertAsync(string filePath)
+    public virtual async Task<Stream> ConvertAsync(Stream source)
     {
-        var fileId = await _msGraphFileConversionService.UploadFileAsync(filePath);
+        var fileId = await _msGraphFileConversionService.UploadFileAsync(_sourceFormat, source);
         // TODO: To download Jpg files need to pass height and width so need an optional query params to pass to GetFileInTargetFormatAsync
         var convertedFileStream = await _msGraphFileConversionService.GetFileInTargetFormatAsync(fileId, _targetFormat);
         await _msGraphFileConversionService.DeleteFileAsync(fileId);

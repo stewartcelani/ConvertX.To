@@ -18,23 +18,16 @@ public class ConversionEngine : IConversionEngine
         _fileService = fileService;
     }
 
-    public async Task<ConversionResult> ConvertAsync(ConversionTask task)
+    // TODO: ConversionEngine should just take in a stream, source format and target format and return a stream
+    // The other logic should be happening somewhere else
+    // in a controller because if you wanted a ConsoleApp in the future
+    public async Task<Stream> ConvertAsync(string sourceFormat, string targetFormat, Stream source)
     {
         _logger.LogInformation(
-            $"Processing new conversion request to convert {task.SourceFilePath} to {task.TargetFormat}");
+            $"Processing new conversion request to convert {sourceFormat} to {targetFormat}");
 
-        var converter = _converterFactory.Create(task.SourceFormat, task.TargetFormat);
+        var converter = _converterFactory.Create(sourceFormat, targetFormat);
         
-        var convertedFileStream = await converter.ConvertAsync(task.SourceFilePath);
-
-        var convertedFile = await _fileService.SaveFileAsync(task.DirectoryName,
-            $"{task.FileNameWithoutExtension}.{task.TargetFormat}", convertedFileStream);
-
-        var response = task.Adapt<ConversionResult>();
-        response.ConvertedFileName = convertedFile.Name;
-        response.ConvertedFilePath = convertedFile.FullName;
-        response.RequestCompleteDate = DateTimeOffset.Now;
-
-        return response;
+        return await converter.ConvertAsync(source);
     }
 }
