@@ -24,64 +24,206 @@
       "xlsx"
     ],
     "jpg": [
-      "docx"
+      "ai",
+      "arw",
+      "asf",
+      "avi",
+      "bash",
+      "bas",
+      "bat",
+      "bmp",
+      "cbl",
+      "cmd",
+      "cool",
+      "cpp",
+      "cr2",
+      "crw",
+      "css",
+      "cs",
+      "csv",
+      "c",
+      "cur",
+      "dcm30",
+      "dcm",
+      "dicm",
+      "dicom",
+      "dic",
+      "dng",
+      "doc",
+      "docx",
+      "dwg",
+      "eml",
+      "epi",
+      "epsf",
+      "epsi",
+      "eps",
+      "epub",
+      "erf",
+      "fbx",
+      "fppx",
+      "g2",
+      "gif",
+      "glb",
+      "hcp",
+      "heic",
+      "heif",
+      "html",
+      "htm",
+      "h",
+      "icon",
+      "ico",
+      "java",
+      "jfif",
+      "jpeg",
+      "jpg",
+      "json",
+      "js",
+      "key",
+      "log",
+      "m2ts",
+      "m4a",
+      "m4v",
+      "markdown",
+      "md",
+      "mef",
+      "movie",
+      "mov",
+      "mp3",
+      "mp4",
+      "mp4v",
+      "mrw",
+      "msg",
+      "mts",
+      "nef",
+      "nrw",
+      "numbers",
+      "obj",
+      "odp",
+      "odt",
+      "ogg",
+      "orf",
+      "pages",
+      "pano",
+      "pdf",
+      "pef",
+      "php",
+      "pict",
+      "pl",
+      "ply",
+      "png",
+      "potm",
+      "pot",
+      "potx",
+      "pps",
+      "ppsxm",
+      "ppsx",
+      "pptm",
+      "ppt",
+      "pptx",
+      "ps1",
+      "psb",
+      "psd",
+      "ps",
+      "py",
+      "raw",
+      "rb",
+      "rtf",
+      "rw1",
+      "rw2",
+      "sh",
+      "sketch",
+      "sql",
+      "sr2",
+      "stl",
+      "tiff",
+      "tif",
+      "ts",
+      "txt",
+      "vb",
+      "webm",
+      "wma",
+      "wmv",
+      "xaml",
+      "xbm",
+      "xcf",
+      "xd",
+      "xml",
+      "xpm",
+      "yaml",
+      "yml"
     ]
   },
   "sourceFormatTo": {
     "doc": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "docx": [
       "pdf",
       "jpg"
     ],
     "eml": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "epub": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "html": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "htm": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "md": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "msg": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "odp": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "ods": [
       "pdf"
     ],
     "odt": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "pps": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "ppsx": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "ppt": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "pptx": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "rtf": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "tiff": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "tif": [
-      "pdf"
+      "pdf",
+      "jpg"
     ],
     "xlsm": [
       "pdf"
@@ -91,6 +233,336 @@
     ],
     "xlsx": [
       "pdf"
+    ],
+    "ai": [
+      "jpg"
+    ],
+    "arw": [
+      "jpg"
+    ],
+    "asf": [
+      "jpg"
+    ],
+    "avi": [
+      "jpg"
+    ],
+    "bash": [
+      "jpg"
+    ],
+    "bas": [
+      "jpg"
+    ],
+    "bat": [
+      "jpg"
+    ],
+    "bmp": [
+      "jpg"
+    ],
+    "cbl": [
+      "jpg"
+    ],
+    "cmd": [
+      "jpg"
+    ],
+    "cool": [
+      "jpg"
+    ],
+    "cpp": [
+      "jpg"
+    ],
+    "cr2": [
+      "jpg"
+    ],
+    "crw": [
+      "jpg"
+    ],
+    "css": [
+      "jpg"
+    ],
+    "cs": [
+      "jpg"
+    ],
+    "csv": [
+      "jpg"
+    ],
+    "c": [
+      "jpg"
+    ],
+    "cur": [
+      "jpg"
+    ],
+    "dcm30": [
+      "jpg"
+    ],
+    "dcm": [
+      "jpg"
+    ],
+    "dicm": [
+      "jpg"
+    ],
+    "dicom": [
+      "jpg"
+    ],
+    "dic": [
+      "jpg"
+    ],
+    "dng": [
+      "jpg"
+    ],
+    "dwg": [
+      "jpg"
+    ],
+    "epi": [
+      "jpg"
+    ],
+    "epsf": [
+      "jpg"
+    ],
+    "epsi": [
+      "jpg"
+    ],
+    "eps": [
+      "jpg"
+    ],
+    "erf": [
+      "jpg"
+    ],
+    "fbx": [
+      "jpg"
+    ],
+    "fppx": [
+      "jpg"
+    ],
+    "g2": [
+      "jpg"
+    ],
+    "gif": [
+      "jpg"
+    ],
+    "glb": [
+      "jpg"
+    ],
+    "hcp": [
+      "jpg"
+    ],
+    "heic": [
+      "jpg"
+    ],
+    "heif": [
+      "jpg"
+    ],
+    "h": [
+      "jpg"
+    ],
+    "icon": [
+      "jpg"
+    ],
+    "ico": [
+      "jpg"
+    ],
+    "java": [
+      "jpg"
+    ],
+    "jfif": [
+      "jpg"
+    ],
+    "jpeg": [
+      "jpg"
+    ],
+    "jpg": [
+      "jpg"
+    ],
+    "json": [
+      "jpg"
+    ],
+    "js": [
+      "jpg"
+    ],
+    "key": [
+      "jpg"
+    ],
+    "log": [
+      "jpg"
+    ],
+    "m2ts": [
+      "jpg"
+    ],
+    "m4a": [
+      "jpg"
+    ],
+    "m4v": [
+      "jpg"
+    ],
+    "markdown": [
+      "jpg"
+    ],
+    "mef": [
+      "jpg"
+    ],
+    "movie": [
+      "jpg"
+    ],
+    "mov": [
+      "jpg"
+    ],
+    "mp3": [
+      "jpg"
+    ],
+    "mp4": [
+      "jpg"
+    ],
+    "mp4v": [
+      "jpg"
+    ],
+    "mrw": [
+      "jpg"
+    ],
+    "mts": [
+      "jpg"
+    ],
+    "nef": [
+      "jpg"
+    ],
+    "nrw": [
+      "jpg"
+    ],
+    "numbers": [
+      "jpg"
+    ],
+    "obj": [
+      "jpg"
+    ],
+    "ogg": [
+      "jpg"
+    ],
+    "orf": [
+      "jpg"
+    ],
+    "pages": [
+      "jpg"
+    ],
+    "pano": [
+      "jpg"
+    ],
+    "pdf": [
+      "jpg"
+    ],
+    "pef": [
+      "jpg"
+    ],
+    "php": [
+      "jpg"
+    ],
+    "pict": [
+      "jpg"
+    ],
+    "pl": [
+      "jpg"
+    ],
+    "ply": [
+      "jpg"
+    ],
+    "png": [
+      "jpg"
+    ],
+    "potm": [
+      "jpg"
+    ],
+    "pot": [
+      "jpg"
+    ],
+    "potx": [
+      "jpg"
+    ],
+    "ppsxm": [
+      "jpg"
+    ],
+    "pptm": [
+      "jpg"
+    ],
+    "ps1": [
+      "jpg"
+    ],
+    "psb": [
+      "jpg"
+    ],
+    "psd": [
+      "jpg"
+    ],
+    "ps": [
+      "jpg"
+    ],
+    "py": [
+      "jpg"
+    ],
+    "raw": [
+      "jpg"
+    ],
+    "rb": [
+      "jpg"
+    ],
+    "rw1": [
+      "jpg"
+    ],
+    "rw2": [
+      "jpg"
+    ],
+    "sh": [
+      "jpg"
+    ],
+    "sketch": [
+      "jpg"
+    ],
+    "sql": [
+      "jpg"
+    ],
+    "sr2": [
+      "jpg"
+    ],
+    "stl": [
+      "jpg"
+    ],
+    "ts": [
+      "jpg"
+    ],
+    "txt": [
+      "jpg"
+    ],
+    "vb": [
+      "jpg"
+    ],
+    "webm": [
+      "jpg"
+    ],
+    "wma": [
+      "jpg"
+    ],
+    "wmv": [
+      "jpg"
+    ],
+    "xaml": [
+      "jpg"
+    ],
+    "xbm": [
+      "jpg"
+    ],
+    "xcf": [
+      "jpg"
+    ],
+    "xd": [
+      "jpg"
+    ],
+    "xml": [
+      "jpg"
+    ],
+    "xpm": [
+      "jpg"
+    ],
+    "yaml": [
+      "jpg"
+    ],
+    "yml": [
+      "jpg"
     ]
   }
 }

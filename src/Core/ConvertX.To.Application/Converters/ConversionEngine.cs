@@ -16,9 +16,14 @@ public class ConversionEngine : IConversionEngine
         _converterFactory = converterFactory;
     }
 
-    // TODO: 1) Implement remaining MsGraph to Jpg converters
-    // TODO: 2) Use something like http://www.pdfsharp.net/ to convert from Jpg to Pdf
-    // TODO: 3) Can then transparently convert to jpg using MsGraph then to Pdf from Jpg using PdfSharp and support many more formats
+    // TODO: To improve the Jpg converters (details below):
+    // 1. If the sourceFormat has a {sourceFormat}ToPdfConverter use that to convert to pdf
+    // 2. Split the PDF using PdfSharp
+    // 3. Loop through split pages and convert each to Jpg
+    // 4. Zip them and store the zip file as the associated file
+    // http://www.pdfsharp.com/PDFsharp/index.php?option=com_content&task=view&id=37&Itemid=48
+    // TODO: If can use PdfSharp to convert from Jpg to Pdf then can transparently convert all the {sourceFormat}ToJpg formats to Pdf as well
+
     public async Task<Stream> ConvertAsync(string sourceFormat, string targetFormat, Stream source)
     {
         _logger.LogInformation(
