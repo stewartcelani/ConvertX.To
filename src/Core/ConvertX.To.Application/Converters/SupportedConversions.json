@@ -1,0 +1,96 @@
+{
+  "targetFormatFrom": {
+    "pdf": [
+      "doc",
+      "docx",
+      "eml",
+      "epub",
+      "html",
+      "htm",
+      "md",
+      "msg",
+      "odp",
+      "ods",
+      "odt",
+      "pps",
+      "ppsx",
+      "ppt",
+      "pptx",
+      "rtf",
+      "tiff",
+      "tif",
+      "xlsm",
+      "xls",
+      "xlsx"
+    ],
+    "jpg": [
+      "docx"
+    ]
+  },
+  "sourceFormatTo": {
+    "doc": [
+      "pdf"
+    ],
+    "docx": [
+      "pdf",
+      "jpg"
+    ],
+    "eml": [
+      "pdf"
+    ],
+    "epub": [
+      "pdf"
+    ],
+    "html": [
+      "pdf"
+    ],
+    "htm": [
+      "pdf"
+    ],
+    "md": [
+      "pdf"
+    ],
+    "msg": [
+      "pdf"
+    ],
+    "odp": [
+      "pdf"
+    ],
+    "ods": [
+      "pdf"
+    ],
+    "odt": [
+      "pdf"
+    ],
+    "pps": [
+      "pdf"
+    ],
+    "ppsx": [
+      "pdf"
+    ],
+    "ppt": [
+      "pdf"
+    ],
+    "pptx": [
+      "pdf"
+    ],
+    "rtf": [
+      "pdf"
+    ],
+    "tiff": [
+      "pdf"
+    ],
+    "tif": [
+      "pdf"
+    ],
+    "xlsm": [
+      "pdf"
+    ],
+    "xls": [
+      "pdf"
+    ],
+    "xlsx": [
+      "pdf"
+    ]
+  }
+}

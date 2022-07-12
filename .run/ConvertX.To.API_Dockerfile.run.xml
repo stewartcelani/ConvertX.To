@@ -3,7 +3,7 @@
     <deployment type="dockerfile">
       <settings>
         <option name="containerName" value="" />
-        <option name="sourceFilePath" value="src/Apps/ConvertX.To.API/Dockerfile" />
+        <option name="sourceFilePath" value="src/Presentation/ConvertX.To.API/Dockerfile" />
       </settings>
     </deployment>
     <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isPublishEnabled="true" />

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.API", "src\Apps\ConvertX.To.API\ConvertX.To.API.csproj", "{98510611-4B8C-4D22-AA86-180150D2E5CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.API", "src\Presentation\ConvertX.To.API\ConvertX.To.API.csproj", "{98510611-4B8C-4D22-AA86-180150D2E5CE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{C6446DD2-CEF3-4FE9-94E1-AD325DA33AEF}"
 EndProject
@@ -12,9 +12,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.Application", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.Domain", "src\Core\ConvertX.To.Domain\ConvertX.To.Domain.csproj", "{B4FA6E9C-B3D5-49D2-9C60-1F4AF631D917}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.Infrastructure.Persistence", "src\Core\ConvertX.To.Infrastructure.Persistence\ConvertX.To.Infrastructure.Persistence.csproj", "{3B182171-CDBE-443C-8326-CD878ABE8B7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.Infrastructure.Persistence", "src\Infrastructure\ConvertX.To.Infrastructure.Persistence\ConvertX.To.Infrastructure.Persistence.csproj", "{3B182171-CDBE-443C-8326-CD878ABE8B7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.Infrastructure.Shared", "src\Core\ConvertX.To.Infrastructure.Shared\ConvertX.To.Infrastructure.Shared.csproj", "{0582034A-5701-466C-95CE-7AF3AE4B3B1F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.Infrastructure.Shared", "src\Infrastructure\ConvertX.To.Infrastructure.Shared\ConvertX.To.Infrastructure.Shared.csproj", "{0582034A-5701-466C-95CE-7AF3AE4B3B1F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{B4D68FFA-6C96-4E93-995B-0646F203C0D0}"
 EndProject

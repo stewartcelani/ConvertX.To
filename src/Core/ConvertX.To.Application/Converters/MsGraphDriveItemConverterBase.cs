@@ -21,9 +21,8 @@ public abstract class MsGraphDriveItemConverterBase : IConverter
     public virtual async Task<Stream> ConvertAsync(Stream source)
     {
         var fileId = await _msGraphFileConversionService.UploadFileAsync(_sourceFormat, source);
-        // TODO: To download Jpg files need to pass height and width so need an optional query params to pass to GetFileInTargetFormatAsync
-        var convertedFileStream = await _msGraphFileConversionService.GetFileInTargetFormatAsync(fileId, _targetFormat);
+        var convertedStream = await _msGraphFileConversionService.GetFileInTargetFormatAsync(fileId, _targetFormat);
         await _msGraphFileConversionService.DeleteFileAsync(fileId);
-        return convertedFileStream;
+        return convertedStream;
     }
 }

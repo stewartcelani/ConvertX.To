@@ -1,6 +1,8 @@
 namespace ConvertX.To.Domain.Common;
 
-public abstract class BaseEntity<TKey>
+public abstract class BaseEntity<TKey> : BaseEntity
 {
-    public TKey Id { get; set; }
+    public virtual TKey Id { get; set; }
 }
+
+public abstract class BaseEntity {}
