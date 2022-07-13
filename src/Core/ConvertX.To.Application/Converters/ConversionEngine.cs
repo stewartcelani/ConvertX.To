@@ -23,6 +23,8 @@ public class ConversionEngine : IConversionEngine
     // 4. Zip them and store the zip file as the associated file
     // http://www.pdfsharp.com/PDFsharp/index.php?option=com_content&task=view&id=37&Itemid=48
     // TODO: If can use PdfSharp to convert from Jpg to Pdf then can transparently convert all the {sourceFormat}ToJpg formats to Pdf as well
+    // TODO: Look into QuestPdf: https://www.questpdf.com/documentation/api-reference.html#static-images
+    // Could try use it to convert Jpg to Pdf and to also write .txt, .log, .json (text formats) to PDF which can then be converted into JPG
 
     public async Task<Stream> ConvertAsync(string sourceFormat, string targetFormat, Stream source)
     {
