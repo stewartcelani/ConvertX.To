@@ -6,7 +6,7 @@ namespace ConvertX.To.Application.Exceptions.Technical;
 [ExcludeFromCodeCoverage]
 public class MsGraphGetFileInTargetFormatException : ConvertXToTechnicalExceptionBase
 {
-    public override string Reason => "Azure File Conversion Download Error";
+    public override string Reason => "Microsoft Graph Conversion Error";
     
     public MsGraphGetFileInTargetFormatException() { }
     public MsGraphGetFileInTargetFormatException(string message) : base(message) { }

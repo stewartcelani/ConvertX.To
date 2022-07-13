@@ -5,8 +5,10 @@ using ConvertX.To.Domain.Settings;
 using Newtonsoft.Json;
 using Microsoft.Graph;
 using Azure.Identity;
+using ConvertX.To.Infrastructure.Http;
 using Microsoft.Extensions.Logging;
 using MimeTypes.Core;
+using Polly.Retry;
 
 namespace ConvertX.To.Infrastructure.Shared.Services;
 
@@ -25,11 +27,14 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
     private HttpClient? _httpClient;
     private GraphServiceClient? _graphServiceClient;
 
+    private AsyncRetryPolicy _asyncRetryPolicy;
+
     public MsGraphFileConversionService(IHttpClientFactory httpClientFactory, MsGraphSettings msGraphSettings, ILogger<MsGraphFileConversionService> logger)
     {
         _httpClientFactory = httpClientFactory;
         _msGraphSettings = msGraphSettings;
         _logger = logger;
+        _asyncRetryPolicy = HttpClientRetryPolicy.GetPolicy();
     }
     
     public async Task<string> UploadFileAsync(string sourceFormat, Stream source)
@@ -41,7 +46,8 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         var requestUrl = $"{_msGraphSettings.GraphEndpoint}/root:/{tempFileName}:/content";
         var requestContent = new StreamContent(source);
         requestContent.Headers.ContentType = new MediaTypeHeaderValue(MimeTypeMap.GetMimeType(sourceFormat));
-        var response = await httpClient.PutAsync(requestUrl, requestContent);
+        var response =
+            await _asyncRetryPolicy.ExecuteAsync(async () => await httpClient.PutAsync(requestUrl, requestContent));
         var responseBody = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
             throw new MsGraphUploadFileException(
@@ -56,7 +62,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         var requestUrl = $"{_msGraphSettings.GraphEndpoint}/{fileId}/content?format={targetFormat}";
         if (targetFormat.Equals("jpg"))
             requestUrl += "&width=1920&height=1080";
-        var response = await httpClient.GetAsync(requestUrl);
+        var response = await _asyncRetryPolicy.ExecuteAsync(async () => await httpClient.GetAsync(requestUrl));
         if (!response.IsSuccessStatusCode)
             throw new MsGraphGetFileInTargetFormatException(
                 $"Downloading converted file failed with status {response.StatusCode} and message {await response.Content.ReadAsStringAsync()}");
@@ -67,7 +73,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
     {
         var httpClient = await CreateAuthorizedHttpClient();
         var requestUrl = $"{_msGraphSettings.GraphEndpoint}/{fileId}";
-        var response = await httpClient.DeleteAsync(requestUrl);
+        var response = await _asyncRetryPolicy.ExecuteAsync(async () => await httpClient.DeleteAsync(requestUrl));
         if (!response.IsSuccessStatusCode)
             throw new MsGraphDeleteFileException(
                 $"Deleting file with id {fileId} failed with status {response.StatusCode} and message {response.Content.ReadAsStringAsync()}");

@@ -1,5 +1,6 @@
 ﻿using ConvertX.To.Application;
 using ConvertX.To.ConsoleUI;
+using ConvertX.To.Infrastructure.Shared;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,10 +10,9 @@ var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         services.AddApplication();
-        services.AddConversionEngine(context.Configuration);
-        services.AddScoped<App>();
+        services.AddSharedInfrastructure(context.Configuration);
+        services.AddHostedService<App>();
     })
     .Build();
 
-var app = host.Services.GetRequiredService<App>();
-await app.RunAsync(args);
+await host.RunAsync();

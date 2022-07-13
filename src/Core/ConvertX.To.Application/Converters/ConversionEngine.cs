@@ -29,7 +29,7 @@ public class ConversionEngine : IConversionEngine
     public async Task<Stream> ConvertAsync(string sourceFormat, string targetFormat, Stream source)
     {
         _logger.LogInformation(
-            $"Processing new request to convert {sourceFormat} to {targetFormat}");
+            "Processing new request to convert {sourceFormat} to {targetFormat}", sourceFormat, targetFormat);
 
         var converter = _converterFactory.Create(sourceFormat, targetFormat);
 

@@ -15,7 +15,7 @@ public static class DependencyInjection
 {
     public static void AddConversionEngine(this IServiceCollection services, IConfiguration configuration)
     {
-        Log.Logger = new LoggerConfiguration()
+        /*Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
             .CreateLogger();
         services.AddLogging(loggingBuilder =>
@@ -32,6 +32,6 @@ public static class DependencyInjection
         services.AddScoped<IConverterFactory, ConverterFactory>();
         services.AddScoped<IConversionEngine, ConversionEngine>();
 
-        services.AddHttpClient();
+        services.AddHttpClient();*/
     }
 }

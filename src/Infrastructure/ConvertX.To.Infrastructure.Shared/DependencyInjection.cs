@@ -3,6 +3,7 @@ using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Application.Settings;
 using ConvertX.To.Application.Validators;
 using ConvertX.To.Domain.Settings;
+using ConvertX.To.Infrastructure.Http;
 using ConvertX.To.Infrastructure.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -28,9 +29,9 @@ public static class DependencyInjection
             SettingsBinder.BindAndValidate<MsGraphSettings, MsGraphSettingsValidator>(configuration);
         services.AddSingleton(msGraphSettings);
         
-        var fileServiceSettings = SettingsBinder.Bind<FileServiceSettings>(configuration);
+        var fileServiceSettings = SettingsBinder.Bind<FileServiceSettings>(configuration); // If null no RootDirectory for LocalFileService will be set, don't need to BindAndValidate
         services.AddSingleton(fileServiceSettings);
-        
+
         services.AddHttpClient();
 
         services.AddScoped<IFileService, LocalFileService>();

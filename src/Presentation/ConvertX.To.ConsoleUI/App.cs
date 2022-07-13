@@ -1,50 +1,55 @@
 using ConvertX.To.Application.Interfaces;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.ConsoleUI;
 
-public class App
+public class App : IHostedService
 {
     private readonly ILogger<App> _logger;
     private readonly IConversionEngine _conversionEngine;
+    private readonly IFileService _fileService;
 
-    private DirectoryInfo _directory = new DirectoryInfo(@"C:\dev\convertx.to\sample_files\pdf");
+    private DirectoryInfo _directory = new DirectoryInfo(@"C:\dev\convertx.to\sample_files");
 
-    public App(ILogger<App> logger, IConversionEngine conversionEngine)
+    public App(ILogger<App> logger, IConversionEngine conversionEngine, IFileService fileService)
     {
         _logger = logger;
         _conversionEngine = conversionEngine;
+        _fileService = fileService;
     }
 
-    /// <summary>
-    /// Just testing things from a Console app now to make sure I'm splitting the projects correctly
-    /// Have an idea of adding a context menu based windows app that lets users right click a compatible file
-    /// and convert to available formats
-    /// </summary>
-    public async Task RunAsync(string[] args)
+
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("{Class}.{Method}",nameof(App), nameof(RunAsync));
+        _logger.LogInformation("{Class}.{Method}",nameof(App), nameof(StartAsync));
+
+        var targetFormat = "jpg";
         
         var supportedConversions = _conversionEngine.GetSupportedConversions();
-        var toPdf = supportedConversions.TargetFormatFrom["pdf"];
-
-        var files = _directory.GetFiles().Where(x => toPdf.Contains(x.Extension.Replace(".",""))).ToList();
-        if (files.Any()) EnsureDirectory(Path.Combine(_directory.FullName, "output"));
+        if (!supportedConversions.TargetFormatFrom.ContainsKey(targetFormat))
+        {
+            _logger.LogInformation("Converting to {targetFormat} is not supported", targetFormat);
+            return;
+        }
         
+        var toTargetFormat = supportedConversions.TargetFormatFrom[targetFormat];
+
+        var files = _directory.GetFiles().Where(x => !x.Name.Contains("ConvertX.To") && toTargetFormat.Contains(x.Extension.Replace(".",""))).ToList();
+
+        var numberOfFilesConverted = 0;
         foreach (var fileInfo in files)
         {
-            var convertAsync = await _conversionEngine.ConvertAsync(fileInfo.Extension.Replace(".", ""), "pdf", fileInfo.OpenRead());
-            
-            _logger.LogDebug(fileInfo.Name);
+            _logger.LogInformation("Converting {fileName} to {targetFormat}", fileInfo.Name, targetFormat);
+            var convertedStream = await _conversionEngine.ConvertAsync(fileInfo.Extension.Replace(".", ""), targetFormat, fileInfo.OpenRead());
+            await _fileService.SaveFileAsync(Path.Combine(fileInfo.DirectoryName!, $"{fileInfo.Name}.ConvertX.To.{targetFormat}"), convertedStream);
+            numberOfFilesConverted++;
+            _logger.LogInformation("{fileName} successfully converted to {targetFormat}!", fileInfo.Name, targetFormat);
         }
-
+        
+        _logger.LogInformation("Converted {numberOfFilesConverted} files to {targetFormat}.", numberOfFilesConverted, targetFormat);
         Console.ReadKey();
     }
 
-    private void EnsureDirectory(string path)
-    {
-        if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-    }
-    
-
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }
