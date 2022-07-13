@@ -6,6 +6,6 @@ namespace ConvertX.To.Application.Converters;
 /// </summary>
 public class SupportedConversions
 {
-    public object TargetFormatFrom { get; set; }
-    public object SourceFormatTo { get; set; }
+    public Dictionary<string, List<string>> TargetFormatFrom { get; set; }
+    public Dictionary<string, List<string>> SourceFormatTo { get; set; }
 }

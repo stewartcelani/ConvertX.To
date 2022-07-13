@@ -7,7 +7,6 @@ using Microsoft.Graph;
 using Azure.Identity;
 using Microsoft.Extensions.Logging;
 using MimeTypes.Core;
-using File = System.IO.File;
 
 namespace ConvertX.To.Infrastructure.Shared.Services;
 

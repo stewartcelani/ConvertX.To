@@ -23,17 +23,17 @@ public static class DependencyInjection
             loggingBuilder.ClearProviders();
             loggingBuilder.AddSerilog(Log.Logger, true);
         });
-        
-        var localStorageSettings = SettingsBinder.BindAndValidate<LocalStorageSettings, LocalStorageSettingsValidator>(configuration);
-        services.AddSingleton(localStorageSettings);
 
         var msGraphSettings =
             SettingsBinder.BindAndValidate<MsGraphSettings, MsGraphSettingsValidator>(configuration);
         services.AddSingleton(msGraphSettings);
         
+        var fileServiceSettings = SettingsBinder.Bind<FileServiceSettings>(configuration);
+        services.AddSingleton(fileServiceSettings);
+        
         services.AddHttpClient();
 
-        services.AddScoped<IStorageService, LocalStorageService>();
+        services.AddScoped<IFileService, LocalFileService>();
         services.AddScoped<IMsGraphFileConversionService, MsGraphFileConversionService>();
         services.AddScoped<IConverterFactory, ConverterFactory>();
         services.AddScoped<IConversionEngine, ConversionEngine>();

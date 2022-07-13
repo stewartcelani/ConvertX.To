@@ -50,6 +50,7 @@ public class ApplicationDbContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        // TODO: Do a configuration for Conversions to set up a calculated column calculating seconds between RequestDate and RequestCompletedDate
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         base.OnModelCreating(builder);

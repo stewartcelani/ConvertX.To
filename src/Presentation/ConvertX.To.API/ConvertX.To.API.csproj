@@ -19,14 +19,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Contracts" />
-      <Folder Include="Contracts\V1\Requests" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\Core\ConvertX.To.Application\ConvertX.To.Application.csproj" />
       <ProjectReference Include="..\..\Infrastructure\ConvertX.To.Infrastructure.Persistence\ConvertX.To.Infrastructure.Persistence.csproj" />
       <ProjectReference Include="..\..\Infrastructure\ConvertX.To.Infrastructure.Shared\ConvertX.To.Infrastructure.Shared.csproj" />
+      <ProjectReference Include="..\ConvertX.To.API.Contracts\ConvertX.To.API.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

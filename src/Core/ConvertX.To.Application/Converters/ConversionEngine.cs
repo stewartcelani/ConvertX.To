@@ -36,4 +36,32 @@ public class ConversionEngine : IConversionEngine
         return await converter.ConvertAsync(source);
     }
     
+    public SupportedConversions GetSupportedConversions()
+    {
+        var assembly = Assembly.GetAssembly(typeof(IConversionEngine))!;
+        
+        var converters = assembly.ExportedTypes
+            .Where(x => typeof(IConverter).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+            .ToList();
+
+        var convertersByTargetFormat = new Dictionary<string, List<string>>();
+        var convertersBySourceFormat = new Dictionary<string, List<string>>();
+        foreach (var converter in converters)
+        {
+            var s = converter.Name.ToLower().Replace("converter", "");
+            var sourceFormat = s.Split("to").First();
+            var targetFormat = s.Split("to").Last();
+            if (!convertersByTargetFormat.ContainsKey(targetFormat)) convertersByTargetFormat[targetFormat] = new List<string>();
+            convertersByTargetFormat[targetFormat].Add(sourceFormat);
+            if (!convertersBySourceFormat.ContainsKey(sourceFormat))
+                convertersBySourceFormat[sourceFormat] = new List<string>();
+            convertersBySourceFormat[sourceFormat].Add(targetFormat);
+        }
+
+        return new SupportedConversions
+        {
+            TargetFormatFrom = convertersByTargetFormat,
+            SourceFormatTo = convertersBySourceFormat
+        };
+    }
 }

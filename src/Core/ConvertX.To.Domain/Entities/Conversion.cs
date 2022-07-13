@@ -10,7 +10,6 @@ public sealed class Conversion : AuditableBaseEntity<Guid>, ISoftDelete
     public string ConvertedFormat { get; set; }
     public DateTimeOffset RequestDate { get; set; }
     public DateTimeOffset RequestCompleteDate { get; set; }
-    public string UserIpAddress { get; set; }
     public int Downloads { get; set; } = 0;
     public DateTimeOffset? DateDeleted { get; set; }
     
