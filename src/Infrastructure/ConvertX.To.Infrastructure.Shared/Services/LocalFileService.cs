@@ -1,5 +1,4 @@
-﻿using ConvertX.To.Application.Exceptions.Business;
-using ConvertX.To.Application.Interfaces;
+﻿using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain.Settings;
 
 namespace ConvertX.To.Infrastructure.Shared.Services;

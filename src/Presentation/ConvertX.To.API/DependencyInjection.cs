@@ -1,6 +1,7 @@
 using System.Reflection;
 using ConvertX.To.API.Services;
 using ConvertX.To.Application.Exceptions;
+using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Infrastructure.Persistence.Contexts;
 using FluentValidation.AspNetCore;
@@ -35,9 +36,7 @@ public static class DependencyInjection
     
     private static void RegisterFiltersFromAssembly(this FilterCollection filterCollection, Assembly assembly)
     {
-        var filters = assembly.ExportedTypes
-            .Where(x => typeof(IFilterMetadata).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
-            .ToList();
+        var filters = Reflection.GetConcreteTypesInAssembly<IFilterMetadata>(assembly);
         filters.ForEach(filter => filterCollection.Add(filter));
     }
  

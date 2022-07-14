@@ -2,7 +2,7 @@ namespace ConvertX.To.Application.Converters;
 
 /// <summary>
 /// Dynamic mapping of all supported conversions using reflection
-/// See SupportedConversions.json
+/// See SupportedConversions.json for example
 /// </summary>
 public class SupportedConversions
 {

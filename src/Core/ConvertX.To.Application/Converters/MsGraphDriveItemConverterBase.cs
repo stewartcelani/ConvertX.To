@@ -18,11 +18,12 @@ public abstract class MsGraphDriveItemConverterBase : IConverter
         _logger = logger;
     }
 
-    public virtual async Task<Stream> ConvertAsync(Stream source)
+    public virtual async Task<(string, Stream)> ConvertAsync(Stream source, ConversionOptions conversionOptions)
     {
         var fileId = await _msGraphFileConversionService.UploadFileAsync(_sourceFormat, source);
         var convertedStream = await _msGraphFileConversionService.GetFileInTargetFormatAsync(fileId, _targetFormat);
         await _msGraphFileConversionService.DeleteFileAsync(fileId);
-        return convertedStream;
+        var savedFileExtension = _targetFormat; // TODO: This is for when returning a .zip file containing multiple images when converting a pdf to jpg
+        return (savedFileExtension, convertedStream);
     }
 }

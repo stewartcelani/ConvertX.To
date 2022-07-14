@@ -20,7 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.API.Contracts", "src\Presentation\ConvertX.To.API.Contracts\ConvertX.To.API.Contracts.csproj", "{0C6C0E84-42F4-4232-B814-9756BCF6FCAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.ConsoleUI", "src\Presentation\ConvertX.To.ConsoleUI\ConvertX.To.ConsoleUI.csproj", "{6F6B9D95-0FB4-421E-8A4C-069613867F91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.ConsoleViaEngine", "src\Presentation\ConvertX.To.ConsoleViaEngine\ConvertX.To.ConsoleViaEngine.csproj", "{6F6B9D95-0FB4-421E-8A4C-069613867F91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.ConsoleUI", "src\Presentation\ConvertX.To.ConsoleUI\ConvertX.To.ConsoleUI.csproj", "{AA535B52-A5BB-4756-93FD-DFEB79B4D8B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +58,10 @@ Global
 		{6F6B9D95-0FB4-421E-8A4C-069613867F91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F6B9D95-0FB4-421E-8A4C-069613867F91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F6B9D95-0FB4-421E-8A4C-069613867F91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA535B52-A5BB-4756-93FD-DFEB79B4D8B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA535B52-A5BB-4756-93FD-DFEB79B4D8B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA535B52-A5BB-4756-93FD-DFEB79B4D8B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA535B52-A5BB-4756-93FD-DFEB79B4D8B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{11747D94-17E3-46EE-904A-2B52B4365AB5} = {C6446DD2-CEF3-4FE9-94E1-AD325DA33AEF}
@@ -68,5 +74,6 @@ Global
 		{0582034A-5701-466C-95CE-7AF3AE4B3B1F} = {B4D68FFA-6C96-4E93-995B-0646F203C0D0}
 		{0C6C0E84-42F4-4232-B814-9756BCF6FCAB} = {11747D94-17E3-46EE-904A-2B52B4365AB5}
 		{6F6B9D95-0FB4-421E-8A4C-069613867F91} = {11747D94-17E3-46EE-904A-2B52B4365AB5}
+		{AA535B52-A5BB-4756-93FD-DFEB79B4D8B8} = {11747D94-17E3-46EE-904A-2B52B4365AB5}
 	EndGlobalSection
 EndGlobal

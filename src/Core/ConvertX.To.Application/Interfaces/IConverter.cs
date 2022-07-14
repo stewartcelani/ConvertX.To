@@ -1,6 +1,8 @@
-﻿namespace ConvertX.To.Application.Interfaces;
+﻿using ConvertX.To.Application.Converters;
+
+namespace ConvertX.To.Application.Interfaces;
 
 public interface IConverter
 {
-    Task<Stream> ConvertAsync(Stream source);
+    Task<(string, Stream)> ConvertAsync(Stream source, ConversionOptions conversionOptions);
 }

@@ -1,10 +1,12 @@
 ﻿using System.Reflection;
 using ConvertX.To.API.Contracts.V1;
 using ConvertX.To.API.Contracts.V1.Responses;
+using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain.Entities;
 using ConvertX.To.Domain.Settings;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConvertX.To.API.Controllers.V1;
@@ -33,14 +35,16 @@ public class ConversionController : ControllerBase
     {
         var requestDate = DateTimeOffset.Now;
         var sourceFormat = Path.GetExtension(file.FileName).ToLower().Replace(".", "");
-        
-        var convertedStream = await _conversionEngine.ConvertAsync(sourceFormat, targetFormat, file.OpenReadStream());
+
+        var conversionOptions = new ConversionOptions();
+        var (convertedFileExtension, convertedStream) = await _conversionEngine.ConvertAsync(sourceFormat, targetFormat, file.OpenReadStream(), conversionOptions);
         
         var conversion = new Conversion
         {
             FileNameWithoutExtension = Path.GetFileNameWithoutExtension(file.FileName),
             SourceFormat = sourceFormat,
-            ConvertedFormat = targetFormat,
+            TargetFormat = targetFormat,
+            ConvertedFileExtension = convertedFileExtension,
             RequestDate = requestDate,
             RequestCompleteDate = DateTimeOffset.Now
         };
@@ -49,15 +53,16 @@ public class ConversionController : ControllerBase
         
         await _fileService.SaveFileAsync(Path.Combine(conversion.Id.ToString(), conversion.ConvertedFileName), convertedStream);
         await convertedStream.DisposeAsync();
-        return Created(_uriService.GetFileUri(conversion.Id), new ConversionResponse { Id = conversion.Id.ToString() });
+        
+        return Created(_uriService.GetFileUri(conversion.Id), conversion.Adapt<ConversionResponse>());
     }
-
+    
     /// <summary>
     /// Returns list of supported conversions
     /// </summary>
     [HttpGet(ApiRoutesV1.Convert.Get)]
     public IActionResult GetSupportedConversions()
     {
-        return Ok(_conversionEngine.GetSupportedConversions());
+        return Ok(_conversionEngine.GetSupportedConversions().Adapt<SupportedConversionsResponse>());
     }
 }

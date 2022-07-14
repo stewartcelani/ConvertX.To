@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -26,26 +28,24 @@ public class ConversionEngine : IConversionEngine
     // TODO: Look into QuestPdf: https://www.questpdf.com/documentation/api-reference.html#static-images
     // Could try use it to convert Jpg to Pdf and to also write .txt, .log, .json (text formats) to PDF which can then be converted into JPG
 
-    public async Task<Stream> ConvertAsync(string sourceFormat, string targetFormat, Stream source)
+    public async Task<(string, Stream)> ConvertAsync(string sourceFormat, string targetFormat, Stream source,
+        ConversionOptions conversionOptions)
     {
         _logger.LogInformation(
             "Processing new request to convert {sourceFormat} to {targetFormat}", sourceFormat, targetFormat);
 
         var converter = _converterFactory.Create(sourceFormat, targetFormat);
 
-        return await converter.ConvertAsync(source);
+        return await converter.ConvertAsync(source, conversionOptions);
     }
-    
+
     public SupportedConversions GetSupportedConversions()
     {
-        var assembly = Assembly.GetAssembly(typeof(IConversionEngine))!;
-        
-        var converters = assembly.ExportedTypes
-            .Where(x => typeof(IConverter).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
-            .ToList();
+        var converters = Reflection.GetConcreteTypesInAssembly<IConverter>(Assembly.GetExecutingAssembly());
 
         var convertersByTargetFormat = new Dictionary<string, List<string>>();
         var convertersBySourceFormat = new Dictionary<string, List<string>>();
+        
         foreach (var converter in converters)
         {
             var s = converter.Name.ToLower().Replace("converter", "");
@@ -64,4 +64,6 @@ public class ConversionEngine : IConversionEngine
             SourceFormatTo = convertersBySourceFormat
         };
     }
+
+    
 }
