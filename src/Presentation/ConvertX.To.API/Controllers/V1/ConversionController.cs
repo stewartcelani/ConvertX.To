@@ -30,7 +30,6 @@ public class ConversionController : ControllerBase
 
     [HttpPost(ApiRoutesV1.Convert.Post)]
     [Consumes("multipart/form-data")]
-    [DisableRequestSizeLimit]
     public async Task<IActionResult> Convert([FromRoute] string targetFormat, [FromForm] IFormFile file)
     {
         var requestDate = DateTimeOffset.Now;

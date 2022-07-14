@@ -1,13 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ConvertX.To.ConsoleViaEngine" type="DotNetProject" factoryName=".NET Project">
-    <option name="EXE_PATH" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleViaEngine/bin/Debug/net6.0/ConvertX.To.ConsoleViaEngine.exe" />
+  <configuration default="false" name="ConvertX.To.ConsoleUI.Core" type="DotNetProject" factoryName=".NET Project">
+    <option name="EXE_PATH" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleUI.Core/bin/Debug/net6.0/ConvertX.To.ConsoleUI.Core.exe" />
     <option name="PROGRAM_PARAMETERS" value="" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleViaEngine/bin/Debug/net6.0" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleUI.Core/bin/Debug/net6.0" />
     <option name="PASS_PARENT_ENVS" value="1" />
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
     <option name="USE_MONO" value="0" />
     <option name="RUNTIME_ARGUMENTS" value="" />
-    <option name="PROJECT_PATH" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleViaEngine/ConvertX.To.ConsoleViaEngine.csproj" />
+    <option name="PROJECT_PATH" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleUI.Core/ConvertX.To.ConsoleUI.Core.csproj" />
     <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
     <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
     <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
@@ -17,15 +17,15 @@
       <option name="Build" />
     </method>
   </configuration>
-  <configuration default="false" name="ConvertX.To.ConsoleUI" type="DotNetProject" factoryName=".NET Project">
-    <option name="EXE_PATH" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleUI/bin/Debug/net6.0/ConvertX.To.ConsoleUI.exe" />
+  <configuration default="false" name="ConvertX.To.ConsoleUI.API" type="DotNetProject" factoryName=".NET Project">
+    <option name="EXE_PATH" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleUI.API/bin/Debug/net6.0/ConvertX.To.ConsoleUI.API.exe" />
     <option name="PROGRAM_PARAMETERS" value="" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleUI/bin/Debug/net6.0" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleUI.API/bin/Debug/net6.0" />
     <option name="PASS_PARENT_ENVS" value="1" />
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
     <option name="USE_MONO" value="0" />
     <option name="RUNTIME_ARGUMENTS" value="" />
-    <option name="PROJECT_PATH" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleUI/ConvertX.To.ConsoleUI.csproj" />
+    <option name="PROJECT_PATH" value="$PROJECT_DIR$/src/Presentation/ConvertX.To.ConsoleUI.API/ConvertX.To.ConsoleUI.API.csproj" />
     <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
     <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
     <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />

@@ -3,6 +3,7 @@ using ConvertX.To.API.Services;
 using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Domain.Settings;
 using ConvertX.To.Infrastructure.Persistence.Contexts;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
@@ -48,5 +49,24 @@ public static class DependencyInjection
         if (dataContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory") // IntegrationTests
             if ((await dataContext.Database.GetPendingMigrationsAsync()).Any())
                 await dataContext.Database.MigrateAsync();
+    }
+    
+    public static async Task CleanUpExpiredConversions(this WebApplication app)
+    {
+        using var serviceScope = app.Services.CreateScope();
+        await using var dataContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        
+        var ttlSettings = serviceScope.ServiceProvider.GetRequiredService<TimeToLiveSettings>();
+        
+        var conversionService = serviceScope.ServiceProvider.GetRequiredService<IConversionService>();
+        // TODO: Based on DateCreated do a soft delete on Conversion DbSet 
+        //await conversionService.ExpireConversions(ttlSettings.TTL);
+        
+        // TODO: A way to loop through .data RootDirectory and delete anything not within TTL while remaining not tightly coupled and not violtating SRP... do we pass conversionService a func/delegate/interface?
+        /*var fileService = serviceScope.ServiceProvider.GetRequiredService<IFileService>();
+        await fileService.DeleteAnyFoldersNotWithinTTL(ttlSettings.TTL);*/
+        
+
+
     }
 }

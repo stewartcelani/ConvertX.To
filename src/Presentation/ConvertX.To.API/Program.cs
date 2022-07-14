@@ -20,6 +20,8 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 await app.RunPendingMigrationsAsync();
+await app.CleanUpExpiredConversions();
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {

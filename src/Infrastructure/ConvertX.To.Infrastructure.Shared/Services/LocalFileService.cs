@@ -19,6 +19,7 @@ public class LocalFileService : IFileService
         await using var fileStream = new FileStream(CombinePath(path), FileMode.Create);
         await stream.CopyToAsync(fileStream);
         await stream.DisposeAsync();
+        await fileStream.DisposeAsync();
     }
 
     public void DeleteDirectory(string path) => Directory.Delete(CombinePath(path), true);

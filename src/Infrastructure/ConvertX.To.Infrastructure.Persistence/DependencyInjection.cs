@@ -11,6 +11,10 @@ public static class DependencyInjection
 {
     public static void AddPersistenceInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        var ttlSettings =
+            SettingsBinder.BindAndValidate<TimeToLiveSettings, TimeToLiveSettingsValidator>(configuration);
+        services.AddSingleton(ttlSettings);
+    
         var databaseSettings = SettingsBinder.BindAndValidate<DatabaseSettings, DatabaseSettingsValidator>(configuration); 
         services.AddSingleton(databaseSettings);
 
