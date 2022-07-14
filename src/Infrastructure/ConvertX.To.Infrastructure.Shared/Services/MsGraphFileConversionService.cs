@@ -34,7 +34,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         _httpClientFactory = httpClientFactory;
         _msGraphSettings = msGraphSettings;
         _logger = logger;
-        _asyncRetryPolicy = HttpClientRetryPolicy.GetPolicy();
+        _asyncRetryPolicy = HttpClientRetryPolicy.GetPolicy(_logger, 5, 2);
     }
     
     public async Task<string> UploadFileAsync(string sourceFormat, Stream source)
