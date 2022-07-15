@@ -9,7 +9,6 @@ namespace ConvertX.To.Application.Exceptions;
 [ExcludeFromCodeCoverage]
 public abstract class ConvertXToExceptionBase : Exception
 {
-    public abstract string Reason { get; }
     protected ConvertXToExceptionBase() { }
     protected ConvertXToExceptionBase(string message) : base(message) { }
     protected ConvertXToExceptionBase(string message, Exception inner) : base(message, inner) { }

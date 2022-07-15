@@ -3,7 +3,6 @@ using ConvertX.To.API.Contracts.V1;
 using ConvertX.To.API.Contracts.V1.Responses;
 using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Exceptions;
-using ConvertX.To.Application.Exceptions.Business;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain.Entities;
 using ConvertX.To.Domain.Settings;

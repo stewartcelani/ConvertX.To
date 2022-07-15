@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using ConvertX.To.Application.Converters;
-using ConvertX.To.Application.Exceptions.Business;
+using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain.Entities;
 using ConvertX.To.Infrastructure.Persistence.Contexts;

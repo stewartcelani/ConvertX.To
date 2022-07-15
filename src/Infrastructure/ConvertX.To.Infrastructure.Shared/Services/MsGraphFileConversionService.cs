@@ -1,12 +1,11 @@
 using System.Net;
 using System.Net.Http.Headers;
-using ConvertX.To.Application.Exceptions.Technical;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain.Settings;
 using Newtonsoft.Json;
 using Microsoft.Graph;
 using Azure.Identity;
-using ConvertX.To.Application.Exceptions.Business;
+using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Infrastructure.Shared.Http;
 using Microsoft.Extensions.Logging;
 using MimeTypes.Core;
@@ -50,12 +49,11 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         requestContent.Headers.ContentType = new MediaTypeHeaderValue(MimeTypeMap.GetMimeType(sourceFormat));
         var response =
             await _asyncRetryPolicy.ExecuteAsync(async () => await httpClient.PutAsync(requestUrl, requestContent));
-        var responseBody = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
-            throw new MsGraphUploadFileException(
-                $"Upload file failed with status {response.StatusCode} and message {responseBody}");
+            throw new MsGraphUploadFileException(response);
+        var responseBody = await response.Content.ReadAsStringAsync();
         dynamic fileResponse = JsonConvert.DeserializeObject(responseBody);
-        return fileResponse?.id ?? throw new MsGraphUploadFileException($"Error deserializing response sourceFormat {requestUrl}");
+        return fileResponse?.id ?? throw new NullReferenceException(nameof(fileResponse.id));
     }
 
     public async Task<Stream> GetFileInTargetFormatAsync(string fileId, string targetFormat)
@@ -65,11 +63,20 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         if (targetFormat.Equals("jpg"))
             requestUrl += "&width=1920&height=1080";
         var response = await _asyncRetryPolicy.ExecuteAsync(async () => await httpClient.GetAsync(requestUrl));
-        if (response.StatusCode == HttpStatusCode.NotAcceptable)
-            throw new UnsupportedConversionException();
         if (!response.IsSuccessStatusCode)
-            throw new MsGraphGetFileInTargetFormatException(
-                $"Downloading converted file failed with status {response.StatusCode} and message {await response.Content.ReadAsStringAsync()}");
+        {
+            try
+            {
+                await DeleteFileAsync(fileId);
+            }
+            catch (MsGraphDeleteFileException ex)
+            {
+                throw new MsGraphGetFileInTargetFormatException(response, ex);
+            }
+            
+            throw new MsGraphGetFileInTargetFormatException(response);
+        }
+            
         return await response.Content.ReadAsStreamAsync();
     }
 
@@ -79,8 +86,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         var requestUrl = $"{_msGraphSettings.GraphEndpoint}/{fileId}";
         var response = await _asyncRetryPolicy.ExecuteAsync(async () => await httpClient.DeleteAsync(requestUrl));
         if (!response.IsSuccessStatusCode)
-            throw new MsGraphDeleteFileException(
-                $"Deleting file with id {fileId} failed with status {response.StatusCode} and message {response.Content.ReadAsStringAsync()}");
+            throw new MsGraphDeleteFileException(response);
     }
     
     /// <summary>
@@ -101,7 +107,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         {
             var uploadResult = await largeFileUploadTask.UploadAsync();
 
-            if (!uploadResult.UploadSucceeded) throw new MsGraphUploadFileException($"Error uploading file to Sharepoint");
+            if (!uploadResult.UploadSucceeded) throw new MsGraphUploadLargeFileException(uploadResult);
 
             await stream.DisposeAsync();
             return uploadResult.ItemResponse.Id;
@@ -110,7 +116,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         {
             _logger.LogError(e.Message, e);
             await stream.DisposeAsync();
-            throw new MsGraphUploadFileException($"Error uploading file to Sharepoint: {e.Message}", e);
+            throw;
         }
     }
     
@@ -159,12 +165,12 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         var requestContent = new FormUrlEncodedContent(values);
 
         var response = await client.PostAsync(requestUrl, requestContent);
-        var responseBody = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
-            throw new MsGraphAuthorizationException($"Non-200 response from {requestUrl}: {responseBody}");
+            throw new MsGraphAuthorizationException(response);
+        var responseBody = await response.Content.ReadAsStringAsync();
 
         dynamic tokenResponse = JsonConvert.DeserializeObject(responseBody);
-        return tokenResponse?.access_token ?? throw new MsGraphAuthorizationException($"Error deserializing response from {requestUrl}");
+        return tokenResponse?.access_token ?? throw new NullReferenceException(nameof(tokenResponse.access_token));
     }
     
 }

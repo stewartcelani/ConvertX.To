@@ -1,6 +1,7 @@
 using ConvertX.To.Application.Helpers;
 using ConvertX.To.ConsoleUI.API.ApiClient;
 using ConvertX.To.ConsoleUI.API.ApiClient.DelegatingHandlers;
+using ConvertX.To.ConsoleUI.API.Services;
 using ConvertX.To.ConsoleUI.API.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,7 +48,9 @@ public static class DependencyInjection
             .AddHttpMessageHandler<UnsuccessfulStatusCodeHandler>()
             .AddPolicyHandler(retryPolicy)
             .AddPolicyHandler(timeoutPolicy);
-        
+
+        services.AddScoped<IConversionService, ConversionService>();
+
         /*
             services.Decorate<IApiClient, ApiClient.ApiClient>();
         */

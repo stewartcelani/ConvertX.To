@@ -5,41 +5,42 @@ using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.ConsoleUI.Core;
 
-public class App : IHostedService
+public class App
 {
     private readonly ILogger<App> _logger;
     private readonly IConversionEngine _conversionEngine;
     private readonly IFileService _fileService;
-    private readonly IHostApplicationLifetime _hostApplicationLifetime;
 
     private DirectoryInfo _directory = new DirectoryInfo(@"C:\dev\convertx.to\sample_files");
 
-    public App(ILogger<App> logger, IConversionEngine conversionEngine, IFileService fileService, IHostApplicationLifetime hostApplicationLifetime)
+    public App(ILogger<App> logger, IConversionEngine conversionEngine, IFileService fileService)
     {
         _logger = logger;
         _conversionEngine = conversionEngine;
         _fileService = fileService;
-        _hostApplicationLifetime = hostApplicationLifetime;
     }
 
-
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public async Task RunAsync(string[] args, CancellationToken ct = default)
     {
-        _logger.LogInformation("{Class}.{Method}",nameof(App), nameof(StartAsync));
-        
         var supportedConversions = _conversionEngine.GetSupportedConversions();
-        
-        var files = _directory.GetFiles("*.*", SearchOption.AllDirectories).Where(x => !x.Name.Contains("ConvertX.To")).ToList();
 
-        foreach (var fileInfo in files)
+        var files = _directory
+            .GetFiles("*.*", SearchOption.AllDirectories)
+            .Where(x => !x.Name.Contains("ConvertX.To"))
+            .ToList();
+
+        var parallelOptions = new ParallelOptions
         {
-            await ConvertFileToAllSupportedFormatsAsync(fileInfo, supportedConversions);
-        }
-        
-        _hostApplicationLifetime.StopApplication();
+            CancellationToken = ct,
+            MaxDegreeOfParallelism = 8
+        };
+
+        await Parallel.ForEachAsync(files, parallelOptions,
+            async (file, ctx) => { await ConvertFileToAllSupportedFormatsAsync(file, supportedConversions); });
     }
 
-    private async Task ConvertFileToAllSupportedFormatsAsync(FileInfo fileInfo, SupportedConversions supportedConversions)
+    private async Task ConvertFileToAllSupportedFormatsAsync(FileInfo fileInfo,
+        SupportedConversions supportedConversions)
     {
         var sourceFormat = fileInfo.Extension.Replace(".", "");
         if (!supportedConversions.SourceFormatTo.ContainsKey(sourceFormat)) return;
@@ -48,16 +49,32 @@ public class App : IHostedService
         {
             _logger.LogInformation("Converting {fileName} to {targetFormat}", fileInfo.Name, targetFormat);
             var conversionOptions = new ConversionOptions();
-            var (convertedFileExtension, convertedStream) = await _conversionEngine.ConvertAsync(sourceFormat, targetFormat, fileInfo.OpenRead(), conversionOptions);
-            var fileName = targetFormat == convertedFileExtension
-                ? $"{fileInfo.Name}.ConvertX.To.{targetFormat}"
-                : $"{fileInfo.Name}.ConvertX.To.{targetFormat}.{convertedFileExtension}";
-            await _fileService.SaveFileAsync(Path.Combine(fileInfo.DirectoryName!, fileName), convertedStream);
+            try
+            {
+                var (convertedFileExtension, convertedStream) =
+                    await _conversionEngine.ConvertAsync(sourceFormat, targetFormat, fileInfo.OpenRead(),
+                        conversionOptions);
+                var fileName = GetConvertedFileName(fileInfo.Name, targetFormat, convertedFileExtension);
+                await _fileService.SaveFileAsync(Path.Combine(fileInfo.DirectoryName!, fileName), convertedStream);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "Error while attempting to convert {fileName} to {targetFormat}. Skipping file...",
+                    fileInfo.Name,
+                    targetFormat);
+            }
+            
             _logger.LogInformation("{fileName} successfully converted to {targetFormat}!", fileInfo.Name, targetFormat);
         }
     }
-    
-    
 
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    private static string GetConvertedFileName(string sourceFileName, string targetFormat,
+        string convertedFileExtension)
+    {
+        var fileName = targetFormat == convertedFileExtension
+            ? $"{sourceFileName}.ConvertX.To.{targetFormat}"
+            : $"{sourceFileName}.ConvertX.To.{targetFormat}.{convertedFileExtension}";
+        return fileName;
+    }
 }

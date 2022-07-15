@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 /*
- * This ConsoleUI.Core uses the conversion engine and related services directly and doesn't rely on the API.
+ * This ConsoleUI.Core uses the conversion engine and related services directly and doesn't use the API at all.
  * It references:
  * - ConvertX.To.Application
  * - ConvertX.To.Infrastructure.Shared
@@ -17,8 +17,9 @@ var host = Host.CreateDefaultBuilder(args)
     {
         services.AddApplication();
         services.AddSharedInfrastructure(context.Configuration);
-        services.AddHostedService<App>();
+        services.AddScoped<App>();
     })
     .Build();
 
-await host.RunAsync();
+var app = host.Services.GetRequiredService<App>();
+await app.RunAsync(args);

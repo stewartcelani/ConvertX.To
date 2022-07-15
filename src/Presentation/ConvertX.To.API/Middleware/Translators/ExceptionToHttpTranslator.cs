@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
+﻿using System.Net;
+using System.Text.Json;
 using ConvertX.To.API.Contracts.V1.Responses;
 using ConvertX.To.Application.Exceptions;
-using ConvertX.To.Application.Exceptions.Business;
 using Microsoft.AspNetCore.Http.Features;
 
 namespace ConvertX.To.API.Middleware.Translators;
@@ -15,15 +15,15 @@ public static class ExceptionToHttpTranslator
         
         var exceptionType = "Exception";
         var message = "Internal Server Error";
+        httpResponse.StatusCode = MapExceptionToStatusCode(exception);
 
-        if (exception is ConvertXToBusinessExceptionBase businessException)
+        if (exception is HttpResponseException httpResponseException)
         {
             exceptionType = exception.GetType().Name;
             message = exception.Message;
-            httpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = businessException.Reason;
+            httpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = httpResponseException.HttpResponseMessage.ReasonPhrase;
         }
 
-        httpResponse.StatusCode = MapExceptionToStatusCode(exception);
         httpResponse.Headers.Add("Exception-Type", exceptionType);
 
         var errorResponse = new ErrorResponse
@@ -48,11 +48,15 @@ public static class ExceptionToHttpTranslator
 
     private static int MapExceptionToStatusCode(Exception exception)
     {
+        if (exception is HttpResponseException httpResponseException)
+        {
+            return (int)httpResponseException.HttpResponseMessage.StatusCode;
+        }
+        
         return exception switch
         {
             UnsupportedConversionException => 415,
             ConversionNotFoundException => 404,
-            ConvertXToBusinessExceptionBase => 400,
             _ => 500
         };
     }
