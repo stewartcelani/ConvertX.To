@@ -265,3 +265,6 @@ __pycache__/
 logs/
 appsettings.secret.json
 .data
+.hide
+.hidden
+.secret

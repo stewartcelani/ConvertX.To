@@ -1,5 +1,6 @@
 using ConvertX.To.Application.Helpers;
 using ConvertX.To.ConsoleUI.API.ApiClient;
+using ConvertX.To.ConsoleUI.API.ApiClient.DelegatingHandlers;
 using ConvertX.To.ConsoleUI.API.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,13 +38,20 @@ public static class DependencyInjection
         AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy
             .TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(httpSettings.WaitAndRetryConfig.TimeoutSeconds));
 
+        /*services.AddTransient<ExceptionHandler>();*/
+        services.AddTransient<UnsuccessfulStatusCodeHandler>();
+
         services.AddRefitClient<IApiClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(httpSettings.BaseUrl))
+            /*.AddHttpMessageHandler<ExceptionHandler>()*/
+            .AddHttpMessageHandler<UnsuccessfulStatusCodeHandler>()
             .AddPolicyHandler(retryPolicy)
             .AddPolicyHandler(timeoutPolicy);
         
-        services.Decorate<IApiClient, ApiClient.ApiClient>();
+        /*
+            services.Decorate<IApiClient, ApiClient.ApiClient>();
+        */
 
-        services.AddHttpClient();
+        //services.AddHttpClient();
     }
 }

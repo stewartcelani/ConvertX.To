@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using ConvertX.To.Application.Exceptions.Technical;
 using ConvertX.To.Application.Interfaces;
@@ -5,7 +6,8 @@ using ConvertX.To.Domain.Settings;
 using Newtonsoft.Json;
 using Microsoft.Graph;
 using Azure.Identity;
-using ConvertX.To.Infrastructure.Http;
+using ConvertX.To.Application.Exceptions.Business;
+using ConvertX.To.Infrastructure.Shared.Http;
 using Microsoft.Extensions.Logging;
 using MimeTypes.Core;
 using Polly.Retry;
@@ -34,7 +36,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         _httpClientFactory = httpClientFactory;
         _msGraphSettings = msGraphSettings;
         _logger = logger;
-        _asyncRetryPolicy = HttpClientRetryPolicy.GetPolicy(_logger, 5, 2);
+        _asyncRetryPolicy = HttpClientRetryPolicy.GetPolicy(_logger, 3, 2);
     }
     
     public async Task<string> UploadFileAsync(string sourceFormat, Stream source)
@@ -63,6 +65,8 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         if (targetFormat.Equals("jpg"))
             requestUrl += "&width=1920&height=1080";
         var response = await _asyncRetryPolicy.ExecuteAsync(async () => await httpClient.GetAsync(requestUrl));
+        if (response.StatusCode == HttpStatusCode.NotAcceptable)
+            throw new UnsupportedConversionException();
         if (!response.IsSuccessStatusCode)
             throw new MsGraphGetFileInTargetFormatException(
                 $"Downloading converted file failed with status {response.StatusCode} and message {await response.Content.ReadAsStringAsync()}");

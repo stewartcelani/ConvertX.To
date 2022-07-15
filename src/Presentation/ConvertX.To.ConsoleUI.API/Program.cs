@@ -12,8 +12,10 @@ var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         services.AddConsoleUiApiServices(context.Configuration);
-        services.AddHostedService<App>();
+        services.AddScoped<App>();
     })
     .Build();
 
-await host.RunAsync();
+var app = host.Services.GetRequiredService<App>();
+
+await app.RunAsync();

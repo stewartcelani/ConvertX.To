@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+/*using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.Infrastructure.Http;
 
@@ -25,4 +25,4 @@ class LoggerHandler: DelegatingHandler
             throw;
         }
     }
-}
+}*/

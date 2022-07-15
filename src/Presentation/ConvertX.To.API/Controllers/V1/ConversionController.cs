@@ -3,6 +3,7 @@ using ConvertX.To.API.Contracts.V1;
 using ConvertX.To.API.Contracts.V1.Responses;
 using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Exceptions;
+using ConvertX.To.Application.Exceptions.Business;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain.Entities;
 using ConvertX.To.Domain.Settings;
@@ -32,6 +33,8 @@ public class ConversionController : ControllerBase
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> Convert([FromRoute] string targetFormat, [FromForm] IFormFile file)
     {
+        if (file.Length == 0) throw new InvalidFileLengthException();
+        
         var requestDate = DateTimeOffset.Now;
         var sourceFormat = Path.GetExtension(file.FileName).ToLower().Replace(".", "");
 

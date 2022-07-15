@@ -3,7 +3,6 @@ using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Application.Validators;
 using ConvertX.To.Domain.Settings;
-using ConvertX.To.Infrastructure.Http;
 using ConvertX.To.Infrastructure.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
