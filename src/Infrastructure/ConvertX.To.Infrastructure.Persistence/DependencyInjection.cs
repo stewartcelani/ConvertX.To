@@ -2,6 +2,9 @@ using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Validators;
 using ConvertX.To.Domain.Settings;
 using ConvertX.To.Infrastructure.Persistence.Contexts;
+using ConvertX.To.Infrastructure.Persistence.Cron;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,15 +17,28 @@ public static class DependencyInjection
         var ttlSettings =
             SettingsBinder.BindAndValidate<TimeToLiveSettings, TimeToLiveSettingsValidator>(configuration);
         services.AddSingleton(ttlSettings);
-    
-        var databaseSettings = SettingsBinder.BindAndValidate<DatabaseSettings, DatabaseSettingsValidator>(configuration); 
+
+        var databaseSettings =
+            SettingsBinder.BindAndValidate<DatabaseSettings, DatabaseSettingsValidator>(configuration);
         services.AddSingleton(databaseSettings);
 
-        services.AddDbContext<ApplicationDbContext>(); // Config is within class as DI is required
+        services.AddScoped<ApplicationDbContext>(); // Config is within class as DI is required
         
+        services.AddHangfire(x => x.UseSqlServerStorage(databaseSettings.ConnectionString,
+            new SqlServerStorageOptions
+            {
+                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                QueuePollInterval = TimeSpan.Zero,
+                UseRecommendedIsolationLevel = true,
+                DisableGlobalLocks = true,
+            }));
+        services.AddHangfireServer();
+
+        services.AddScoped<ExpireAndCleanUpConversions>();
+
         /*#region Repositories
         services.AddTransient<IConversionRepository, ConversionRepositoryAsync>();
         #endregion*/
     }
-
 }

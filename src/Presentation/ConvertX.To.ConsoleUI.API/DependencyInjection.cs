@@ -33,28 +33,21 @@ public static class DependencyInjection
         
         AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
             .HandleTransientHttpError()
-            .Or<TimeoutRejectedException>() // Thrown by Polly's TimeoutPolicy if the inner call gets timeout.
+            .Or<TimeoutRejectedException>()
             .WaitAndRetryAsync(httpSettings.WaitAndRetryConfig.RetryAttempts, _ => TimeSpan.FromSeconds(httpSettings.WaitAndRetryConfig.RetrySeconds));
         
         AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy
             .TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(httpSettings.WaitAndRetryConfig.TimeoutSeconds));
 
-        /*services.AddTransient<ExceptionHandler>();*/
         services.AddTransient<UnsuccessfulStatusCodeHandler>();
 
         services.AddRefitClient<IApiClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(httpSettings.BaseUrl))
-            /*.AddHttpMessageHandler<ExceptionHandler>()*/
             .AddHttpMessageHandler<UnsuccessfulStatusCodeHandler>()
             .AddPolicyHandler(retryPolicy)
             .AddPolicyHandler(timeoutPolicy);
 
         services.AddScoped<IConversionService, ConversionService>();
 
-        /*
-            services.Decorate<IApiClient, ApiClient.ApiClient>();
-        */
-
-        //services.AddHttpClient();
     }
 }

@@ -24,7 +24,6 @@
       <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
       <PackageReference Include="Refit" Version="6.3.2" />
       <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
-      <PackageReference Include="Scrutor" Version="4.2.0" />
       <PackageReference Include="Serilog" Version="2.11.0" />
       <PackageReference Include="Serilog.Exceptions" Version="8.3.0" />
       <PackageReference Include="Serilog.Exceptions.Refit" Version="8.3.0" />

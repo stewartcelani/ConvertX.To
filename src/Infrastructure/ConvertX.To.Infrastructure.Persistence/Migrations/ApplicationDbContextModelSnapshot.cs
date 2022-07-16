@@ -33,7 +33,9 @@ namespace ConvertX.To.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("datetimeoffset");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTimeOffset?>("DateDeleted")
                         .HasColumnType("datetimeoffset");
@@ -42,7 +44,9 @@ namespace ConvertX.To.Infrastructure.Persistence.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Downloads")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("FileNameWithoutExtension")
                         .IsRequired()

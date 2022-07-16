@@ -3,6 +3,7 @@ using ConvertX.To.API.Middleware;
 using ConvertX.To.Application;
 using ConvertX.To.Infrastructure.Persistence;
 using ConvertX.To.Infrastructure.Shared;
+using Hangfire;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +21,9 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 await app.RunPendingMigrationsAsync();
-await app.CleanUpExpiredConversions();
+
+app.ScheduleRecurringJobs();
+app.UseHangfireDashboard();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -34,7 +37,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseAuthorization();
-app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHangfireDashboard();
+});
 
 app.Run();

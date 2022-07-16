@@ -7,7 +7,7 @@ public class TimeToLiveSettingsValidator :AbstractValidator<TimeToLiveSettings>
 {
     public TimeToLiveSettingsValidator()
     {
-        RuleFor(x => x.TTL)
+        RuleFor(x => x.TimeToLiveInMinutes)
             .GreaterThanOrEqualTo(10);
     }
 }

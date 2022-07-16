@@ -5,7 +5,10 @@ using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain.Settings;
 using ConvertX.To.Infrastructure.Persistence.Contexts;
+using ConvertX.To.Infrastructure.Persistence.Cron;
+using ConvertX.To.Infrastructure.Persistence.Cron.Helpers;
 using FluentValidation.AspNetCore;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
@@ -16,14 +19,15 @@ public static class DependencyInjection
 {
     public static void AddAspNetCoreServices(this IServiceCollection services)
     {
-        services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true); // Using custom filter
+        services.Configure<ApiBehaviorOptions>(options =>
+            options.SuppressModelStateInvalidFilter = true); // Using custom filter
 
         services.AddControllers(options =>
             options.Filters.RegisterFiltersFromAssembly(Assembly.GetExecutingAssembly()));
 
         services.AddFluentValidation(options =>
             options.RegisterValidatorsFromAssemblyContaining<ConvertXToExceptionBase>());
-        
+
         services.AddTransient<IUriService>(provider =>
         {
             var accessor = provider.GetRequiredService<IHttpContextAccessor>();
@@ -34,13 +38,13 @@ public static class DependencyInjection
 
         services.AddTransient<IIpAddressService, IpAddressService>();
     }
-    
+
     private static void RegisterFiltersFromAssembly(this FilterCollection filterCollection, Assembly assembly)
     {
         var filters = Reflection.GetConcreteTypesInAssembly<IFilterMetadata>(assembly);
         filters.ForEach(filter => filterCollection.Add(filter));
     }
- 
+
     public static async Task RunPendingMigrationsAsync(this WebApplication app)
     {
         using var serviceScope = app.Services.CreateScope();
@@ -50,23 +54,12 @@ public static class DependencyInjection
             if ((await dataContext.Database.GetPendingMigrationsAsync()).Any())
                 await dataContext.Database.MigrateAsync();
     }
-    
-    public static async Task CleanUpExpiredConversions(this WebApplication app)
+
+    public static void ScheduleRecurringJobs(this WebApplication app)
     {
         using var serviceScope = app.Services.CreateScope();
-        await using var dataContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var recurringJobManager = serviceScope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
         
-        var ttlSettings = serviceScope.ServiceProvider.GetRequiredService<TimeToLiveSettings>();
-        
-        var conversionService = serviceScope.ServiceProvider.GetRequiredService<IConversionService>();
-        // TODO: Based on DateCreated do a soft delete on Conversion DbSet 
-        //await conversionService.ExpireConversions(ttlSettings.TTL);
-        
-        // TODO: A way to loop through .data RootDirectory and delete anything not within TTL while remaining not tightly coupled and not violtating SRP... do we pass conversionService a func/delegate/interface?
-        /*var fileService = serviceScope.ServiceProvider.GetRequiredService<IFileService>();
-        await fileService.DeleteAnyFoldersNotWithinTTL(ttlSettings.TTL);*/
-        
-
-
+        recurringJobManager.AddOrUpdate<ExpireAndCleanUpConversions>(nameof(ExpireAndCleanUpConversions), x => x.RunAsync(), CronExpressionHelper.EverySeconds(15));
     }
 }
