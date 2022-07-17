@@ -31,7 +31,7 @@ public class ConversionEngine : IConversionEngine
     public async Task<(string, Stream)> ConvertAsync(string sourceFormat, string targetFormat, Stream source,
         ConversionOptions conversionOptions)
     {
-        _logger.LogInformation(
+        _logger.LogDebug(
             "Processing new request to convert {sourceFormat} to {targetFormat}", sourceFormat, targetFormat);
 
         var converter = _converterFactory.Create(sourceFormat, targetFormat);
@@ -41,21 +41,12 @@ public class ConversionEngine : IConversionEngine
 
     public SupportedConversions GetSupportedConversions()
     {
-        var converters = Reflection.GetConcreteTypesInAssembly<IConverter>(Assembly.GetExecutingAssembly());
-
         var convertersByTargetFormat = new Dictionary<string, List<string>>();
         var convertersBySourceFormat = new Dictionary<string, List<string>>();
         
-        foreach (var converter in converters)
+        foreach (var converter in Reflection.GetConcreteTypesInAssembly<IConverter>(Assembly.GetExecutingAssembly()))
         {
-            var s = converter.Name.ToLower().Replace("converter", "");
-            var sourceFormat = s.Split("to").First();
-            var targetFormat = s.Split("to").Last();
-            if (!convertersByTargetFormat.ContainsKey(targetFormat)) convertersByTargetFormat[targetFormat] = new List<string>();
-            convertersByTargetFormat[targetFormat].Add(sourceFormat);
-            if (!convertersBySourceFormat.ContainsKey(sourceFormat))
-                convertersBySourceFormat[sourceFormat] = new List<string>();
-            convertersBySourceFormat[sourceFormat].Add(targetFormat);
+            MapSupportedConversionsForConverter(converter, convertersByTargetFormat, convertersBySourceFormat);
         }
 
         return new SupportedConversions
@@ -65,5 +56,24 @@ public class ConversionEngine : IConversionEngine
         };
     }
 
-    
+    private static void MapSupportedConversionsForConverter(Type converter, IDictionary<string, List<string>> convertersByTargetFormat,
+        IDictionary<string, List<string>> convertersBySourceFormat)
+    {
+        var (sourceFormat, targetFormat) = ParseFormats(converter.Name);
+        
+        if (!convertersByTargetFormat.ContainsKey(targetFormat))
+            convertersByTargetFormat[targetFormat] = new List<string>();
+        convertersByTargetFormat[targetFormat].Add(sourceFormat);
+        
+        if (!convertersBySourceFormat.ContainsKey(sourceFormat))
+            convertersBySourceFormat[sourceFormat] = new List<string>();
+        convertersBySourceFormat[sourceFormat].Add(targetFormat);
+    }
+
+
+    private static (string, string) ParseFormats(string converterName)
+    {
+        var s = converterName.ToLower().Replace("converter", "");
+        return (s.Split("to").First(), s.Split("to").Last());
+    }
 }

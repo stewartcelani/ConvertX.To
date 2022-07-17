@@ -2,7 +2,9 @@
 
 public interface IFileService
 {
-    Task SaveFileAsync(string path, Stream stream);
+    DirectoryInfo GetDirectory(string path);
+    DirectoryInfo GetRootDirectory();
     void DeleteDirectory(string path);
     Stream GetFile(string path);
+    Task SaveFileAsync(string path, Stream stream);
 }

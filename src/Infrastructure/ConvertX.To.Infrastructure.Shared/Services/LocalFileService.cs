@@ -10,7 +10,6 @@ public class LocalFileService : IFileService
     public LocalFileService(FileServiceSettings fileServiceSettings)
     {
         _fileServiceSettings = fileServiceSettings;
-        
     }
 
     public async Task SaveFileAsync(string path, Stream stream)
@@ -20,6 +19,15 @@ public class LocalFileService : IFileService
         await stream.CopyToAsync(fileStream);
         await stream.DisposeAsync();
         await fileStream.DisposeAsync();
+    }
+
+    public DirectoryInfo GetDirectory(string path) => new (CombinePath(path));
+
+    public DirectoryInfo GetRootDirectory()
+    {
+        if (string.IsNullOrEmpty(_fileServiceSettings.RootDirectory))
+            throw new NullReferenceException(_fileServiceSettings.RootDirectory);
+        return GetDirectory(_fileServiceSettings.RootDirectory);
     }
 
     public void DeleteDirectory(string path) => Directory.Delete(CombinePath(path), true);
@@ -36,6 +44,6 @@ public class LocalFileService : IFileService
         if (directory is not null && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
     }
 
-    private string CombinePath(string path) => Path.Combine(_fileServiceSettings.RootDirectory, path);
+    private string CombinePath(string path) => path.Equals(_fileServiceSettings.RootDirectory) ? path : Path.Combine(_fileServiceSettings.RootDirectory, path);
 
 }

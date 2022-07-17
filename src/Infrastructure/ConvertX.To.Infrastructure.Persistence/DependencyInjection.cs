@@ -15,7 +15,7 @@ public static class DependencyInjection
     public static void AddPersistenceInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         var ttlSettings =
-            SettingsBinder.BindAndValidate<TimeToLiveSettings, TimeToLiveSettingsValidator>(configuration);
+            SettingsBinder.BindAndValidate<ConversionLifecycleManagerSettings, ConversionLifecycleManagerSettingsValidator>(configuration);
         services.AddSingleton(ttlSettings);
 
         var databaseSettings =
@@ -35,7 +35,7 @@ public static class DependencyInjection
             }));
         services.AddHangfireServer();
 
-        services.AddScoped<ExpireAndCleanUpConversions>();
+        services.AddScoped<ConversionLifecycleManagerScheduledTask>();
 
         /*#region Repositories
         services.AddTransient<IConversionRepository, ConversionRepositoryAsync>();

@@ -3,11 +3,11 @@ using FluentValidation;
 
 namespace ConvertX.To.Application.Validators;
 
-public class TimeToLiveSettingsValidator :AbstractValidator<TimeToLiveSettings>
+public class ConversionLifecycleManagerSettingsValidator :AbstractValidator<ConversionLifecycleManagerSettings>
 {
-    public TimeToLiveSettingsValidator()
+    public ConversionLifecycleManagerSettingsValidator()
     {
         RuleFor(x => x.TimeToLiveInMinutes)
-            .GreaterThanOrEqualTo(10);
+            .GreaterThanOrEqualTo(5);
     }
 }

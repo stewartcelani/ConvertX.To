@@ -18,14 +18,16 @@ public class ConversionController : ControllerBase
     private readonly IUriService _uriService;
     private readonly IConversionEngine _conversionEngine;
     private readonly IFileService _fileService;
+    private readonly ILogger<ConversionController> _logger;
 
     public ConversionController(IConversionService conversionService,
-        IUriService uriService, IConversionEngine conversionEngine, IFileService fileService)
+        IUriService uriService, IConversionEngine conversionEngine, IFileService fileService, ILogger<ConversionController> logger)
     {
         _conversionService = conversionService;
         _uriService = uriService;
         _conversionEngine = conversionEngine;
         _fileService = fileService;
+        _logger = logger;
     }
 
     [HttpPost(ApiRoutesV1.Convert.Post)]
@@ -33,6 +35,8 @@ public class ConversionController : ControllerBase
     public async Task<IActionResult> Convert([FromRoute] string targetFormat, [FromForm] IFormFile file)
     {
         if (file.Length == 0) throw new InvalidFileLengthException();
+        
+        _logger.LogInformation("Conversion request: {fileName} to {targetFormat}", file.FileName, targetFormat);
         
         var requestDate = DateTimeOffset.Now;
         var sourceFormat = Path.GetExtension(file.FileName).ToLower().Replace(".", "");

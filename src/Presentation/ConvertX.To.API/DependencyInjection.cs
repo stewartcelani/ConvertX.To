@@ -3,7 +3,6 @@ using ConvertX.To.API.Services;
 using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces;
-using ConvertX.To.Domain.Settings;
 using ConvertX.To.Infrastructure.Persistence.Contexts;
 using ConvertX.To.Infrastructure.Persistence.Cron;
 using ConvertX.To.Infrastructure.Persistence.Cron.Helpers;
@@ -60,6 +59,6 @@ public static class DependencyInjection
         using var serviceScope = app.Services.CreateScope();
         var recurringJobManager = serviceScope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
         
-        recurringJobManager.AddOrUpdate<ExpireAndCleanUpConversions>(nameof(ExpireAndCleanUpConversions), x => x.RunAsync(), CronExpressionHelper.EverySeconds(15));
+        recurringJobManager.AddOrUpdate<ConversionLifecycleManagerScheduledTask>(nameof(ConversionLifecycleManagerScheduledTask), x => x.RunAsync(), CronExpressionHelper.EveryMinutes(5));
     }
 }

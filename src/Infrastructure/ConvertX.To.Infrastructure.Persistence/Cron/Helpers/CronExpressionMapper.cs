@@ -4,29 +4,30 @@ public static class CronExpressionHelper
 {
     public static string EverySeconds(int seconds)
     {
-        if (seconds is < 1 or > 59) throw new ArgumentOutOfRangeException(nameof(seconds), seconds, "Valid range: 1-59");
-
+        ThrowIfOutOfRange(seconds);
         return $"*/{seconds} * * * * *";
     }
     
-    public static string EveryMinutes(int hours)
+    public static string EveryMinutes(int minutes)
     {
-        if (hours is < 1 or > 59) throw new ArgumentOutOfRangeException(nameof(hours), hours, "Valid range: 1-59");
-
-        return $"* */{hours} * * * *";
+        ThrowIfOutOfRange(minutes);
+        return $"* */{minutes} * * * *";
     }
     
     public static string EveryHours(int hours)
     {
-        if (hours is < 1 or > 59) throw new ArgumentOutOfRangeException(nameof(hours), hours, "Valid range: 1-59");
-
+        ThrowIfOutOfRange(hours);
         return $"* * */{hours} * * *";
     }
     
     public static string EveryDays(int days)
     {
-        if (days is < 1 or > 59) throw new ArgumentOutOfRangeException(nameof(days), days, "Valid range: 1-59");
-
+        ThrowIfOutOfRange(days);
         return $"* * * */{days} * *";
+    }
+    
+    private static void ThrowIfOutOfRange(int n)
+    {
+        if (n is < 1 or > 59) throw new ArgumentOutOfRangeException(nameof(n), n, "Valid range: 1-59");
     }
 }
