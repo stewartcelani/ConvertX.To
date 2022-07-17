@@ -1,5 +1,9 @@
+using ConvertX.To.Application.Helpers;
+using ConvertX.To.Application.Validators;
 using ConvertX.To.Domain.Settings;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.Infrastructure.Persistence.Contexts.Tools;
@@ -12,12 +16,18 @@ public class DesignTimeContextFactory : IDesignTimeDbContextFactory<ApplicationD
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         ILogger<ApplicationDbContext> logger = new Logger<ApplicationDbContext>(new LoggerFactory());
+        
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(@"C:\dev\convertx.to\src\Presentation\ConvertX.To.API")
+            .AddJsonFile("appsettings.json")
+            .Build();
 
-        var databaseSettings = new DatabaseSettings
-        {
-            ConnectionString = "Server=mssql;Database=ConvertXTo;User=sa;Password=Password1!" 
-        };
+        var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
+        
+        var databaseSettings = SettingsBinder.BindAndValidate<DatabaseSettings, DatabaseSettingsValidator>(configuration);
+        
+        builder.UseNpgsql(databaseSettings.ConnectionString);
 
-        return new ApplicationDbContext(databaseSettings, logger);
+        return new ApplicationDbContext(builder.Options, databaseSettings, logger);
     }
 }

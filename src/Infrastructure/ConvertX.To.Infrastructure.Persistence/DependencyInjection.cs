@@ -4,6 +4,7 @@ using ConvertX.To.Domain.Settings;
 using ConvertX.To.Infrastructure.Persistence.Contexts;
 using ConvertX.To.Infrastructure.Persistence.Cron;
 using Hangfire;
+using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,15 +25,7 @@ public static class DependencyInjection
 
         services.AddScoped<ApplicationDbContext>(); // Config is within class as DI is required
         
-        services.AddHangfire(x => x.UseSqlServerStorage(databaseSettings.ConnectionString,
-            new SqlServerStorageOptions
-            {
-                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                QueuePollInterval = TimeSpan.Zero,
-                UseRecommendedIsolationLevel = true,
-                DisableGlobalLocks = true,
-            }));
+        services.AddHangfire(x => x.UsePostgreSqlStorage(databaseSettings.ConnectionString));
         services.AddHangfireServer();
 
         services.AddScoped<ConversionLifecycleManagerScheduledTask>();

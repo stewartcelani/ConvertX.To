@@ -28,19 +28,17 @@ services:
       - local
     volumes:
       - ~/.aspnet/https:/https:ro
-  
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    user: root
-    container_name: mssql
+    
+  postgres:
+    image: postgres:latest
+    container_name: postgres
     environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=Password1!
-      - MSSQL_TCP_PORT=1433
+      - POSTGRES_PASSWORD=kYsiW8133PNw
     restart: always
     ports:
-      - "1433:1433"
+      - "5432:5432"
     networks:
       - local
     volumes:
-      - .mssql/data:/var/opt/mssql/data
+      - .postgres/:/var/lib/postgresql/data/
+      

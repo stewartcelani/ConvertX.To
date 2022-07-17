@@ -36,6 +36,6 @@ public class ConversionConfiguration : IEntityTypeConfiguration<Conversion>
             .HasDefaultValue(null);
 
         builder.Property(x => x.DateCreated)
-            .HasDefaultValueSql("getdate()");
+            .HasDefaultValueSql("now()");
     }
 }

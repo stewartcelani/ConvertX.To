@@ -2,6 +2,7 @@ using System.Reflection;
 using ConvertX.To.Domain.Common;
 using ConvertX.To.Domain.Entities;
 using ConvertX.To.Domain.Settings;
+using ConvertX.To.Infrastructure.Persistence.Contexts.ValueConverters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -28,6 +29,12 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Conversion> Conversions { get; set; }
     
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder
+            .Properties<DateTimeOffset>()
+            .HaveConversion<DateTimeOffsetConverter>();
+    }    
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var now = DateTimeOffset.Now;
@@ -50,7 +57,6 @@ public class ApplicationDbContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        // TODO: Do a configuration for Conversions to set up a calculated column calculating seconds between RequestDate and RequestCompletedDate
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         base.OnModelCreating(builder);
@@ -66,15 +72,15 @@ public class ApplicationDbContext : DbContext
         {
             if (_databaseSettings.EnableSensitiveDataLogging)
             {
-                optionsBuilder.UseSqlServer(_databaseSettings.ConnectionString,
-                    sqlOptions => sqlOptions.EnableRetryOnFailure());
-            }
-            else
-            {
-                optionsBuilder.UseSqlServer(_databaseSettings.ConnectionString,
+                optionsBuilder.UseNpgsql(_databaseSettings.ConnectionString,
                         sqlOptions => sqlOptions.EnableRetryOnFailure())
                     .EnableSensitiveDataLogging()
                     .LogTo(s => _logger.LogTrace(s));
+            }
+            else
+            {
+                optionsBuilder.UseNpgsql(_databaseSettings.ConnectionString,
+                    sqlOptions => sqlOptions.EnableRetryOnFailure());
             }
         }
     }
