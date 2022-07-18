@@ -23,7 +23,7 @@ services:
       - "8000:80"
       - "8001:443"
     depends_on:
-      - mssql
+      - postgres
     networks:
       - local
     volumes:

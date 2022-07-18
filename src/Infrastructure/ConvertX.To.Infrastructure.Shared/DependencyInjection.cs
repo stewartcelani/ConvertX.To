@@ -38,7 +38,7 @@ public static class DependencyInjection
         services.AddScoped<IConverterFactory, ConverterFactory>();
         services.AddScoped<IConversionEngine, ConversionEngine>();
         services.AddScoped<IConversionService, ConversionService>();
-        services.AddScoped<IConversionLifecycleManager, ConversionLifecycleManager>();
+        services.AddScoped<IConversionLifecycleManagerService, ConversionLifecycleManagerService>();
     }
     
 }

@@ -33,8 +33,4 @@
       <ProjectReference Include="..\ConvertX.To.Infrastructure.Persistence\ConvertX.To.Infrastructure.Persistence.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Settings" />
-    </ItemGroup>
-
 </Project>

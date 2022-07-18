@@ -2,7 +2,7 @@ using ConvertX.To.Domain.Common;
 
 namespace ConvertX.To.Domain.Entities;
 
-public sealed class Conversion : AuditableBaseEntity<Guid>, ISoftDelete
+public sealed class Conversion : AuditableBaseEntity<Guid>, ISoftDelete, IAggregateRoot
 {
     #region Database Fields
     

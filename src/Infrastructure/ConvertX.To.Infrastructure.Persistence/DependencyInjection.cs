@@ -1,8 +1,11 @@
 using ConvertX.To.Application.Helpers;
+using ConvertX.To.Application.Interfaces.Repositories;
 using ConvertX.To.Application.Validators;
+using ConvertX.To.Domain.Entities;
 using ConvertX.To.Domain.Settings;
 using ConvertX.To.Infrastructure.Persistence.Contexts;
 using ConvertX.To.Infrastructure.Persistence.Cron;
+using ConvertX.To.Infrastructure.Persistence.Repositories;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
@@ -25,13 +28,16 @@ public static class DependencyInjection
 
         services.AddScoped<ApplicationDbContext>(); // Config is within class as DI is required
         
+        
+        
         services.AddHangfire(x => x.UsePostgreSqlStorage(databaseSettings.ConnectionString));
         services.AddHangfireServer();
 
-        services.AddScoped<ConversionLifecycleManagerScheduledTask>();
+        services.AddScoped<ConversionLifecycleManagerServiceScheduledTask>();
 
-        /*#region Repositories
-        services.AddTransient<IConversionRepository, ConversionRepositoryAsync>();
-        #endregion*/
+        #region Repositories
+        services.AddTransient<IReadOnlyConversionRepository, ConversionReadOnlyRepository>();
+        services.AddTransient<IConversionRepository, ConversionRepository>();
+        #endregion
     }
 }

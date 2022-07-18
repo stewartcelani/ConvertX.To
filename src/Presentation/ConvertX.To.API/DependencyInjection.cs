@@ -59,6 +59,6 @@ public static class DependencyInjection
         using var serviceScope = app.Services.CreateScope();
         var recurringJobManager = serviceScope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
         
-        recurringJobManager.AddOrUpdate<ConversionLifecycleManagerScheduledTask>(nameof(ConversionLifecycleManagerScheduledTask), x => x.RunAsync(), CronExpressionHelper.EveryMinutes(5));
+        recurringJobManager.AddOrUpdate<ConversionLifecycleManagerServiceScheduledTask>(nameof(ConversionLifecycleManagerServiceScheduledTask), x => x.RunAsync(), CronExpressionHelper.EveryMinutes(5));
     }
 }

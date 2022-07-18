@@ -1,4 +1,3 @@
-using System.Net;
 using System.Net.Http.Headers;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain.Settings;
@@ -24,11 +23,10 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly MsGraphSettings _msGraphSettings;
     private readonly ILogger<MsGraphFileConversionService> _logger;
+    private readonly AsyncRetryPolicy _asyncRetryPolicy;
 
     private HttpClient? _httpClient;
     private GraphServiceClient? _graphServiceClient;
-
-    private AsyncRetryPolicy _asyncRetryPolicy;
 
     public MsGraphFileConversionService(IHttpClientFactory httpClientFactory, MsGraphSettings msGraphSettings, ILogger<MsGraphFileConversionService> logger)
     {
@@ -59,25 +57,26 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
     public async Task<Stream> GetFileInTargetFormatAsync(string fileId, string targetFormat)
     {
         var httpClient = await CreateAuthorizedHttpClient();
+        
         var requestUrl = $"{_msGraphSettings.GraphEndpoint}/{fileId}/content?format={targetFormat}";
+        
         if (targetFormat.Equals("jpg"))
             requestUrl += "&width=1920&height=1080";
+        
         var response = await _asyncRetryPolicy.ExecuteAsync(async () => await httpClient.GetAsync(requestUrl));
-        if (!response.IsSuccessStatusCode)
+        
+        if (response.IsSuccessStatusCode) return await response.Content.ReadAsStreamAsync();
+        
+        try
         {
-            try
-            {
-                await DeleteFileAsync(fileId);
-            }
-            catch (MsGraphDeleteFileException ex)
-            {
-                throw new MsGraphGetFileInTargetFormatException(response, ex);
-            }
-            
-            throw new MsGraphGetFileInTargetFormatException(response);
+            await DeleteFileAsync(fileId);
+        }
+        catch (MsGraphDeleteFileException ex)
+        {
+            throw new MsGraphGetFileInTargetFormatException(response, ex);
         }
             
-        return await response.Content.ReadAsStreamAsync();
+        throw new MsGraphGetFileInTargetFormatException(response);
     }
 
     public async Task DeleteFileAsync(string fileId)
