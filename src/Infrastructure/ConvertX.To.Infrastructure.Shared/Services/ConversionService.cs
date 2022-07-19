@@ -32,7 +32,7 @@ public class ConversionService : IConversionService
     public async Task ExpireConversions(int timeToLiveInMinutes)
     {
         var timeToLive = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(timeToLiveInMinutes));
-        var conversions = (await _conversionRepository.GetOlderThanAsync(timeToLive)).ToList();
+        var conversions = (await _conversionRepository.GetAsync(x => x.DateDeleted == null & x.DateCreated < timeToLive)).ToList();
         var now = DateTimeOffset.Now;
         foreach (var conversion in conversions)
         {
@@ -48,10 +48,14 @@ public class ConversionService : IConversionService
     /// <summary>
     /// Gets all non-expired/soft-deleted conversions
     /// </summary>
-    public async Task<IEnumerable<Conversion>> GetAllAsync() => await _conversionRepository.GetAllAsync();
+    public async Task<IEnumerable<Conversion>> GetAllAsync() => await _conversionRepository.GetAsync(x => x.DateDeleted == null);
 
     /// <summary>
     /// Gets a list of ids of non-expired/soft-deleted conversions 
     /// </summary>
-    public async Task<IEnumerable<Guid>> GetAllIdsAsync() => await _conversionRepository.GetAllIdsAsync();
+    public async Task<IEnumerable<Guid>> GetAllIdsAsync()
+    {
+        var conversions = await _conversionRepository.GetAsync(x => x.DateDeleted == null);
+        return conversions.Select(x => x.Id);
+    }
 }

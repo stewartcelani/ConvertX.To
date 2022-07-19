@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Domain.Common;
 using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.Application.Converters;

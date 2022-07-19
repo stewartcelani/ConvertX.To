@@ -1,12 +1,10 @@
-﻿using System.Reflection;
-using ConvertX.To.API.Contracts.V1;
+﻿using ConvertX.To.API.Contracts.V1;
+using ConvertX.To.API.Contracts.V1.Mappers;
 using ConvertX.To.API.Contracts.V1.Responses;
 using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain.Entities;
-using ConvertX.To.Domain.Settings;
-using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConvertX.To.API.Controllers.V1;
@@ -59,7 +57,7 @@ public class ConversionController : ControllerBase
         await _fileService.SaveFileAsync(Path.Combine(conversion.Id.ToString(), conversion.ConvertedFileName), convertedStream);
         await convertedStream.DisposeAsync();
         
-        return Created(_uriService.GetFileUri(conversion.Id), conversion.Adapt<ConversionResponse>());
+        return Created(_uriService.GetFileUri(conversion.Id), conversion.ToConversionResponse());
     }
     
     /// <summary>
@@ -68,6 +66,6 @@ public class ConversionController : ControllerBase
     [HttpGet(ApiRoutesV1.Convert.Get)]
     public IActionResult GetSupportedConversions()
     {
-        return Ok(_conversionEngine.GetSupportedConversions().Adapt<SupportedConversionsResponse>());
+        return Ok(_conversionEngine.GetSupportedConversions().ToSupportedConversionsResponse());
     }
 }

@@ -36,7 +36,6 @@ public static class DependencyInjection
         services.AddScoped<ConversionLifecycleManagerServiceScheduledTask>();
 
         #region Repositories
-        services.AddTransient<IReadOnlyConversionRepository, ConversionReadOnlyRepository>();
         services.AddTransient<IConversionRepository, ConversionRepository>();
         #endregion
     }
