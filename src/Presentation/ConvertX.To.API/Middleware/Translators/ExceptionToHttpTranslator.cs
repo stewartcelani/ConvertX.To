@@ -11,33 +11,17 @@ public static class ExceptionToHttpTranslator
     public static async Task Translate(HttpContext httpContext, Exception exception)
     {
         var httpResponse = httpContext.Response;
+
+        var statusCode = MapExceptionToHttpStatusCode(exception);
+        
+        httpResponse.StatusCode = (int)statusCode;
+
+        if (statusCode is HttpStatusCode.InternalServerError) await httpResponse.CompleteAsync();
+
+        var errorResponse = MapExceptionToErrorResponse(exception);
+
         httpContext.Response.ContentType = "application/json";
         
-        var exceptionType = "Exception";
-        var message = "Internal Server Error";
-        httpResponse.StatusCode = MapExceptionToStatusCode(exception);
-
-        if (exception is HttpResponseException httpResponseException)
-        {
-            exceptionType = exception.GetType().Name;
-            message = exception.Message;
-            httpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = httpResponseException.HttpResponseMessage.ReasonPhrase;
-        }
-
-        httpResponse.Headers.Add("Exception-Type", exceptionType);
-
-        var errorResponse = new ErrorResponse
-        {
-            Errors = new List<ErrorResponseModel>
-            {
-                new()
-                {
-                    Error = exceptionType,
-                    Message = message
-                }
-            }
-        };
-
         var jsonErrorResponse = JsonSerializer.Serialize(errorResponse, new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -45,19 +29,30 @@ public static class ExceptionToHttpTranslator
 
         await httpResponse.WriteAsync(jsonErrorResponse);
     }
-
-    private static int MapExceptionToStatusCode(Exception exception)
+    
+    private static HttpStatusCode MapExceptionToHttpStatusCode(Exception exception)
     {
-        if (exception is HttpResponseException httpResponseException)
-        {
-            return (int)httpResponseException.HttpResponseMessage.StatusCode;
-        }
-        
+        if (exception is not IBusinessException) return HttpStatusCode.InternalServerError;
+
         return exception switch
         {
-            UnsupportedConversionException => 415,
-            ConversionNotFoundException => 404,
-            _ => 500
+            UnsupportedConversionException => HttpStatusCode.UnsupportedMediaType,
+            ConversionNotFoundException => HttpStatusCode.NotFound,
+            ConvertedFileGoneException => HttpStatusCode.Gone,
+            InvalidFileLengthException => HttpStatusCode.BadRequest,
+            _ => throw new ArgumentOutOfRangeException(nameof(exception))
         };
     }
+
+    private static ErrorResponse MapExceptionToErrorResponse(Exception exception)
+    {
+        return new ErrorResponse
+        {
+            Errors = new List<ErrorResponseModel>()
+            {
+                new (exception.GetType().Name, exception.Message)
+            }
+        };
+    }
+    
 }

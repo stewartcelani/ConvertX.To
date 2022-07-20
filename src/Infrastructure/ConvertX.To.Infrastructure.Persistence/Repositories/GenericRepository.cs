@@ -6,13 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConvertX.To.Infrastructure.Persistence.Repositories;
 
-/// <summary>
-/// // TODO: Repository Improvements:
-/// - Implement generic IQueryable -- good (but old) reference I just noticed is
-/// public class GenericRepository<TEntity> where TEntity : class -- at:
-/// https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
-/// This will get rid of the need to override methods in the conversion repository for date deleted
-/// </summary>
 public abstract class GenericRepository<TEntity, TKey> : IRepository<TEntity, TKey>
     where TEntity : BaseEntity<TKey>, IAggregateRoot
     where TKey : IEquatable<TKey>
@@ -43,18 +36,40 @@ public abstract class GenericRepository<TEntity, TKey> : IRepository<TEntity, TK
     public virtual async Task<TEntity> GetByIdAsync(TKey id) =>
         await _dbSet.FirstAsync(x => x.Id.Equals(id));
 
-    public virtual void Add(TEntity item) => _dbSet.Add(item);
+    public virtual async Task CreateAsync(TEntity item)
+    {
+        _dbSet.Add(item);
+        await _applicationDbContext.SaveChangesAsync();
+    }
 
-    public virtual void AddRange(IEnumerable<TEntity> items) => _dbSet.AddRange(items);
-    public virtual void Update(TEntity item) => _dbSet.Update(item);
+    public virtual async Task CreateAsync(IEnumerable<TEntity> items)
+    {
+        _dbSet.AddRange(items);
+        await _applicationDbContext.SaveChangesAsync();
+    }
 
-    public virtual void UpdateRange(IEnumerable<TEntity> items) =>
+    public virtual async Task UpdateAsync(TEntity item)
+    {
+        _dbSet.Update(item);
+        await _applicationDbContext.SaveChangesAsync();
+    }
+
+    public virtual async Task UpdateAsync(IEnumerable<TEntity> items)
+    {
         _dbSet.UpdateRange(items);
+        await _applicationDbContext.SaveChangesAsync();
+    }
 
-    public virtual void Remove(TEntity item) => _dbSet.Remove(item);
+    public virtual async Task DeleteAsync(TEntity item)
+    {
+        _dbSet.Remove(item);
+        await _applicationDbContext.SaveChangesAsync();
+    }
 
-    public virtual void RemoveRange(IEnumerable<TEntity> items) =>
+    public virtual async Task DeleteAsync(IEnumerable<TEntity> items)
+    {
         _dbSet.RemoveRange(items);
+        await _applicationDbContext.SaveChangesAsync();
+    }
 
-    public virtual async Task SaveChangesAsync() => await _applicationDbContext.SaveChangesAsync();
 }

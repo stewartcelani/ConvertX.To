@@ -4,7 +4,7 @@ namespace ConvertX.To.Application.Exceptions;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
-public class InvalidFileLengthException : ConvertXToExceptionBase
+public class InvalidFileLengthException : ConvertXToExceptionBase, IBusinessException
 {
     public InvalidFileLengthException() { }
     public InvalidFileLengthException(string message) : base(message) { }

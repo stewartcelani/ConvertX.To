@@ -1,6 +1,6 @@
 namespace ConvertX.To.Application.Exceptions;
 
-public class HttpResponseException : ConvertXToExceptionBase
+public class HttpResponseException : ConvertXToExceptionBase, IBusinessException
 {
     public HttpResponseMessage HttpResponseMessage { get; }
 

@@ -28,9 +28,13 @@ namespace ConvertX.To.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ConvertedFileExtension")
+                    b.Property<string>("ConvertedFormat")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("ConvertedMegabytes")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("numeric(18,6)");
 
                     b.Property<DateTimeOffset>("DateCreated")
                         .ValueGeneratedOnAdd()
@@ -48,19 +52,23 @@ namespace ConvertX.To.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
-                    b.Property<string>("FileNameWithoutExtension")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTimeOffset>("RequestCompleteDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset>("RequestDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal>("RequestSeconds")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("numeric(18,6)");
+
                     b.Property<string>("SourceFormat")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("SourceMegabytes")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("numeric(18,6)");
 
                     b.Property<string>("TargetFormat")
                         .IsRequired()

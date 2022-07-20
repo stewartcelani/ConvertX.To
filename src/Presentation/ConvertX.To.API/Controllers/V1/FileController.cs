@@ -9,12 +9,12 @@ namespace ConvertX.To.API.Controllers.V1;
 public class FileController : ControllerBase
 {
     private readonly IConversionService _conversionService;
-    private readonly IFileService _fileService;
+    private readonly IConversionStorageService _conversionStorageService;
 
-    public FileController(IConversionService conversionService, IFileService fileService)
+    public FileController(IConversionService conversionService, IConversionStorageService conversionStorageService)
     {
         _conversionService = conversionService;
-        _fileService = fileService;
+        _conversionStorageService = conversionStorageService;
     }
 
     [HttpGet(ApiRoutesV1.Files.Get)]
@@ -23,7 +23,7 @@ public class FileController : ControllerBase
         var conversion = await _conversionService.GetByIdAsync(conversionId);
         if (conversion.DateDeleted is not null) return StatusCode(410, null);
         
-        var stream = (FileStream)_fileService.GetFile(Path.Combine(conversion.Id.ToString(), conversion.ConvertedFileName));
+        var stream = (FileStream)_conversionStorageService.GetConvertedFile(conversion.Id.ToString());
         
         conversion.Downloads++;
         await _conversionService.UpdateAsync(conversion);
@@ -37,7 +37,7 @@ public class FileController : ControllerBase
         var conversion = await _conversionService.GetByIdAsync(conversionId);
         if (conversion.DateDeleted is not null) return Ok();
 
-        _fileService.DeleteDirectory(conversion.Id.ToString());
+        _conversionStorageService.DeleteConvertedFile(conversion.Id.ToString());
         
         conversion.DateDeleted = DateTimeOffset.Now;
         await _conversionService.UpdateAsync(conversion);

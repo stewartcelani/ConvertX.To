@@ -4,7 +4,7 @@ namespace ConvertX.To.Application.Exceptions;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
-public class UnsupportedConversionException : ConvertXToExceptionBase
+public class UnsupportedConversionException : ConvertXToExceptionBase, IBusinessException
 {
     public UnsupportedConversionException() { }
     public UnsupportedConversionException(string message) : base(message) { }

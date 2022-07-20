@@ -28,12 +28,13 @@ public static class DependencyInjection
             SettingsBinder.BindAndValidate<MsGraphSettings, MsGraphSettingsValidator>(configuration);
         services.AddSingleton(msGraphSettings);
         
-        var fileServiceSettings = SettingsBinder.Bind<FileServiceSettings>(configuration); // If null no RootDirectory for LocalFileService will be set, don't need to BindAndValidate
-        services.AddSingleton(fileServiceSettings);
+        var conversionStorageSettings = SettingsBinder.Bind<ConversionStorageSettings>(configuration);
+        services.AddSingleton(conversionStorageSettings);
 
         services.AddHttpClient();
 
         services.AddScoped<IFileService, LocalFileService>();
+        services.AddScoped<IConversionStorageService, LocalConversionStorageService>();
         services.AddScoped<IMsGraphFileConversionService, MsGraphFileConversionService>();
         services.AddScoped<IConverterFactory, ConverterFactory>();
         services.AddScoped<IConversionEngine, ConversionEngine>();

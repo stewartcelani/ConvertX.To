@@ -11,19 +11,28 @@ public class ConversionConfiguration : IEntityTypeConfiguration<Conversion>
         builder.Property(x => x.Id)
             .IsRequired();
 
-        builder.Property(x => x.FileNameWithoutExtension)
-            .IsRequired();
-
         builder.Property(x => x.SourceFormat)
             .IsRequired();
 
-        builder.Property(x => x.ConvertedFileExtension)
+        builder.Property(x => x.ConvertedFormat)
+            .IsRequired();
+
+        builder.Property(x => x.SourceMegabytes)
+            .HasPrecision(18, 6)
+            .IsRequired();
+
+        builder.Property(x => x.ConvertedMegabytes)
+            .HasPrecision(18, 6)
             .IsRequired();
 
         builder.Property(x => x.RequestDate)
             .IsRequired();
 
         builder.Property(x => x.RequestCompleteDate)
+            .IsRequired();
+
+        builder.Property(x => x.RequestSeconds)
+            .HasPrecision(18, 6)
             .IsRequired();
 
         builder.Property(x => x.Downloads)

@@ -4,11 +4,10 @@ namespace ConvertX.To.Application.Interfaces.Repositories.Common;
 
 public interface IWriteRepository<in TEntity> where TEntity : BaseEntity, IAggregateRoot
 {
-    void Add(TEntity item);
-    void AddRange(IEnumerable<TEntity> items);
-    void Update(TEntity item);
-    void UpdateRange(IEnumerable<TEntity> items);
-    void Remove(TEntity item);
-    void RemoveRange(IEnumerable<TEntity> items);
-    Task SaveChangesAsync();
+    Task CreateAsync(TEntity item);
+    Task CreateAsync(IEnumerable<TEntity> items);
+    Task UpdateAsync(TEntity item);
+    Task UpdateAsync(IEnumerable<TEntity> items);
+    Task DeleteAsync(TEntity item);
+    Task DeleteAsync(IEnumerable<TEntity> items);
 }

@@ -67,8 +67,8 @@ public class ConversionService : IConversionService
 
         await SaveFileAsync(
             Path.Combine(file.DirectoryName!,
-                GetConvertedFileName(conversion.SourceFileName, conversion.TargetFormat,
-                    conversion.ConvertedFileExtension)), convertedStream);
+                GetConvertedFileName(Path.GetFileNameWithoutExtension(file.Name), conversion.TargetFormat,
+                    conversion.ConvertedFormat)), convertedStream);
 
         _logger.LogInformation("{fileName} successfully converted to {targetFormat}!", file.Name, targetFormat);
     }

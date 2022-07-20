@@ -1,4 +1,5 @@
-﻿using ConvertX.To.Application.Interfaces;
+﻿using System.Linq.Expressions;
+using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Application.Interfaces.Repositories;
 using ConvertX.To.Domain.Entities;
 
@@ -17,45 +18,41 @@ public class ConversionService : IConversionService
         _conversionRepository = conversionRepository;
     }
 
+    public async Task<IEnumerable<Conversion>> GetAsync(Expression<Func<Conversion, bool>>? predicate = null,
+        Func<IQueryable<Conversion>, IOrderedQueryable<Conversion>>? orderBy = null) =>
+        await _conversionRepository.GetAsync(predicate, orderBy);
+    
+    public async Task<Conversion> GetByIdAsync(Guid conversionId) =>
+        await _conversionRepository.GetByIdAsync(conversionId);
+
     public async Task CreateAsync(Conversion conversion)
     {
-        _conversionRepository.Add(conversion);
-        await _conversionRepository.SaveChangesAsync();
+        await _conversionRepository.CreateAsync(conversion);
     }
 
     public async Task UpdateAsync(Conversion conversion)
     {
-        _conversionRepository.Update(conversion);
-        await _conversionRepository.SaveChangesAsync();
+        await _conversionRepository.UpdateAsync(conversion);
     }
 
     public async Task ExpireConversions(int timeToLiveInMinutes)
     {
         var timeToLive = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(timeToLiveInMinutes));
-        var conversions = (await _conversionRepository.GetAsync(x => x.DateDeleted == null & x.DateCreated < timeToLive)).ToList();
+        var conversions =
+            (await _conversionRepository.GetAsync(x => x.DateDeleted == null & x.DateCreated < timeToLive)).ToList();
         var now = DateTimeOffset.Now;
         foreach (var conversion in conversions)
         {
             conversion.DateDeleted = now;
         }
-        _conversionRepository.UpdateRange(conversions);
-        await _conversionRepository.SaveChangesAsync();
+        await _conversionRepository.UpdateAsync(conversions);
     }
-
-    public async Task<Conversion> GetByIdAsync(Guid conversionId) =>
-        await _conversionRepository.GetByIdAsync(conversionId);
-
-    /// <summary>
-    /// Gets all non-expired/soft-deleted conversions
-    /// </summary>
-    public async Task<IEnumerable<Conversion>> GetAllAsync() => await _conversionRepository.GetAsync(x => x.DateDeleted == null);
-
-    /// <summary>
-    /// Gets a list of ids of non-expired/soft-deleted conversions 
-    /// </summary>
-    public async Task<IEnumerable<Guid>> GetAllIdsAsync()
+    
+    public string GetConvertedFileName(string fileNameWithoutExtension, string targetFormat,
+        string convertedFormat)
     {
-        var conversions = await _conversionRepository.GetAsync(x => x.DateDeleted == null);
-        return conversions.Select(x => x.Id);
+        return targetFormat == convertedFormat
+            ? $"{fileNameWithoutExtension}.{targetFormat}"
+            : $"{fileNameWithoutExtension}.{targetFormat}.{convertedFormat}";
     }
 }

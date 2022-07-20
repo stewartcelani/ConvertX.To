@@ -3,6 +3,7 @@ using ConvertX.To.API.Contracts.V1.Mappers;
 using ConvertX.To.API.Contracts.V1.Responses;
 using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Exceptions;
+using ConvertX.To.Application.Extensions;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -15,16 +16,16 @@ public class ConversionController : ControllerBase
     private readonly IConversionService _conversionService;
     private readonly IUriService _uriService;
     private readonly IConversionEngine _conversionEngine;
-    private readonly IFileService _fileService;
+    private readonly IConversionStorageService _conversionStorageService;
     private readonly ILogger<ConversionController> _logger;
 
     public ConversionController(IConversionService conversionService,
-        IUriService uriService, IConversionEngine conversionEngine, IFileService fileService, ILogger<ConversionController> logger)
+        IUriService uriService, IConversionEngine conversionEngine, IConversionStorageService conversionStorageService, ILogger<ConversionController> logger)
     {
         _conversionService = conversionService;
         _uriService = uriService;
         _conversionEngine = conversionEngine;
-        _fileService = fileService;
+        _conversionStorageService = conversionStorageService;
         _logger = logger;
     }
 
@@ -41,24 +42,34 @@ public class ConversionController : ControllerBase
 
         var conversionOptions = new ConversionOptions();
         var (convertedFileExtension, convertedStream) = await _conversionEngine.ConvertAsync(sourceFormat, targetFormat, file.OpenReadStream(), conversionOptions);
-        
+
+        var now = DateTimeOffset.Now;
         var conversion = new Conversion
         {
-            FileNameWithoutExtension = Path.GetFileNameWithoutExtension(file.FileName),
             SourceFormat = sourceFormat,
             TargetFormat = targetFormat,
-            ConvertedFileExtension = convertedFileExtension,
+            ConvertedFormat = convertedFileExtension,
+            SourceMegabytes = file.Length.ToMegabytes(),
+            ConvertedMegabytes = convertedStream.Length.ToMegabytes(),
             RequestDate = requestDate,
-            RequestCompleteDate = DateTimeOffset.Now
+            RequestCompleteDate = now,
+            RequestSeconds = (decimal)(now - requestDate).TotalSeconds
         };
 
         await _conversionService.CreateAsync(conversion);
+
+        var convertedFileName = _conversionService.GetConvertedFileName(Path.GetFileNameWithoutExtension(file.FileName),
+            conversion.TargetFormat, conversion.ConvertedFormat);
+
+        await _conversionStorageService.SaveConversionAsync(conversion.Id.ToString(), convertedFileName,
+            convertedStream);
         
-        await _fileService.SaveFileAsync(Path.Combine(conversion.Id.ToString(), conversion.ConvertedFileName), convertedStream);
         await convertedStream.DisposeAsync();
         
         return Created(_uriService.GetFileUri(conversion.Id), conversion.ToConversionResponse());
     }
+    
+    
     
     /// <summary>
     /// Returns list of supported conversions

@@ -8,16 +8,16 @@ public class ConversionLifecycleManagerService : IConversionLifecycleManagerServ
 {
     private readonly ILogger<ConversionLifecycleManagerService> _logger;
     private readonly IConversionService _conversionService;
-    private readonly IFileService _fileService;
+    private readonly IConversionStorageService _conversionStorageService;
     private readonly ConversionLifecycleManagerSettings _conversionLifecycleManagerSettings;
 
     public ConversionLifecycleManagerService(ILogger<ConversionLifecycleManagerService> logger,
-        IConversionService conversionService, IFileService fileService,
+        IConversionService conversionService, IConversionStorageService conversionStorageService,
         ConversionLifecycleManagerSettings conversionLifecycleManagerSettings)
     {
         _logger = logger;
         _conversionService = conversionService;
-        _fileService = fileService;
+        _conversionStorageService = conversionStorageService;
         _conversionLifecycleManagerSettings = conversionLifecycleManagerSettings;
     }
 
@@ -31,13 +31,14 @@ public class ConversionLifecycleManagerService : IConversionLifecycleManagerServ
     {
         _logger.LogTrace("{Class}.{Method}", nameof(ConversionLifecycleManagerService),
             nameof(CleanUpTemporaryStorage));
-        var nonExpiredConversionIds = (await _conversionService.GetAllIdsAsync()).Select(x => x.ToString()).ToArray();
-        var rootDirectory = _fileService.GetRootDirectory();
+        var nonExpiredConversions = await _conversionService.GetAsync(x => x.DateDeleted == null);
+        var nonExpiredConversionIds = nonExpiredConversions.Select(x => x.Id.ToString()).ToArray();
+        var rootDirectory = _conversionStorageService.GetRootDirectory();
         foreach (var directoryInfo in rootDirectory.GetDirectories()
                      .Where(x => !nonExpiredConversionIds.Contains(x.Name)))
         {
             _logger.LogDebug("Cleaning up expired conversion {conversionId}", directoryInfo.Name);
-            _fileService.DeleteDirectory(directoryInfo.Name);
+            _conversionStorageService.DeleteConvertedFile(directoryInfo.Name);
         }
     }
 
