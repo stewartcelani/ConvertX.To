@@ -1,18 +1,16 @@
-using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Interfaces;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.ConsoleUI.Core;
 
 public class App
 {
-    private readonly ILogger<App> _logger;
     private readonly IConversionEngine _conversionEngine;
     private readonly IFileService _fileService;
+    private readonly ILogger<App> _logger;
 
-    private DirectoryInfo _directory = new DirectoryInfo(@"C:\dev\convertx.to\sample_files");
+    private readonly DirectoryInfo _directory = new(@"C:\dev\convertx.to\sample_files");
 
     public App(ILogger<App> logger, IConversionEngine conversionEngine, IFileService fileService)
     {
@@ -65,7 +63,7 @@ public class App
                     fileInfo.Name,
                     targetFormat);
             }
-            
+
             _logger.LogInformation("{fileName} successfully converted to {targetFormat}!", fileInfo.Name, targetFormat);
         }
     }

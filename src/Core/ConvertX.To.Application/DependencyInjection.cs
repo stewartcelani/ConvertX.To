@@ -6,6 +6,6 @@ public static class DependencyInjection
 {
     public static void AddApplication(this IServiceCollection services)
     {
-       // TODO: Add MediatR
+        // TODO: Add MediatR
     }
 }

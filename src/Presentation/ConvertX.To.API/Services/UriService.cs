@@ -1,5 +1,4 @@
-﻿using ConvertX.To.API.Contracts.V1;
-using ConvertX.To.Application.Interfaces;
+using ConvertX.To.API.Contracts.V1;
 
 namespace ConvertX.To.API.Services;
 
@@ -14,6 +13,6 @@ public class UriService : IUriService
 
     public Uri GetFileUri(Guid conversionId)
     {
-        return new Uri(_baseUri + ApiRoutesV1.Files.Get.Replace("{conversionId}", conversionId.ToString()));
+        return new Uri(_baseUri + ApiRoutesV1.Files.Get.Url.ReplaceConversionId(conversionId));
     }
 }

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConvertX.To.Application.Validators;
 
-public class ConversionLifecycleManagerSettingsValidator :AbstractValidator<ConversionLifecycleManagerSettings>
+public class ConversionLifecycleManagerSettingsValidator : AbstractValidator<ConversionLifecycleManagerSettings>
 {
     public ConversionLifecycleManagerSettingsValidator()
     {

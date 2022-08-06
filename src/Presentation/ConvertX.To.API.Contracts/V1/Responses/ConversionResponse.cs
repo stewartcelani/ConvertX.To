@@ -8,7 +8,8 @@ public class ConversionResponse
     public string ConvertedFormat { get; set; }
     public decimal SourceMegabytes { get; set; }
     public decimal ConvertedMegabytes { get; set; }
-    public DateTimeOffset RequestDate { get; set; }
-    public DateTimeOffset RequestCompleteDate { get; set; }
+    public DateTimeOffset DateRequestReceived { get; set; }
+    public DateTimeOffset DateRequestCompleted { get; set; }
     public decimal RequestSeconds { get; set; }
+    public DateTimeOffset DateScheduledForDeletion { get; set; }
 }

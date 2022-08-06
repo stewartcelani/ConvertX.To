@@ -31,8 +31,9 @@ public abstract class GenericRepository<TEntity, TKey> : IRepository<TEntity, TK
 
         return await query.AsNoTracking().FirstOrDefaultAsync(x => x.Id.Equals(id));
     }
-    
-    public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, IEnumerable<string>? includeProperties = null)
+
+    public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate,
+        IEnumerable<string>? includeProperties = null)
     {
         var query = DbSet.Where(predicate);
 
@@ -63,9 +64,9 @@ public abstract class GenericRepository<TEntity, TKey> : IRepository<TEntity, TK
             var skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
             query = query.Skip(skip).Take(paginationFilter.PageSize);
         }
-        
+
         query = query.AsNoTracking();
-        
+
         return await query.ToListAsync();
     }
 
@@ -82,7 +83,7 @@ public abstract class GenericRepository<TEntity, TKey> : IRepository<TEntity, TK
     {
         return await DbSet.AsNoTracking().AnyAsync(x => x.Id.Equals(id));
     }
-    
+
     public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
     {
         return await DbSet.AsNoTracking().Where(predicate).AnyAsync();

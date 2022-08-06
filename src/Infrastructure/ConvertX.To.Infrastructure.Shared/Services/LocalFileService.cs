@@ -15,7 +15,7 @@ public class LocalFileService : IFileService
 
     private static void EnsureDirectory(string path)
     {
-        var directory = Path.GetDirectoryName(path); 
+        var directory = Path.GetDirectoryName(path);
         if (directory is not null && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
     }
 }

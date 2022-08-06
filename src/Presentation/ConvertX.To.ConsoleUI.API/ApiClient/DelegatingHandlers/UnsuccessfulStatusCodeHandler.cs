@@ -1,6 +1,4 @@
-using System.Net;
 using ConvertX.To.ConsoleUI.API.Exceptions;
-using Refit;
 
 namespace ConvertX.To.ConsoleUI.API.ApiClient.DelegatingHandlers;
 
@@ -10,14 +8,10 @@ public class UnsuccessfulStatusCodeHandler : DelegatingHandler
         CancellationToken cancellationToken)
     {
         var response = await base.SendAsync(request, cancellationToken);
-        
-        if (!response.IsSuccessStatusCode/* || string.IsNullOrWhiteSpace(response.Content.ToString())*/)
-        {
-            throw new UnsuccessfulStatusCodeException(response);
-        }
+
+        if (!response.IsSuccessStatusCode /* || string.IsNullOrWhiteSpace(response.Content.ToString())*/
+           ) throw new UnsuccessfulStatusCodeException(response);
 
         return response;
     }
-
-    
 }

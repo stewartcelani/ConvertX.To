@@ -1,17 +1,17 @@
 ﻿using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.Application.Converters;
 
 public abstract class MsGraphDriveItemConverterBase : IConverter
 {
+    private readonly ILoggerAdapter<IConverter> _logger;
+    private readonly IMsGraphFileConversionService _msGraphFileConversionService;
     private readonly string _sourceFormat;
     private readonly string _targetFormat;
-    private readonly IMsGraphFileConversionService _msGraphFileConversionService;
-    private readonly ILogger _logger;
-    
-    protected MsGraphDriveItemConverterBase(string sourceFormat, string targetFormat, ILogger logger, IMsGraphFileConversionService msGraphFileConversionService)
+
+    protected MsGraphDriveItemConverterBase(string sourceFormat, string targetFormat, ILoggerAdapter<IConverter> logger,
+        IMsGraphFileConversionService msGraphFileConversionService)
     {
         _sourceFormat = sourceFormat;
         _targetFormat = targetFormat;
@@ -24,7 +24,8 @@ public abstract class MsGraphDriveItemConverterBase : IConverter
         var fileId = await _msGraphFileConversionService.UploadFileAsync(_sourceFormat, source);
         var convertedStream = await _msGraphFileConversionService.GetFileInTargetFormatAsync(fileId, _targetFormat);
         await _msGraphFileConversionService.DeleteFileAsync(fileId);
-        var savedFileExtension = _targetFormat; // TODO: This is for when returning a .zip file containing multiple images when converting a pdf to jpg
+        var savedFileExtension =
+            _targetFormat; // TODO: This is for when returning a .zip file containing multiple images when converting a pdf to jpg
         return (savedFileExtension, convertedStream);
     }
 }

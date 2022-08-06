@@ -12,7 +12,7 @@ public class ApiExceptionMiddleware
     {
         _request = request;
     }
-    
+
     [ExcludeFromCodeCoverage]
     public async Task InvokeAsync(HttpContext context)
     {

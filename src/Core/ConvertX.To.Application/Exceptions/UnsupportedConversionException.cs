@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace ConvertX.To.Application.Exceptions;
 
@@ -6,10 +7,21 @@ namespace ConvertX.To.Application.Exceptions;
 [ExcludeFromCodeCoverage]
 public class UnsupportedConversionException : ConvertXToExceptionBase, IBusinessException
 {
-    public UnsupportedConversionException() { }
-    public UnsupportedConversionException(string message) : base(message) { }
-    public UnsupportedConversionException(string message, Exception inner) : base(message, inner) { }
+    public UnsupportedConversionException()
+    {
+    }
+
+    public UnsupportedConversionException(string message) : base(message)
+    {
+    }
+
+    public UnsupportedConversionException(string message, Exception inner) : base(message, inner)
+    {
+    }
+
     public UnsupportedConversionException(
-        System.Runtime.Serialization.SerializationInfo info,
-        System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        SerializationInfo info,
+        StreamingContext context) : base(info, context)
+    {
+    }
 }

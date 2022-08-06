@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace ConvertX.To.Application.Exceptions;
 
@@ -6,10 +7,21 @@ namespace ConvertX.To.Application.Exceptions;
 [ExcludeFromCodeCoverage]
 public class ConversionNotFoundException : ConvertXToExceptionBase, IBusinessException
 {
-    public ConversionNotFoundException() { }
-    public ConversionNotFoundException(string message) : base(message) { }
-    public ConversionNotFoundException(string message, Exception inner) : base(message, inner) { }
+    public ConversionNotFoundException()
+    {
+    }
+
+    public ConversionNotFoundException(string message) : base(message)
+    {
+    }
+
+    public ConversionNotFoundException(string message, Exception inner) : base(message, inner)
+    {
+    }
+
     public ConversionNotFoundException(
-        System.Runtime.Serialization.SerializationInfo info,
-        System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        SerializationInfo info,
+        StreamingContext context) : base(info, context)
+    {
+    }
 }

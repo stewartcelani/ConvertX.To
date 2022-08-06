@@ -7,13 +7,11 @@ namespace ConvertX.To.Infrastructure.Shared.Tests.Unit;
 
 public class ConversionServiceTests
 {
-    private readonly IConversionService _sut;
     private readonly IConversionRepository _conversionRepository = Substitute.For<IConversionRepository>();
+    private readonly IConversionService _sut;
 
     public ConversionServiceTests()
     {
         _sut = new ConversionService(_conversionRepository);
     }
-    
-    
 }

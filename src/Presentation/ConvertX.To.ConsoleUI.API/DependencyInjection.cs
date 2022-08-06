@@ -30,13 +30,14 @@ public static class DependencyInjection
 
         var httpSettings = SettingsBinder.Bind<HttpSettings>(configuration);
         services.AddSingleton(httpSettings);
-        
+
         AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
             .HandleTransientHttpError()
             .Or<TimeoutRejectedException>()
-            .WaitAndRetryAsync(httpSettings.WaitAndRetryConfig.RetryAttempts, _ => TimeSpan.FromSeconds(httpSettings.WaitAndRetryConfig.RetrySeconds));
-        
-        AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy
+            .WaitAndRetryAsync(httpSettings.WaitAndRetryConfig.RetryAttempts,
+                _ => TimeSpan.FromSeconds(httpSettings.WaitAndRetryConfig.RetrySeconds));
+
+        var timeoutPolicy = Policy
             .TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(httpSettings.WaitAndRetryConfig.TimeoutSeconds));
 
         services.AddTransient<UnsuccessfulStatusCodeHandler>();
@@ -48,6 +49,5 @@ public static class DependencyInjection
             .AddPolicyHandler(timeoutPolicy);
 
         services.AddScoped<IConversionService, ConversionService>();
-
     }
 }

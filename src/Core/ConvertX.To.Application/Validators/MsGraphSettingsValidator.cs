@@ -37,6 +37,5 @@ public class MsGraphSettingsValidator : AbstractValidator<MsGraphSettings>
             .Must(s => !string.IsNullOrEmpty(s))
             .Must(s => Uri.TryCreate(s, UriKind.Absolute, out _))
             .WithMessage("Invalid uri.");
-
     }
 }

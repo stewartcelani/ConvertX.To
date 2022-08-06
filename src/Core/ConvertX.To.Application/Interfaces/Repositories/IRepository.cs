@@ -12,11 +12,12 @@ public interface IRepository<TEntity, in TKey>
     Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate);
     Task<TEntity?> GetAsync(TKey id, IEnumerable<string>? includeProperties = null);
     Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, IEnumerable<string>? includeProperties = null);
-    
+
     Task<IEnumerable<TEntity>> GetManyAsync(Expression<Func<TEntity, bool>>? predicate = null,
         IEnumerable<string>? includeProperties = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         PaginationFilter? paginationFilter = null);
+
     Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null);
     Task<bool> CreateAsync(TEntity entity);
     Task<bool> CreateAsync(IEnumerable<TEntity> entities);

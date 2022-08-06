@@ -1,6 +1,10 @@
 namespace ConvertX.To.Application.Interfaces;
 
-public interface ILoggerAdapter<TType>
+public interface ILoggerAdapter<TType> : ILoggerAdapter
+{
+}
+
+public interface ILoggerAdapter
 {
     void LogTrace(string? message, params object?[] args);
     void LogDebug(string? message, params object?[] args);

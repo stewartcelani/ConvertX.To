@@ -11,8 +11,9 @@ using FluentValidation;
 namespace ConvertX.To.Infrastructure.Shared.Services;
 
 /// <summary>
-/// IConversionService is primarily concerned with DbSet<ConversionEntity>
-/// IConversionEngine is what actually handles the conversions
+///     IConversionService is primarily concerned with DbSet
+///     <ConversionEntity>
+///         IConversionEngine is what actually handles the conversions
 /// </summary>
 public class ConversionService : IConversionService
 {
@@ -22,42 +23,43 @@ public class ConversionService : IConversionService
     {
         _conversionRepository = conversionRepository;
     }
-    
+
     public async Task<Conversion?> GetByIdAsync(Guid id)
     {
         var conversionEntity = await _conversionRepository.GetAsync(id);
         return conversionEntity?.ToConversion();
     }
 
-    public async Task<IEnumerable<Conversion>> GetAsync() => await GetAsync(new ConversionFilter());
+    public async Task<IEnumerable<Conversion>> GetAsync()
+    {
+        return await GetAsync(new ConversionFilter());
+    }
 
     public async Task<IEnumerable<Conversion>> GetAsync(ConversionFilter getCitiesFilter)
     {
         Expression<Func<ConversionEntity, bool>>? predicate = x => x.DateDeleted == null;
-        if (getCitiesFilter.Deleted)
-        {
-            predicate = x => x.DateDeleted != null;
-        }
+        if (getCitiesFilter.Deleted) predicate = x => x.DateDeleted != null;
 
-        var conversionEntities = await _conversionRepository.GetManyAsync(predicate, null, q => q.OrderByDescending(x => x.DateRequestCompleted), null);
+        var conversionEntities =
+            await _conversionRepository.GetManyAsync(predicate, null,
+                q => q.OrderByDescending(x => x.DateRequestCompleted));
         return conversionEntities.Select(x => x.ToConversion());
     }
-    
-    public async Task<IEnumerable<Conversion>> GetAsync(ConversionFilter getCitiesFilter, PaginationFilter paginationFilter)
+
+    public async Task<IEnumerable<Conversion>> GetAsync(ConversionFilter getCitiesFilter,
+        PaginationFilter paginationFilter)
     {
         Expression<Func<ConversionEntity, bool>>? predicate = x => x.DateDeleted == null;
-        if (getCitiesFilter.Deleted)
-        {
-            predicate = x => x.DateDeleted != null;
-        }
+        if (getCitiesFilter.Deleted) predicate = x => x.DateDeleted != null;
 
-        var conversionEntities = await _conversionRepository.GetManyAsync(predicate, null, q => q.OrderByDescending(x => x.DateRequestCompleted), paginationFilter);
+        var conversionEntities = await _conversionRepository.GetManyAsync(predicate, null,
+            q => q.OrderByDescending(x => x.DateRequestCompleted), paginationFilter);
         return conversionEntities.Select(x => x.ToConversion());
     }
 
     public async Task<bool> ExistsAsync(Guid id)
     {
-        return await _conversionRepository.ExistsAsync(x => x.Id.Equals(id) && x.DateDeleted != null);
+        return await _conversionRepository.ExistsAsync(x => x.Id == id && x.DateDeleted == null);
     }
 
     public async Task<bool> CreateAsync(Conversion conversion)
@@ -67,6 +69,7 @@ public class ConversionService : IConversionService
             var message = $"A conversion with id {conversion.Id} already exists";
             throw new ValidationException(message, ValidationFailureHelper.Generate(nameof(Conversion), message));
         }
+
         var conversionEntity = conversion.ToConversionEntity();
         var created = await _conversionRepository.CreateAsync(conversionEntity);
         return created;
@@ -79,7 +82,7 @@ public class ConversionService : IConversionService
             var message = $"Can not update conversion with id {conversion.Id} as it does not exist";
             throw new ValidationException(message, ValidationFailureHelper.Generate(nameof(Conversion), message));
         }
-        
+
         var conversionEntity = conversion.ToConversionEntity();
         var updated = await _conversionRepository.UpdateAsync(conversionEntity);
         return updated;
@@ -96,28 +99,27 @@ public class ConversionService : IConversionService
     {
         var timeToLive = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(timeToLiveInMinutes));
         var conversions =
-            (await _conversionRepository.GetManyAsync(x => x.DateDeleted == null & x.DateCreated < timeToLive)).ToList();
+            (await _conversionRepository.GetManyAsync(x => (x.DateDeleted == null) & (x.DateCreated < timeToLive)))
+            .ToList();
         var now = DateTimeOffset.Now;
-        foreach (var conversion in conversions)
-        {
-            conversion.DateDeleted = now;
-        }
+        foreach (var conversion in conversions) conversion.DateDeleted = now;
         return await _conversionRepository.UpdateAsync(conversions);
     }
 
     public async Task<bool> IncrementDownloadCounter(Guid id)
     {
         var conversionEntity = await _conversionRepository.GetAsync(id);
-        
+
         if (conversionEntity is null)
         {
             var message = $"Can not increment download counter for conversion with id {id} as it does not exist";
             throw new ValidationException(message, ValidationFailureHelper.Generate(nameof(Conversion), message));
         }
-        
+
         if (conversionEntity!.DateDeleted is not null)
         {
-            var message = $"Can not increment download counter for conversion with id {id} as it has been deleted from disk";
+            var message =
+                $"Can not increment download counter for conversion with id {id} as it has been deleted from disk";
             throw new ValidationException(message, ValidationFailureHelper.Generate(nameof(Conversion), message));
         }
 
@@ -126,7 +128,7 @@ public class ConversionService : IConversionService
         var updated = await _conversionRepository.UpdateAsync(conversionEntity);
         return updated;
     }
-    
+
     public string GetConvertedFileName(string fileNameWithoutExtension, string targetFormat,
         string convertedFormat)
     {
@@ -134,5 +136,4 @@ public class ConversionService : IConversionService
             ? $"{fileNameWithoutExtension}.{targetFormat}"
             : $"{fileNameWithoutExtension}.{targetFormat}.{convertedFormat}";
     }
-    
 }

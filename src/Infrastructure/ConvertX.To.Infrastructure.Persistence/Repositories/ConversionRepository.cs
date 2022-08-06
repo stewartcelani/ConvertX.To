@@ -20,9 +20,7 @@ public class ConversionRepository : GenericRepository<ConversionEntity, Guid>, I
     {
         var conversionEntities = entities.ToList();
         foreach (var entity in conversionEntities.Where(entity => entity.Downloads == 0))
-        {
             DbContext.Entry(entity).Property(x => x.Downloads).IsModified = false;
-        }
         return base.UpdateAsync(conversionEntities);
     }
 
@@ -39,11 +37,10 @@ public class ConversionRepository : GenericRepository<ConversionEntity, Guid>, I
         var numberDeleted = 0;
 
         var conversionIds = ids.ToList();
-        
+
         foreach (var id in conversionIds)
-        {
-            if (await DeleteAsync(id)) numberDeleted++;
-        }
+            if (await DeleteAsync(id))
+                numberDeleted++;
 
         return numberDeleted == conversionIds.Count;
     }

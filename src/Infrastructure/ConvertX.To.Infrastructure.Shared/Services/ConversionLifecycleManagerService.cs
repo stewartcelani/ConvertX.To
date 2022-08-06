@@ -1,17 +1,16 @@
 using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.Infrastructure.Shared.Services;
 
 public class ConversionLifecycleManagerService : IConversionLifecycleManagerService
 {
-    private readonly ILogger<ConversionLifecycleManagerService> _logger;
+    private readonly ConversionLifecycleManagerSettings _conversionLifecycleManagerSettings;
     private readonly IConversionService _conversionService;
     private readonly IConversionStorageService _conversionStorageService;
-    private readonly ConversionLifecycleManagerSettings _conversionLifecycleManagerSettings;
+    private readonly ILoggerAdapter<ConversionLifecycleManagerService> _logger;
 
-    public ConversionLifecycleManagerService(ILogger<ConversionLifecycleManagerService> logger,
+    public ConversionLifecycleManagerService(ILoggerAdapter<ConversionLifecycleManagerService> logger,
         IConversionService conversionService, IConversionStorageService conversionStorageService,
         ConversionLifecycleManagerSettings conversionLifecycleManagerSettings)
     {

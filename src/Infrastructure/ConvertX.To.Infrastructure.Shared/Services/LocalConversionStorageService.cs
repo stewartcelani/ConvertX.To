@@ -18,17 +18,27 @@ public class LocalConversionStorageService : IConversionStorageService
     {
         var id = conversionId.ToString();
         EnsureDirectory(id);
-        await using var fileStream = new FileStream(Path.Combine(_rootDirectory, id, convertedFileName), FileMode.Create);
+        await using var fileStream =
+            new FileStream(Path.Combine(_rootDirectory, id, convertedFileName), FileMode.Create);
         await stream.CopyToAsync(fileStream);
         await stream.DisposeAsync();
         await fileStream.DisposeAsync();
     }
 
-    public DirectoryInfo GetDirectory(string conversionId) => new (Path.Combine(_rootDirectory, conversionId));
+    public DirectoryInfo GetDirectory(string conversionId)
+    {
+        return new(Path.Combine(_rootDirectory, conversionId));
+    }
 
-    public DirectoryInfo GetRootDirectory() => GetDirectory(_rootDirectory);
+    public DirectoryInfo GetRootDirectory()
+    {
+        return GetDirectory(_rootDirectory);
+    }
 
-    public void DeleteConvertedFile(Guid conversionId) => Directory.Delete(Path.Combine(_rootDirectory, conversionId.ToString()), true);
+    public void DeleteConvertedFile(Guid conversionId)
+    {
+        Directory.Delete(Path.Combine(_rootDirectory, conversionId.ToString()), true);
+    }
 
     public Stream GetConvertedFile(Guid conversionId)
     {
@@ -45,11 +55,10 @@ public class LocalConversionStorageService : IConversionStorageService
             throw;
         }
     }
-    
+
     private void EnsureDirectory(string conversionId)
     {
-        var directory = Path.Combine(_rootDirectory, conversionId); 
+        var directory = Path.Combine(_rootDirectory, conversionId);
         if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
     }
-    
 }

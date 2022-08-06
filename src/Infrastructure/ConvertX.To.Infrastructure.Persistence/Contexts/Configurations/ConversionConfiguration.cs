@@ -18,11 +18,11 @@ public class ConversionConfiguration : IEntityTypeConfiguration<ConversionEntity
             .IsRequired();
 
         builder.Property(x => x.SourceMegabytes)
-            .HasPrecision(18, 6)
+            .HasPrecision(18, 4)
             .IsRequired();
 
         builder.Property(x => x.ConvertedMegabytes)
-            .HasPrecision(18, 6)
+            .HasPrecision(18, 4)
             .IsRequired();
 
         builder.Property(x => x.DateRequestReceived)
@@ -32,7 +32,7 @@ public class ConversionConfiguration : IEntityTypeConfiguration<ConversionEntity
             .IsRequired();
 
         builder.Property(x => x.RequestSeconds)
-            .HasPrecision(18, 6)
+            .HasPrecision(18, 2)
             .IsRequired();
 
         builder.Property(x => x.Downloads)

@@ -22,7 +22,7 @@ namespace ConvertX.To.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ConvertX.To.Domain.Entities.Conversion", b =>
+            modelBuilder.Entity("ConvertX.To.Application.Domain.Entities.ConversionEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,8 +33,8 @@ namespace ConvertX.To.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<decimal>("ConvertedMegabytes")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("numeric(18,6)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)");
 
                     b.Property<DateTimeOffset>("DateCreated")
                         .ValueGeneratedOnAdd()
@@ -42,6 +42,12 @@ namespace ConvertX.To.Infrastructure.Persistence.Migrations
                         .HasDefaultValueSql("now()");
 
                     b.Property<DateTimeOffset?>("DateDeleted")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("DateRequestCompleted")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("DateRequestReceived")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("DateUpdated")
@@ -52,23 +58,17 @@ namespace ConvertX.To.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
-                    b.Property<DateTimeOffset>("RequestCompleteDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("RequestDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<decimal>("RequestSeconds")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("numeric(18,6)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<string>("SourceFormat")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<decimal>("SourceMegabytes")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("numeric(18,6)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)");
 
                     b.Property<string>("TargetFormat")
                         .IsRequired()

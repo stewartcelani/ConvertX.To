@@ -17,7 +17,8 @@ public static class DomainToEntityMapper
             ConvertedMegabytes = conversion.ConvertedMegabytes,
             DateRequestReceived = conversion.DateRequestReceived,
             DateRequestCompleted = conversion.DateRequestCompleted,
-            RequestSeconds = (decimal)(conversion.DateRequestCompleted - conversion.DateRequestReceived).TotalSeconds,
+            RequestSeconds =
+                Math.Round((decimal)(conversion.DateRequestCompleted - conversion.DateRequestReceived).TotalSeconds, 2)
         };
     }
 }

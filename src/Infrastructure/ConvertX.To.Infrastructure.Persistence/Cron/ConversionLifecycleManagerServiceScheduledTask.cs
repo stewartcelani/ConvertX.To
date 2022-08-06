@@ -6,7 +6,8 @@ public class ConversionLifecycleManagerServiceScheduledTask
 {
     private readonly IConversionLifecycleManagerService _conversionLifecycleManagerService;
 
-    public ConversionLifecycleManagerServiceScheduledTask(IConversionLifecycleManagerService conversionLifecycleManagerService)
+    public ConversionLifecycleManagerServiceScheduledTask(
+        IConversionLifecycleManagerService conversionLifecycleManagerService)
     {
         _conversionLifecycleManagerService = conversionLifecycleManagerService;
     }

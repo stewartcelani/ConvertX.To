@@ -7,7 +7,6 @@ using ConvertX.To.Infrastructure.Persistence.Cron;
 using ConvertX.To.Infrastructure.Persistence.Repositories;
 using Hangfire;
 using Hangfire.PostgreSql;
-using Hangfire.SqlServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +17,9 @@ public static class DependencyInjection
     public static void AddPersistenceInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         var ttlSettings =
-            SettingsBinder.BindAndValidate<ConversionLifecycleManagerSettings, ConversionLifecycleManagerSettingsValidator>(configuration);
+            SettingsBinder
+                .BindAndValidate<ConversionLifecycleManagerSettings, ConversionLifecycleManagerSettingsValidator>(
+                    configuration);
         services.AddSingleton(ttlSettings);
 
         var databaseSettings =
@@ -26,16 +27,17 @@ public static class DependencyInjection
         services.AddSingleton(databaseSettings);
 
         services.AddScoped<ApplicationDbContext>(); // Config is within class as DI is required
-        
-        
-        
+
+
         services.AddHangfire(x => x.UsePostgreSqlStorage(databaseSettings.ConnectionString));
         services.AddHangfireServer();
 
         services.AddScoped<ConversionLifecycleManagerServiceScheduledTask>();
 
         #region Repositories
+
         services.AddTransient<IConversionRepository, ConversionRepository>();
+
         #endregion
     }
 }

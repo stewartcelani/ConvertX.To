@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
  * - ConvertX.To.Infrastructure.Shared
  */
 var host = Host.CreateDefaultBuilder(args)
-    .ConfigureAppConfiguration(((_, builder) => builder.AddJsonFile("appsettings.secret.json")))
+    .ConfigureAppConfiguration((_, builder) => builder.AddJsonFile("appsettings.secret.json"))
     .ConfigureServices((context, services) =>
     {
         services.AddApplication();

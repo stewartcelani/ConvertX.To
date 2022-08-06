@@ -2,11 +2,11 @@ using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Application.Logging;
 using ConvertX.To.Application.Validators;
-using ConvertX.To.Infrastructure.Shared.Logging;
 using ConvertX.To.Infrastructure.Shared.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
@@ -29,7 +29,7 @@ public static class DependencyInjection
         var msGraphSettings =
             SettingsBinder.BindAndValidate<MsGraphSettings, MsGraphSettingsValidator>(configuration);
         services.AddSingleton(msGraphSettings);
-        
+
         var conversionStorageSettings = SettingsBinder.Bind<ConversionStorageSettings>(configuration);
         services.AddSingleton(conversionStorageSettings);
 
@@ -43,5 +43,4 @@ public static class DependencyInjection
         services.AddScoped<IConversionService, ConversionService>();
         services.AddScoped<IConversionLifecycleManagerService, ConversionLifecycleManagerService>();
     }
-    
 }

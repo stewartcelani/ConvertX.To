@@ -1,9 +1,8 @@
-using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Domain;
 using ConvertX.To.ConsoleUI.API.ApiClient;
 using ConvertX.To.ConsoleUI.API.Exceptions;
-using Microsoft.Extensions.Logging;
 using Mapster;
+using Microsoft.Extensions.Logging;
 using MimeTypes.Core;
 using Refit;
 
@@ -11,8 +10,8 @@ namespace ConvertX.To.ConsoleUI.API.Services;
 
 public class ConversionService : IConversionService
 {
-    private readonly ILogger<ConversionService> _logger;
     private readonly IApiClient _apiClient;
+    private readonly ILogger<ConversionService> _logger;
 
     public ConversionService(ILogger<ConversionService> logger, IApiClient apiClient)
     {
@@ -35,19 +34,17 @@ public class ConversionService : IConversionService
         var supportedTargetFormats = supportedConversions.SourceFormatTo[sourceFormat];
 
         foreach (var targetFormat in supportedTargetFormats)
-        {
             try
             {
                 await ConvertFileToTargetFormatAsync(file, targetFormat);
             }
             catch (UnsuccessfulStatusCodeException ex)
             {
-                _logger.LogError(ex, 
+                _logger.LogError(ex,
                     "{statusCode} '{reasonPhrase}' error from API while attempting to convert {fileName} to {targetFormat}. Skipping file...",
                     (int)ex.HttpResponseMessage.StatusCode, ex.HttpResponseMessage.ReasonPhrase, file.Name,
                     targetFormat);
             }
-        }
     }
 
     public async Task ConvertFileToTargetFormatAsync(FileInfo file, string targetFormat)

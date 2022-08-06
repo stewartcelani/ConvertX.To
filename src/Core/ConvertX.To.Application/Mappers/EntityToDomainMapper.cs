@@ -16,7 +16,7 @@ public static class EntityToDomainMapper
             SourceMegabytes = conversionEntity.SourceMegabytes,
             ConvertedMegabytes = conversionEntity.ConvertedMegabytes,
             DateRequestReceived = conversionEntity.DateRequestReceived,
-            DateRequestCompleted = conversionEntity.DateRequestCompleted,
+            DateRequestCompleted = conversionEntity.DateRequestCompleted
         };
     }
 }

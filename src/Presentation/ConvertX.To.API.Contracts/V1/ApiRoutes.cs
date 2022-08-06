@@ -5,16 +5,50 @@ public static class ApiRoutesV1
     private const string Root = "api";
     private const string Version = "v1";
     private const string Base = $"/{Root}/{Version}";
-    
+
+    public static string ReplaceConversionId(this string s, Guid conversionId)
+    {
+        return s.Replace("{conversionId}", conversionId.ToString());
+    }
+
     public static class Files
     {
-        public const string Get = Base + "/file/{conversionId}";
-        public const string Delete = Base + "/file/{conversionId}";
+        public static class Get
+        {
+            public const string Url = Base + "/file/{conversionId}";
+
+            public static string UrlFor(Guid conversionId)
+            {
+                return Url.ReplaceConversionId(conversionId);
+            }
+        }
+
+        public static class Delete
+        {
+            public const string Url = Base + "/file/{conversionId}";
+
+            public static string UrlFor(Guid conversionId)
+            {
+                return Url.ReplaceConversionId(conversionId);
+            }
+        }
     }
 
     public static class Convert
     {
-        public const string Get = Base + "/convert";
-        public const string Post = Base + "/convert/{targetFormat}";
+        public static class Get
+        {
+            public const string Url = Base + "/convert";
+        }
+
+        public static class Post
+        {
+            public const string Url = Base + "/convert/{targetFormat}";
+
+            public static string UrlFor(string targetFormat)
+            {
+                return Url.Replace("{targetFormat}", targetFormat);
+            }
+        }
     }
 }

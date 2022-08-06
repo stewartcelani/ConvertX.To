@@ -5,23 +5,22 @@ using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Infrastructure.Persistence.Contexts.ValueConverters;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.Infrastructure.Persistence.Contexts;
 
 public class ApplicationDbContext : DbContext
 {
     private readonly DatabaseSettings _databaseSettings;
-    private readonly ILogger<ApplicationDbContext> _logger;
+    private readonly ILoggerAdapter<ApplicationDbContext> _logger;
 
-    public ApplicationDbContext(DatabaseSettings databaseSettings, ILogger<ApplicationDbContext> logger)
+    public ApplicationDbContext(DatabaseSettings databaseSettings, ILoggerAdapter<ApplicationDbContext> logger)
     {
         _databaseSettings = databaseSettings;
         _logger = logger;
     }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, DatabaseSettings databaseSettings,
-        ILogger<ApplicationDbContext> logger)
+        ILoggerAdapter<ApplicationDbContext> logger)
         : base(options)
     {
         _databaseSettings = databaseSettings;
@@ -29,19 +28,19 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<ConversionEntity> Conversions { get; set; }
-    
+
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder
             .Properties<DateTimeOffset>()
             .HaveConversion<DateTimeOffsetConverter>();
-    }    
+    }
+
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var now = DateTimeOffset.Now;
 
         foreach (var entry in ChangeTracker.Entries<IAuditable>())
-        {
             switch (entry.State)
             {
                 case EntityState.Added:
@@ -52,11 +51,10 @@ public class ApplicationDbContext : DbContext
                     entry.Property(x => x.DateCreated).IsModified = false;
                     break;
             }
-        }
 
         return base.SaveChangesAsync(cancellationToken);
     }
-    
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -73,17 +71,13 @@ public class ApplicationDbContext : DbContext
         else
         {
             if (_databaseSettings.EnableSensitiveDataLogging)
-            {
                 optionsBuilder.UseNpgsql(_databaseSettings.ConnectionString,
                         sqlOptions => sqlOptions.EnableRetryOnFailure())
                     .EnableSensitiveDataLogging()
                     .LogTo(s => _logger.LogTrace(s));
-            }
             else
-            {
                 optionsBuilder.UseNpgsql(_databaseSettings.ConnectionString,
                     sqlOptions => sqlOptions.EnableRetryOnFailure());
-            }
         }
     }
 }
