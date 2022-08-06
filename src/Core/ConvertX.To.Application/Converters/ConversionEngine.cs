@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
+using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces;
-using ConvertX.To.Domain.Common;
 using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.Application.Converters;
@@ -45,7 +45,7 @@ public class ConversionEngine : IConversionEngine
         var convertersByTargetFormat = new Dictionary<string, List<string>>();
         var convertersBySourceFormat = new Dictionary<string, List<string>>();
         
-        foreach (var converter in Reflection.GetConcreteTypesInAssembly<IConverter>(Assembly.GetExecutingAssembly()))
+        foreach (var converter in ReflectionHelper.GetConcreteTypesInAssembly<IConverter>(Assembly.GetExecutingAssembly()))
         {
             MapSupportedConversionsForConverter(converter, convertersByTargetFormat, convertersBySourceFormat);
         }

@@ -1,6 +1,6 @@
+using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Validators;
-using ConvertX.To.Domain.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;

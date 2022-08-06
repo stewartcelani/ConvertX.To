@@ -26,6 +26,8 @@ app.ScheduleRecurringJobs();
 app.UseHangfireDashboard();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ApiExceptionMiddleware>();
+app.UseMiddleware<ValidationExceptionMiddleware>();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto

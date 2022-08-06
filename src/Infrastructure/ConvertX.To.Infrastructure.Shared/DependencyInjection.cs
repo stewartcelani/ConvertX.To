@@ -1,8 +1,9 @@
 using ConvertX.To.Application.Converters;
+using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Application.Validators;
-using ConvertX.To.Domain.Settings;
+using ConvertX.To.Infrastructure.Shared.Logging;
 using ConvertX.To.Infrastructure.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,7 @@ public static class DependencyInjection
             loggingBuilder.ClearProviders();
             loggingBuilder.AddSerilog(Log.Logger, true);
         });
+        services.AddTransient(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
 
         var msGraphSettings =
             SettingsBinder.BindAndValidate<MsGraphSettings, MsGraphSettingsValidator>(configuration);

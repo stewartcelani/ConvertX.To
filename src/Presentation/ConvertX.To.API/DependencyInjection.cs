@@ -40,7 +40,7 @@ public static class DependencyInjection
 
     private static void RegisterFiltersFromAssembly(this FilterCollection filterCollection, Assembly assembly)
     {
-        var filters = Reflection.GetConcreteTypesInAssembly<IFilterMetadata>(assembly);
+        var filters = ReflectionHelper.GetConcreteTypesInAssembly<IFilterMetadata>(assembly);
         filters.ForEach(filter => filterCollection.Add(filter));
     }
 

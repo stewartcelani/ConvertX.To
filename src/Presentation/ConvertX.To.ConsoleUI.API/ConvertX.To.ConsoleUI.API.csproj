@@ -9,7 +9,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Core\ConvertX.To.Application\ConvertX.To.Application.csproj" />
-      <ProjectReference Include="..\..\Core\ConvertX.To.Domain\ConvertX.To.Domain.csproj" />
       <ProjectReference Include="..\ConvertX.To.API.Contracts\ConvertX.To.API.Contracts.csproj" />
     </ItemGroup>
 

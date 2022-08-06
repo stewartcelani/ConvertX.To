@@ -1,5 +1,5 @@
+using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Validators.Mappers;
-using ConvertX.To.Domain.Settings;
 using FluentValidation;
 
 namespace ConvertX.To.Application.Validators;

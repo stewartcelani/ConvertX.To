@@ -1,6 +1,6 @@
-﻿using ConvertX.To.Application.Exceptions;
+﻿using ConvertX.To.Application.Domain.Settings;
+using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Interfaces;
-using ConvertX.To.Domain.Settings;
 
 namespace ConvertX.To.Infrastructure.Shared.Services;
 
@@ -14,10 +14,11 @@ public class LocalConversionStorageService : IConversionStorageService
                          throw new NullReferenceException(nameof(conversionStorageSettings.RootDirectory));
     }
 
-    public async Task SaveConversionAsync(string conversionId, string convertedFileName, Stream stream)
+    public async Task SaveConversionAsync(Guid conversionId, string convertedFileName, Stream stream)
     {
-        EnsureDirectory(conversionId);
-        await using var fileStream = new FileStream(Path.Combine(_rootDirectory, conversionId, convertedFileName), FileMode.Create);
+        var id = conversionId.ToString();
+        EnsureDirectory(id);
+        await using var fileStream = new FileStream(Path.Combine(_rootDirectory, id, convertedFileName), FileMode.Create);
         await stream.CopyToAsync(fileStream);
         await stream.DisposeAsync();
         await fileStream.DisposeAsync();
@@ -27,19 +28,20 @@ public class LocalConversionStorageService : IConversionStorageService
 
     public DirectoryInfo GetRootDirectory() => GetDirectory(_rootDirectory);
 
-    public void DeleteConvertedFile(string conversionId) => Directory.Delete(Path.Combine(_rootDirectory, conversionId), true);
+    public void DeleteConvertedFile(Guid conversionId) => Directory.Delete(Path.Combine(_rootDirectory, conversionId.ToString()), true);
 
-    public Stream GetConvertedFile(string conversionId)
+    public Stream GetConvertedFile(Guid conversionId)
     {
-        var directory = GetDirectory(conversionId);
-        if (!directory.Exists) throw new ConvertedFileGoneException(conversionId);
+        var id = conversionId.ToString();
+        var directory = GetDirectory(id);
+        if (!directory.Exists) throw new ConvertedFileGoneException(id);
         try
         {
             return directory.GetFiles().Single().OpenRead();
         }
         catch (InvalidOperationException ex)
         {
-            if (ex.Message.Equals("Sequence contains no elements")) throw new ConvertedFileGoneException(conversionId);
+            if (ex.Message.Equals("Sequence contains no elements")) throw new ConvertedFileGoneException(id);
             throw;
         }
     }

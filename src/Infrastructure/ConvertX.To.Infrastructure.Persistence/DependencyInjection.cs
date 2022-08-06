@@ -1,8 +1,7 @@
+using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces.Repositories;
 using ConvertX.To.Application.Validators;
-using ConvertX.To.Domain.Entities;
-using ConvertX.To.Domain.Settings;
 using ConvertX.To.Infrastructure.Persistence.Contexts;
 using ConvertX.To.Infrastructure.Persistence.Cron;
 using ConvertX.To.Infrastructure.Persistence.Repositories;

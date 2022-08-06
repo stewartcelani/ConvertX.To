@@ -1,12 +1,17 @@
 ﻿using System.Linq.Expressions;
+using ConvertX.To.Application.Domain;
+using ConvertX.To.Application.Domain.Entities;
+using ConvertX.To.Application.Domain.Filters;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Application.Interfaces.Repositories;
-using ConvertX.To.Domain.Entities;
+using ConvertX.To.Application.Mappers;
+using ConvertX.To.Application.Validators.Helpers;
+using FluentValidation;
 
 namespace ConvertX.To.Infrastructure.Shared.Services;
 
 /// <summary>
-/// IConversionService is primarily concerned with DbSet<Conversion>
+/// IConversionService is primarily concerned with DbSet<ConversionEntity>
 /// IConversionEngine is what actually handles the conversions
 /// </summary>
 public class ConversionService : IConversionService
@@ -17,35 +22,109 @@ public class ConversionService : IConversionService
     {
         _conversionRepository = conversionRepository;
     }
-
-    public async Task<IEnumerable<Conversion>> GetAsync(Expression<Func<Conversion, bool>>? predicate = null,
-        Func<IQueryable<Conversion>, IOrderedQueryable<Conversion>>? orderBy = null) =>
-        await _conversionRepository.GetAsync(predicate, orderBy);
     
-    public async Task<Conversion> GetByIdAsync(Guid conversionId) =>
-        await _conversionRepository.GetByIdAsync(conversionId);
-
-    public async Task CreateAsync(Conversion conversion)
+    public async Task<Conversion?> GetByIdAsync(Guid id)
     {
-        await _conversionRepository.CreateAsync(conversion);
+        var conversionEntity = await _conversionRepository.GetAsync(id);
+        return conversionEntity?.ToConversion();
     }
 
-    public async Task UpdateAsync(Conversion conversion)
+    public async Task<IEnumerable<Conversion>> GetAsync() => await GetAsync(new ConversionFilter());
+
+    public async Task<IEnumerable<Conversion>> GetAsync(ConversionFilter getCitiesFilter)
     {
-        await _conversionRepository.UpdateAsync(conversion);
+        Expression<Func<ConversionEntity, bool>>? predicate = x => x.DateDeleted == null;
+        if (getCitiesFilter.Deleted)
+        {
+            predicate = x => x.DateDeleted != null;
+        }
+
+        var conversionEntities = await _conversionRepository.GetManyAsync(predicate, null, q => q.OrderByDescending(x => x.DateRequestCompleted), null);
+        return conversionEntities.Select(x => x.ToConversion());
+    }
+    
+    public async Task<IEnumerable<Conversion>> GetAsync(ConversionFilter getCitiesFilter, PaginationFilter paginationFilter)
+    {
+        Expression<Func<ConversionEntity, bool>>? predicate = x => x.DateDeleted == null;
+        if (getCitiesFilter.Deleted)
+        {
+            predicate = x => x.DateDeleted != null;
+        }
+
+        var conversionEntities = await _conversionRepository.GetManyAsync(predicate, null, q => q.OrderByDescending(x => x.DateRequestCompleted), paginationFilter);
+        return conversionEntities.Select(x => x.ToConversion());
     }
 
-    public async Task ExpireConversions(int timeToLiveInMinutes)
+    public async Task<bool> ExistsAsync(Guid id)
+    {
+        return await _conversionRepository.ExistsAsync(x => x.Id.Equals(id) && x.DateDeleted != null);
+    }
+
+    public async Task<bool> CreateAsync(Conversion conversion)
+    {
+        if (await _conversionRepository.ExistsAsync(conversion.Id))
+        {
+            var message = $"A conversion with id {conversion.Id} already exists";
+            throw new ValidationException(message, ValidationFailureHelper.Generate(nameof(Conversion), message));
+        }
+        var conversionEntity = conversion.ToConversionEntity();
+        var created = await _conversionRepository.CreateAsync(conversionEntity);
+        return created;
+    }
+
+    public async Task<bool> UpdateAsync(Conversion conversion)
+    {
+        if (!await _conversionRepository.ExistsAsync(conversion.Id))
+        {
+            var message = $"Can not update conversion with id {conversion.Id} as it does not exist";
+            throw new ValidationException(message, ValidationFailureHelper.Generate(nameof(Conversion), message));
+        }
+        
+        var conversionEntity = conversion.ToConversionEntity();
+        var updated = await _conversionRepository.UpdateAsync(conversionEntity);
+        return updated;
+    }
+
+    public async Task<bool> DeleteAsync(Guid conversionId)
+    {
+        if (!await _conversionRepository.ExistsAsync(conversionId)) return true;
+        var deleted = await _conversionRepository.DeleteAsync(conversionId);
+        return deleted;
+    }
+
+    public async Task<bool> ExpireConversions(int timeToLiveInMinutes)
     {
         var timeToLive = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(timeToLiveInMinutes));
         var conversions =
-            (await _conversionRepository.GetAsync(x => x.DateDeleted == null & x.DateCreated < timeToLive)).ToList();
+            (await _conversionRepository.GetManyAsync(x => x.DateDeleted == null & x.DateCreated < timeToLive)).ToList();
         var now = DateTimeOffset.Now;
         foreach (var conversion in conversions)
         {
             conversion.DateDeleted = now;
         }
-        await _conversionRepository.UpdateAsync(conversions);
+        return await _conversionRepository.UpdateAsync(conversions);
+    }
+
+    public async Task<bool> IncrementDownloadCounter(Guid id)
+    {
+        var conversionEntity = await _conversionRepository.GetAsync(id);
+        
+        if (conversionEntity is null)
+        {
+            var message = $"Can not increment download counter for conversion with id {id} as it does not exist";
+            throw new ValidationException(message, ValidationFailureHelper.Generate(nameof(Conversion), message));
+        }
+        
+        if (conversionEntity!.DateDeleted is not null)
+        {
+            var message = $"Can not increment download counter for conversion with id {id} as it has been deleted from disk";
+            throw new ValidationException(message, ValidationFailureHelper.Generate(nameof(Conversion), message));
+        }
+
+        conversionEntity.Downloads++;
+
+        var updated = await _conversionRepository.UpdateAsync(conversionEntity);
+        return updated;
     }
     
     public string GetConvertedFileName(string fileNameWithoutExtension, string targetFormat,
@@ -55,4 +134,5 @@ public class ConversionService : IConversionService
             ? $"{fileNameWithoutExtension}.{targetFormat}"
             : $"{fileNameWithoutExtension}.{targetFormat}.{convertedFormat}";
     }
+    
 }

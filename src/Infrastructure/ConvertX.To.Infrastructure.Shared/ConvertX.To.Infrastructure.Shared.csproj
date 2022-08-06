@@ -29,7 +29,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Core\ConvertX.To.Application\ConvertX.To.Application.csproj" />
-      <ProjectReference Include="..\..\Core\ConvertX.To.Domain\ConvertX.To.Domain.csproj" />
       <ProjectReference Include="..\ConvertX.To.Infrastructure.Persistence\ConvertX.To.Infrastructure.Persistence.csproj" />
     </ItemGroup>
 

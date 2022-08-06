@@ -1,5 +1,5 @@
+using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Interfaces;
-using ConvertX.To.Domain.Settings;
 using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.Infrastructure.Shared.Services;
@@ -31,14 +31,14 @@ public class ConversionLifecycleManagerService : IConversionLifecycleManagerServ
     {
         _logger.LogTrace("{Class}.{Method}", nameof(ConversionLifecycleManagerService),
             nameof(CleanUpTemporaryStorage));
-        var nonExpiredConversions = await _conversionService.GetAsync(x => x.DateDeleted == null);
+        var nonExpiredConversions = await _conversionService.GetAsync();
         var nonExpiredConversionIds = nonExpiredConversions.Select(x => x.Id.ToString()).ToArray();
         var rootDirectory = _conversionStorageService.GetRootDirectory();
         foreach (var directoryInfo in rootDirectory.GetDirectories()
                      .Where(x => !nonExpiredConversionIds.Contains(x.Name)))
         {
             _logger.LogDebug("Cleaning up expired conversion {conversionId}", directoryInfo.Name);
-            _conversionStorageService.DeleteConvertedFile(directoryInfo.Name);
+            _conversionStorageService.DeleteConvertedFile(Guid.Parse(directoryInfo.Name));
         }
     }
 

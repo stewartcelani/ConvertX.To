@@ -1,7 +1,7 @@
 using ConvertX.To.Application.Converters;
+using ConvertX.To.Application.Domain;
 using ConvertX.To.ConsoleUI.API.ApiClient;
 using ConvertX.To.ConsoleUI.API.Exceptions;
-using ConvertX.To.Domain.Common;
 using Microsoft.Extensions.Logging;
 using Mapster;
 using MimeTypes.Core;

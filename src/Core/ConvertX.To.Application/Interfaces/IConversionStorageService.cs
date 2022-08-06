@@ -4,7 +4,7 @@ public interface IConversionStorageService
 {
     DirectoryInfo GetDirectory(string conversionId);
     DirectoryInfo GetRootDirectory();
-    void DeleteConvertedFile(string conversionId);
-    Stream GetConvertedFile(string conversionId);
-    Task SaveConversionAsync(string conversionId, string convertedFileName, Stream stream);
+    void DeleteConvertedFile(Guid conversionId);
+    Stream GetConvertedFile(Guid conversionId);
+    Task SaveConversionAsync(Guid conversionId, string convertedFileName, Stream stream);
 }

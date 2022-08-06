@@ -1,4 +1,4 @@
-using ConvertX.To.Domain.Settings;
+using ConvertX.To.Application.Domain.Settings;
 using FluentValidation;
 
 namespace ConvertX.To.Application.Validators;

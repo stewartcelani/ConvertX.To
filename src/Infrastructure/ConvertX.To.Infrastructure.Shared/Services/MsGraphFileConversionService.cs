@@ -1,9 +1,9 @@
 using System.Net.Http.Headers;
 using ConvertX.To.Application.Interfaces;
-using ConvertX.To.Domain.Settings;
 using Newtonsoft.Json;
 using Microsoft.Graph;
 using Azure.Identity;
+using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Infrastructure.Shared.Http;
 using Microsoft.Extensions.Logging;

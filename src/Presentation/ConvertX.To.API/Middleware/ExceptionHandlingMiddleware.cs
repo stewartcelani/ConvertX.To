@@ -1,27 +1,31 @@
-﻿using ConvertX.To.API.Middleware.Translators;
+using System.Diagnostics.CodeAnalysis;
+using ConvertX.To.Application.Interfaces;
 
 namespace ConvertX.To.API.Middleware;
 
-public sealed class ExceptionHandlingMiddleware
+public class ExceptionHandlingMiddleware
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
-    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+    private readonly ILoggerAdapter<ExceptionHandlingMiddleware> _logger;
+    private readonly RequestDelegate _request;
+
+    public ExceptionHandlingMiddleware(RequestDelegate request, ILoggerAdapter<ExceptionHandlingMiddleware> logger)
     {
-        _next = next;
+        _request = request;
         _logger = logger;
     }
 
-    public async Task InvokeAsync(HttpContext httpContext)
+    [ExcludeFromCodeCoverage]
+    public async Task InvokeAsync(HttpContext context)
     {
         try
         {
-            await _next(httpContext);
+            await _request(context);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
-            await ExceptionToHttpTranslator.Translate(httpContext, ex);
+            _logger.LogCritical(ex, ex.Message);
+            context.Response.StatusCode = 500;
+            await context.Response.CompleteAsync();
         }
     }
 }

@@ -1,12 +1,12 @@
-using ConvertX.To.Domain.Entities;
+using ConvertX.To.Application.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConvertX.To.Infrastructure.Persistence.Contexts.Configurations;
 
-public class ConversionConfiguration : IEntityTypeConfiguration<Conversion>
+public class ConversionConfiguration : IEntityTypeConfiguration<ConversionEntity>
 {
-    public void Configure(EntityTypeBuilder<Conversion> builder)
+    public void Configure(EntityTypeBuilder<ConversionEntity> builder)
     {
         builder.Property(x => x.Id)
             .IsRequired();
@@ -25,10 +25,10 @@ public class ConversionConfiguration : IEntityTypeConfiguration<Conversion>
             .HasPrecision(18, 6)
             .IsRequired();
 
-        builder.Property(x => x.RequestDate)
+        builder.Property(x => x.DateRequestReceived)
             .IsRequired();
 
-        builder.Property(x => x.RequestCompleteDate)
+        builder.Property(x => x.DateRequestCompleted)
             .IsRequired();
 
         builder.Property(x => x.RequestSeconds)

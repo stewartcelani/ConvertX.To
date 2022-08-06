@@ -20,27 +20,23 @@ public class FileController : ControllerBase
     [HttpGet(ApiRoutesV1.Files.Get)]
     public async Task<IActionResult> Get([FromRoute] Guid conversionId)
     {
-        var conversion = await _conversionService.GetByIdAsync(conversionId);
-        if (conversion.DateDeleted is not null) return StatusCode(410, null);
-        
-        var stream = (FileStream)_conversionStorageService.GetConvertedFile(conversion.Id.ToString());
-        
-        conversion.Downloads++;
-        await _conversionService.UpdateAsync(conversion);
-        
+        if (!await _conversionService.ExistsAsync(conversionId)) return NotFound();
+
+        var stream = (FileStream)_conversionStorageService.GetConvertedFile(conversionId);
+
+        await _conversionService.IncrementDownloadCounter(conversionId);
+                
         return new FileStreamResult(stream, MimeTypeMap.GetMimeType(Path.GetExtension(stream.Name)));
     }
     
     [HttpDelete(ApiRoutesV1.Files.Delete)]
     public async Task<IActionResult> Delete([FromRoute] Guid conversionId)
     {
-        var conversion = await _conversionService.GetByIdAsync(conversionId);
-        if (conversion.DateDeleted is not null) return Ok();
+        if (!await _conversionService.ExistsAsync(conversionId)) return NotFound();
 
-        _conversionStorageService.DeleteConvertedFile(conversion.Id.ToString());
+        _conversionStorageService.DeleteConvertedFile(conversionId);
         
-        conversion.DateDeleted = DateTimeOffset.Now;
-        await _conversionService.UpdateAsync(conversion);
+        await _conversionService.DeleteAsync(conversionId);
 
         return Ok();
     }
