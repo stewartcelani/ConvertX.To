@@ -1,3 +1,4 @@
+using ConvertX.To.API.Contracts.V1.Responses;
 using ConvertX.To.Application.Domain;
 using ConvertX.To.ConsoleUI.API.ApiClient;
 using ConvertX.To.ConsoleUI.API.Exceptions;
@@ -53,8 +54,23 @@ public class ConversionService : IConversionService
 
         _logger.LogInformation("Converting {fileName} to {targetFormat}", file.Name, targetFormat);
 
-        var conversionResponse = await _apiClient.ConvertAsync(targetFormat,
-            new StreamPart(file.OpenRead(), file.Name, MimeTypeMap.GetMimeType(file.Extension)));
+        ApiResponse<ConversionResponse>? conversionResponse = null;
+
+        try
+        {
+            conversionResponse = await _apiClient.ConvertAsync(targetFormat,
+                new StreamPart(file.OpenRead(), file.Name, MimeTypeMap.GetMimeType(file.Extension)));
+        }
+        catch (TaskCanceledException ex)
+        {
+            _logger.LogError(ex,
+                "The request convert {fileName} to {targetFormat} timed out. Skipping file...",
+                file.Name,
+                targetFormat);
+            return;
+        }
+
+        if (conversionResponse is null) throw new NullReferenceException(nameof(conversionResponse));
 
         var conversion = conversionResponse.Content!;
 
@@ -64,7 +80,7 @@ public class ConversionService : IConversionService
 
         await SaveFileAsync(
             Path.Combine(file.DirectoryName!,
-                GetConvertedFileName(Path.GetFileNameWithoutExtension(file.Name), conversion.TargetFormat,
+                GetConvertedFileName(file.Name, conversion.TargetFormat,
                     conversion.ConvertedFormat)), convertedStream);
 
         _logger.LogInformation("{fileName} successfully converted to {targetFormat}!", file.Name, targetFormat);

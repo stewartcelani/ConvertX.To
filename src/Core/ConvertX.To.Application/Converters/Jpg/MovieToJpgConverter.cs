@@ -2,10 +2,10 @@ using ConvertX.To.Application.Interfaces;
 
 namespace ConvertX.To.Application.Converters.Jpg;
 
-public class MovieToJpgConverter : MsGraphDriveItemConverterBase
+public class MovieToJpgConverter : ToJpgConverterBase
 {
-    public MovieToJpgConverter(string sourceFormat, string targetFormat, ILoggerAdapter<IConverter> logger,
-        IMsGraphFileConversionService msGraphFileConversionService) : base(sourceFormat, targetFormat, logger,
+    public MovieToJpgConverter(ConverterFactory converterFactory, string sourceFormat, string targetFormat, ILoggerAdapter<IConverter> logger,
+        IMsGraphFileConversionService msGraphFileConversionService) : base(converterFactory, sourceFormat, targetFormat, logger,
         msGraphFileConversionService)
     {
     }

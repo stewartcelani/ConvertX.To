@@ -43,7 +43,11 @@ public static class DependencyInjection
         services.AddTransient<UnsuccessfulStatusCodeHandler>();
 
         services.AddRefitClient<IApiClient>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(httpSettings.BaseUrl))
+            .ConfigureHttpClient(c =>
+            {
+                c.BaseAddress = new Uri(httpSettings.BaseUrl);
+                c.Timeout = TimeSpan.FromSeconds(httpSettings.WaitAndRetryConfig.TimeoutSeconds);
+            })
             .AddHttpMessageHandler<UnsuccessfulStatusCodeHandler>()
             .AddPolicyHandler(retryPolicy)
             .AddPolicyHandler(timeoutPolicy);

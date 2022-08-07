@@ -2,10 +2,10 @@ using ConvertX.To.Application.Interfaces;
 
 namespace ConvertX.To.Application.Converters.Jpg;
 
-public class EpiToJpgConverter : MsGraphDriveItemConverterBase
+public class EpiToJpgConverter : ToJpgConverterBase
 {
-    public EpiToJpgConverter(string sourceFormat, string targetFormat, ILoggerAdapter<IConverter> logger,
-        IMsGraphFileConversionService msGraphFileConversionService) : base(sourceFormat, targetFormat, logger,
+    public EpiToJpgConverter(ConverterFactory converterFactory, string sourceFormat, string targetFormat, ILoggerAdapter<IConverter> logger,
+        IMsGraphFileConversionService msGraphFileConversionService) : base(converterFactory, sourceFormat, targetFormat, logger,
         msGraphFileConversionService)
     {
     }

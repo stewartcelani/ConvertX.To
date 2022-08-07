@@ -13,6 +13,8 @@
         <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
         <PackageReference Include="Microsoft.Graph" Version="4.34.0" />
         <PackageReference Include="Microsoft.Graph.Core" Version="2.0.9" />
+        <PackageReference Include="PDFsharp" Version="1.50.5147" />
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>

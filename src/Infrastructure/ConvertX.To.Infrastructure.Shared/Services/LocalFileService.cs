@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using ConvertX.To.Application.Interfaces;
 
 namespace ConvertX.To.Infrastructure.Shared.Services;
@@ -11,6 +12,25 @@ public class LocalFileService : IFileService
         await stream.CopyToAsync(fileStream);
         await stream.DisposeAsync();
         await fileStream.DisposeAsync();
+    }
+
+    public async Task<Stream> ZipFilesAsync(IEnumerable<FileInfo> files)
+    {
+        var zipStream = new MemoryStream();
+        
+        using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+        {
+            foreach (var file in files)
+            {
+                var entry = zip.CreateEntry(file.Name);
+                await using var entryStream = entry.Open();
+                await using var fileStream = file.OpenRead();
+                await fileStream.CopyToAsync(entryStream);
+            }
+        }
+        
+        zipStream.Position = 0;
+        return zipStream;
     }
 
     private static void EnsureDirectory(string path)

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using ConvertX.To.API.Contracts.V1;
 using ConvertX.To.API.Contracts.V1.Mappers;
+using ConvertX.To.API.Contracts.V1.Queries;
 using ConvertX.To.API.Services;
 using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Domain.Settings;
@@ -8,6 +9,7 @@ using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Extensions;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Application.Validators.Helpers;
+using ConvertX.To.Domain.Options;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConvertX.To.API.Controllers.V1;
@@ -40,16 +42,19 @@ public class ConversionController : ControllerBase
 
     [HttpPost(ApiRoutesV1.Convert.Post.Url)]
     [Consumes("multipart/form-data")]
-    public async Task<IActionResult> Convert([FromRoute] string targetFormat, [FromForm] IFormFile file)
+    public async Task<IActionResult> Convert([FromRoute] string targetFormat, [FromForm] IFormFile file, [FromQuery] ConversionOptionsQuery conversionOptionsQuery)
     {
         if (file.Length == 0) throw new InvalidFileLengthException();
 
-        _logger.LogInformation("Conversion request: {fileName} to {targetFormat}", file.FileName, targetFormat);
 
         var requestDate = DateTimeOffset.Now;
+        
         var sourceFormat = Path.GetExtension(file.FileName).ToLower().Replace(".", "");
 
-        var conversionOptions = new ConversionOptions();
+        _logger.LogInformation("Conversion request: {sourceFormat} to {targetFormat}", sourceFormat, targetFormat);
+        
+        var conversionOptions = conversionOptionsQuery.ToConversionOptions();
+        
         var (convertedFileExtension, convertedStream) =
             await _conversionEngine.ConvertAsync(sourceFormat, targetFormat, file.OpenReadStream(), conversionOptions);
 

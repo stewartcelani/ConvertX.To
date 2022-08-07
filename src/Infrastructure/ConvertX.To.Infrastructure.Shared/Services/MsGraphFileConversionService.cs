@@ -3,11 +3,9 @@ using Azure.Identity;
 using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Interfaces;
-using ConvertX.To.Infrastructure.Shared.Http;
 using Microsoft.Graph;
 using MimeTypes.Core;
 using Newtonsoft.Json;
-using Polly.Retry;
 
 namespace ConvertX.To.Infrastructure.Shared.Services;
 
@@ -19,7 +17,6 @@ namespace ConvertX.To.Infrastructure.Shared.Services;
 /// </summary>
 public class MsGraphFileConversionService : IMsGraphFileConversionService
 {
-    private readonly AsyncRetryPolicy _asyncRetryPolicy;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILoggerAdapter<MsGraphFileConversionService> _logger;
     private readonly MsGraphSettings _msGraphSettings;
@@ -33,7 +30,6 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         _httpClientFactory = httpClientFactory;
         _msGraphSettings = msGraphSettings;
         _logger = logger;
-        _asyncRetryPolicy = HttpClientRetryPolicy.GetPolicy(_logger, 3, 2);
     }
 
     public async Task<string> UploadFileAsync(string sourceFormat, Stream source)
@@ -46,8 +42,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         var requestUrl = $"{_msGraphSettings.GraphEndpoint}/root:/{tempFileName}:/content";
         var requestContent = new StreamContent(source);
         requestContent.Headers.ContentType = new MediaTypeHeaderValue(MimeTypeMap.GetMimeType(sourceFormat));
-        var response =
-            await _asyncRetryPolicy.ExecuteAsync(async () => await httpClient.PutAsync(requestUrl, requestContent));
+        var response = await httpClient.PutAsync(requestUrl, requestContent);
         if (!response.IsSuccessStatusCode)
             throw new MsGraphUploadFileException(response);
         var responseBody = await response.Content.ReadAsStringAsync();
@@ -64,7 +59,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         if (targetFormat.Equals("jpg"))
             requestUrl += "&width=1920&height=1080";
 
-        var response = await _asyncRetryPolicy.ExecuteAsync(async () => await httpClient.GetAsync(requestUrl));
+        var response = await httpClient.GetAsync(requestUrl);
 
         if (response.IsSuccessStatusCode) return await response.Content.ReadAsStreamAsync();
 
@@ -84,7 +79,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
     {
         var httpClient = await CreateAuthorizedHttpClient();
         var requestUrl = $"{_msGraphSettings.GraphEndpoint}/{fileId}";
-        var response = await _asyncRetryPolicy.ExecuteAsync(async () => await httpClient.DeleteAsync(requestUrl));
+        var response = await httpClient.DeleteAsync(requestUrl);
         if (!response.IsSuccessStatusCode)
             throw new MsGraphDeleteFileException(response);
     }
@@ -144,7 +139,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         if (_httpClient is not null) return _httpClient;
 
         var token = await GetAccessTokenAsync();
-        _httpClient = _httpClientFactory.CreateClient();
+        _httpClient = _httpClientFactory.CreateClient(nameof(MsGraphFileConversionService));
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
         return _httpClient;

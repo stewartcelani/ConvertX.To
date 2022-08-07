@@ -1,5 +1,6 @@
 using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Domain.Options;
 using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.ConsoleUI.Core;

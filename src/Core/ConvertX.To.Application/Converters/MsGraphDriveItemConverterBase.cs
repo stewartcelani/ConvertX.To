@@ -1,5 +1,6 @@
 ﻿using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Domain.Options;
 
 namespace ConvertX.To.Application.Converters;
 
@@ -7,8 +8,8 @@ public abstract class MsGraphDriveItemConverterBase : IConverter
 {
     private readonly ILoggerAdapter<IConverter> _logger;
     private readonly IMsGraphFileConversionService _msGraphFileConversionService;
-    private readonly string _sourceFormat;
-    private readonly string _targetFormat;
+    protected readonly string _sourceFormat;
+    protected readonly string _targetFormat;
 
     protected MsGraphDriveItemConverterBase(string sourceFormat, string targetFormat, ILoggerAdapter<IConverter> logger,
         IMsGraphFileConversionService msGraphFileConversionService)

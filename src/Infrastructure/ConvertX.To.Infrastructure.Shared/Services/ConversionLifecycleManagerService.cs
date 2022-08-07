@@ -19,14 +19,16 @@ public class ConversionLifecycleManagerService : IConversionLifecycleManagerServ
         _conversionStorageService = conversionStorageService;
         _conversionLifecycleManagerSettings = conversionLifecycleManagerSettings;
     }
-
-    public async Task ExpireConversions()
+    
+    public async Task ExpireConversionsAndCleanUpTemporaryStorage()
     {
-        _logger.LogTrace("{Class}.{Method}", nameof(ConversionLifecycleManagerService), nameof(ExpireConversions));
+        _logger.LogTrace("{Class}.{Method}", nameof(ConversionLifecycleManagerService),
+            nameof(ExpireConversionsAndCleanUpTemporaryStorage));
         await _conversionService.ExpireConversions(_conversionLifecycleManagerSettings.TimeToLiveInMinutes);
+        await CleanUpTemporaryStorage();
     }
 
-    public async Task CleanUpTemporaryStorage()
+    private async Task CleanUpTemporaryStorage()
     {
         _logger.LogTrace("{Class}.{Method}", nameof(ConversionLifecycleManagerService),
             nameof(CleanUpTemporaryStorage));
@@ -41,11 +43,4 @@ public class ConversionLifecycleManagerService : IConversionLifecycleManagerServ
         }
     }
 
-    public async Task ExpireConversionsAndCleanUpTemporaryStorage()
-    {
-        _logger.LogTrace("{Class}.{Method}", nameof(ConversionLifecycleManagerService),
-            nameof(ExpireConversionsAndCleanUpTemporaryStorage));
-        await ExpireConversions();
-        await CleanUpTemporaryStorage();
-    }
 }

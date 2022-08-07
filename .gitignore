@@ -268,3 +268,4 @@ appsettings.secret.json
 .hide
 .hidden
 .secret
+.conversionStorage
