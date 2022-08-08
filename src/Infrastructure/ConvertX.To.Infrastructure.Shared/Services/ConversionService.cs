@@ -6,15 +6,11 @@ using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Application.Interfaces.Repositories;
 using ConvertX.To.Application.Mappers;
 using ConvertX.To.Application.Validators.Helpers;
+using ConvertX.To.Domain;
 using FluentValidation;
 
 namespace ConvertX.To.Infrastructure.Shared.Services;
 
-/// <summary>
-///     IConversionService is primarily concerned with DbSet
-///     <ConversionEntity>
-///         IConversionEngine is what actually handles the conversions
-/// </summary>
 public class ConversionService : IConversionService
 {
     private readonly IConversionRepository _conversionRepository;
@@ -24,21 +20,25 @@ public class ConversionService : IConversionService
         _conversionRepository = conversionRepository;
     }
 
+    public async Task<bool> ExistsAsync(Guid id)
+    {
+        return await _conversionRepository.ExistsAsync(x => x.Id == id && x.DateDeleted == null);
+    }
+
     public async Task<Conversion?> GetByIdAsync(Guid id)
     {
         var conversionEntity = await _conversionRepository.GetAsync(id);
         return conversionEntity?.ToConversion();
     }
-
+    
     public async Task<IEnumerable<Conversion>> GetAsync()
     {
         return await GetAsync(new ConversionFilter());
     }
 
-    public async Task<IEnumerable<Conversion>> GetAsync(ConversionFilter getCitiesFilter)
+    public async Task<IEnumerable<Conversion>> GetAsync(ConversionFilter conversionFilter)
     {
-        Expression<Func<ConversionEntity, bool>>? predicate = x => x.DateDeleted == null;
-        if (getCitiesFilter.Deleted) predicate = x => x.DateDeleted != null;
+        var predicate = GetPredicateForConversionFilter(conversionFilter);
 
         var conversionEntities =
             await _conversionRepository.GetManyAsync(predicate, null,
@@ -46,22 +46,17 @@ public class ConversionService : IConversionService
         return conversionEntities.Select(x => x.ToConversion());
     }
 
-    public async Task<IEnumerable<Conversion>> GetAsync(ConversionFilter getCitiesFilter,
+    public async Task<IEnumerable<Conversion>> GetAsync(ConversionFilter conversionFilter,
         PaginationFilter paginationFilter)
     {
-        Expression<Func<ConversionEntity, bool>>? predicate = x => x.DateDeleted == null;
-        if (getCitiesFilter.Deleted) predicate = x => x.DateDeleted != null;
+        var predicate = GetPredicateForConversionFilter(conversionFilter);
 
         var conversionEntities = await _conversionRepository.GetManyAsync(predicate, null,
             q => q.OrderByDescending(x => x.DateRequestCompleted), paginationFilter);
         return conversionEntities.Select(x => x.ToConversion());
     }
 
-    public async Task<bool> ExistsAsync(Guid id)
-    {
-        return await _conversionRepository.ExistsAsync(x => x.Id == id && x.DateDeleted == null);
-    }
-
+    
     public async Task<bool> CreateAsync(Conversion conversion)
     {
         if (await _conversionRepository.ExistsAsync(conversion.Id))
@@ -95,9 +90,8 @@ public class ConversionService : IConversionService
         return deleted;
     }
 
-    public async Task<bool> ExpireConversions(int timeToLiveInMinutes)
+    public async Task<bool> ExpireConversions(DateTimeOffset timeToLive)
     {
-        var timeToLive = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(timeToLiveInMinutes));
         var conversions =
             (await _conversionRepository.GetManyAsync(x => (x.DateDeleted == null) & (x.DateCreated < timeToLive)))
             .ToList();
@@ -135,5 +129,12 @@ public class ConversionService : IConversionService
         return targetFormat == convertedFormat
             ? $"{fileNameWithoutExtension}.{targetFormat}"
             : $"{fileNameWithoutExtension}.{targetFormat}.{convertedFormat}";
+    }
+    
+    private static Expression<Func<ConversionEntity, bool>> GetPredicateForConversionFilter(ConversionFilter conversionFilter)
+    {
+        Expression<Func<ConversionEntity, bool>>? predicate = x => x.DateDeleted == null;
+        if (conversionFilter.Deleted) predicate = x => x.DateDeleted != null;
+        return predicate;
     }
 }

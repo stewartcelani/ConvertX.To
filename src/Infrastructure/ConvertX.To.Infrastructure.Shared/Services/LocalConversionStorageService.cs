@@ -27,7 +27,7 @@ public class LocalConversionStorageService : IConversionStorageService
 
     public DirectoryInfo GetDirectory(string conversionId)
     {
-        return new(Path.Combine(_rootDirectory, conversionId));
+        return new DirectoryInfo(Path.Combine(_rootDirectory, conversionId));
     }
 
     public DirectoryInfo GetRootDirectory()

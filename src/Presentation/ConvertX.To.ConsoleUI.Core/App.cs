@@ -1,3 +1,4 @@
+using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain.Options;
@@ -22,7 +23,7 @@ public class App
 
     public async Task RunAsync(string[] args, CancellationToken ct = default)
     {
-        var supportedConversions = _conversionEngine.GetSupportedConversions();
+        var supportedConversions = ConversionEngine.GetSupportedConversions();
 
         var files = _directory
             .GetFiles("*.*", SearchOption.AllDirectories)

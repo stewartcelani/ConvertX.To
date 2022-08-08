@@ -1,6 +1,6 @@
 namespace ConvertX.To.Application.Extensions;
 
-public static class MathExtensions
+public static class ConvertXMathExtensions
 {
     public static decimal ToMegabytes(this long i)
     {

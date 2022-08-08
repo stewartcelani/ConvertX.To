@@ -1,4 +1,4 @@
-namespace ConvertX.To.Application.Domain;
+namespace ConvertX.To.Domain;
 
 public class Conversion
 {
@@ -12,4 +12,5 @@ public class Conversion
 
     public DateTimeOffset DateRequestCompleted { get; init; }
     /*public ConversionOptions ConversionOptions { get; init; } = new ();*/
+    
 }

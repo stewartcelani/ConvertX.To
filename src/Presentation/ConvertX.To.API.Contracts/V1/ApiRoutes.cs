@@ -6,11 +6,6 @@ public static class ApiRoutesV1
     private const string Version = "v1";
     private const string Base = $"/{Root}/{Version}";
 
-    public static string ReplaceConversionId(this string s, Guid conversionId)
-    {
-        return s.Replace("{conversionId}", conversionId.ToString());
-    }
-
     public static class Files
     {
         public static class Get
@@ -50,5 +45,10 @@ public static class ApiRoutesV1
                 return Url.Replace("{targetFormat}", targetFormat);
             }
         }
+    }
+    
+    private static string ReplaceConversionId(this string s, Guid conversionId)
+    {
+        return s.Replace("{conversionId}", conversionId.ToString());
     }
 }

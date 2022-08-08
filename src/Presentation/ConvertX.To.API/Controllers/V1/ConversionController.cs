@@ -3,12 +3,14 @@ using ConvertX.To.API.Contracts.V1;
 using ConvertX.To.API.Contracts.V1.Mappers;
 using ConvertX.To.API.Contracts.V1.Queries;
 using ConvertX.To.API.Services;
+using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Extensions;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Application.Validators.Helpers;
+using ConvertX.To.Domain;
 using ConvertX.To.Domain.Options;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,13 +19,12 @@ namespace ConvertX.To.API.Controllers.V1;
 [ApiController]
 public class ConversionController : ControllerBase
 {
-    private readonly IConversionEngine _conversionEngine;
-    private readonly ConversionLifecycleManagerSettings _conversionLifecycleManagerSettings;
     private readonly IConversionService _conversionService;
+    private readonly IConversionEngine _conversionEngine;
     private readonly IConversionStorageService _conversionStorageService;
     private readonly ILoggerAdapter<ConversionController> _logger;
+    private readonly ConversionLifecycleManagerSettings _conversionLifecycleManagerSettings;
     private readonly IUriService _uriService;
-
 
     public ConversionController(IConversionService conversionService, IConversionEngine conversionEngine,
         IConversionStorageService conversionStorageService, ILoggerAdapter<ConversionController> logger,
@@ -39,13 +40,21 @@ public class ConversionController : ControllerBase
                                                   nameof(conversionLifecycleManagerSettings));
         _uriService = uriService ?? throw new NullReferenceException(nameof(uriService));
     }
+    
+    /// <summary>
+    ///     Returns list of supported conversions
+    /// </summary>
+    [HttpGet(ApiRoutesV1.Convert.Get.Url)]
+    public IActionResult GetSupportedConversions()
+    {
+        return Ok(ConversionEngine.GetSupportedConversions().ToSupportedConversionsResponse());
+    }
 
     [HttpPost(ApiRoutesV1.Convert.Post.Url)]
     [Consumes("multipart/form-data")]
-    public async Task<IActionResult> Convert([FromRoute] string targetFormat, [FromForm] IFormFile file, [FromQuery] ConversionOptionsQuery conversionOptionsQuery)
+    public async Task<IActionResult> ConvertAsync([FromRoute] string targetFormat, [FromForm] IFormFile file, [FromQuery] ConversionOptionsQuery conversionOptionsQuery)
     {
         if (file.Length == 0) throw new InvalidFileLengthException();
-
 
         var requestDate = DateTimeOffset.Now;
         
@@ -68,7 +77,6 @@ public class ConversionController : ControllerBase
             ConvertedMegabytes = convertedStream.Length.ToMegabytes(),
             DateRequestReceived = requestDate,
             DateRequestCompleted = now
-            //ConversionOptions = conversionOptions // TODO: Implement storing JSON representation of the conversion options used for each conversion
         };
 
         var created = await _conversionService.CreateAsync(conversion);
@@ -94,12 +102,5 @@ public class ConversionController : ControllerBase
     }
 
 
-    /// <summary>
-    ///     Returns list of supported conversions
-    /// </summary>
-    [HttpGet(ApiRoutesV1.Convert.Get.Url)]
-    public IActionResult GetSupportedConversions()
-    {
-        return Ok(_conversionEngine.GetSupportedConversions().ToSupportedConversionsResponse());
-    }
+   
 }

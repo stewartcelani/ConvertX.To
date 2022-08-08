@@ -1,5 +1,6 @@
 using ConvertX.To.API.Contracts.V1.Responses;
 using ConvertX.To.Application.Domain;
+using ConvertX.To.Domain;
 
 namespace ConvertX.To.API.Contracts.V1.Mappers;
 

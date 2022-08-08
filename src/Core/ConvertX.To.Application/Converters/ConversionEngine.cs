@@ -33,7 +33,7 @@ public class ConversionEngine : IConversionEngine
         return await converter.ConvertAsync(source, conversionOptions);
     }
 
-    public SupportedConversions GetSupportedConversions()
+    public static SupportedConversions GetSupportedConversions()
     {
         var convertersByTargetFormat = new Dictionary<string, List<string>>();
         var convertersBySourceFormat = new Dictionary<string, List<string>>();

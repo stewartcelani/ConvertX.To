@@ -8,5 +8,5 @@ public interface IConversionEngine
     Task<(string, Stream)> ConvertAsync(string sourceFormat, string targetFormat, Stream source,
         ConversionOptions conversionOptions);
 
-    SupportedConversions GetSupportedConversions();
+    //SupportedConversions GetSupportedConversions(); // moved this to static
 }

@@ -22,16 +22,13 @@ public class ConversionLifecycleManagerService : IConversionLifecycleManagerServ
     
     public async Task ExpireConversionsAndCleanUpTemporaryStorage()
     {
-        _logger.LogTrace("{Class}.{Method}", nameof(ConversionLifecycleManagerService),
-            nameof(ExpireConversionsAndCleanUpTemporaryStorage));
-        await _conversionService.ExpireConversions(_conversionLifecycleManagerSettings.TimeToLiveInMinutes);
+        var timeToLive = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(_conversionLifecycleManagerSettings.TimeToLiveInMinutes));
+        await _conversionService.ExpireConversions(timeToLive);
         await CleanUpTemporaryStorage();
     }
 
     private async Task CleanUpTemporaryStorage()
     {
-        _logger.LogTrace("{Class}.{Method}", nameof(ConversionLifecycleManagerService),
-            nameof(CleanUpTemporaryStorage));
         var nonExpiredConversions = await _conversionService.GetAsync();
         var nonExpiredConversionIds = nonExpiredConversions.Select(x => x.Id.ToString()).ToArray();
         var rootDirectory = _conversionStorageService.GetRootDirectory();
