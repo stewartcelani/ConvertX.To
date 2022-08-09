@@ -18,7 +18,7 @@ public class FileController : ControllerBase
     }
 
     [HttpGet(ApiRoutesV1.Files.Get.Url)]
-    public async Task<IActionResult> GetFile([FromRoute] Guid conversionId)
+    public async Task<IActionResult> GetFileAsync([FromRoute] Guid conversionId)
     {
         if (!await _conversionService.ExistsAsync(conversionId)) return NotFound();
 
@@ -30,7 +30,7 @@ public class FileController : ControllerBase
     }
 
     [HttpDelete(ApiRoutesV1.Files.Delete.Url)]
-    public async Task<IActionResult> DeleteFile([FromRoute] Guid conversionId)
+    public async Task<IActionResult> DeleteFileAsync([FromRoute] Guid conversionId)
     {
         if (!await _conversionService.ExistsAsync(conversionId)) return NotFound();
 

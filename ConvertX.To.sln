@@ -24,7 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.ConsoleUI.API",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E27BC859-4A6F-4C87-AE1B-7EC72CE92B72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.Infrastructure.Shared.Tests.Unit", "test\ConvertX.To.Infrastructure.Shared.Tests.Unit\ConvertX.To.Infrastructure.Shared.Tests.Unit.csproj", "{61C4B5EC-AA49-412E-96D0-782F76C01763}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.Tests.Unit", "test\ConvertX.To.Tests.Unit\ConvertX.To.Tests.Unit.csproj", "{61C4B5EC-AA49-412E-96D0-782F76C01763}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertX.To.Domain", "src\Core\ConvertX.To.Domain\ConvertX.To.Domain.csproj", "{190AA3A3-D238-4F40-8E11-A09A81E59072}"
 EndProject

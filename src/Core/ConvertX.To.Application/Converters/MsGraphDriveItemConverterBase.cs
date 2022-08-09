@@ -25,8 +25,6 @@ public abstract class MsGraphDriveItemConverterBase : IConverter
         var fileId = await _msGraphFileConversionService.UploadFileAsync(_sourceFormat, source);
         var convertedStream = await _msGraphFileConversionService.GetFileInTargetFormatAsync(fileId, _targetFormat);
         await _msGraphFileConversionService.DeleteFileAsync(fileId);
-        var savedFileExtension =
-            _targetFormat; // TODO: This is for when returning a .zip file containing multiple images when converting a pdf to jpg
-        return (savedFileExtension, convertedStream);
+        return (_targetFormat, convertedStream);
     }
 }
