@@ -29,8 +29,7 @@ public class FileControllerTests
         // Arrange
         var conversionId = Guid.NewGuid();
         _conversionService.ExistsAsync(conversionId).Returns(true);
-        var sampleFile = new FileInfo(Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(),
-            "../../../../SampleFiles/sample.doc")));
+        var sampleFile = SharedTestContext.GetSampleFile("sample_page.doc");
         _conversionStorageService.GetConvertedFile(conversionId).Returns(sampleFile.OpenRead());
         _conversionService.IncrementDownloadCounter(conversionId).Returns(true);
 

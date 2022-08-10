@@ -9,7 +9,7 @@ using PdfSharp.Pdf.IO;
 
 namespace ConvertX.To.Application.Converters;
 
-public class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDisposable
+public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDisposable
 {
     private readonly ConverterFactory _converterFactory;
     private readonly ILoggerAdapter<IConverter> _logger;
@@ -104,11 +104,11 @@ public class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDisposable
     {
         var splitPdfStreams = new List<InMemoryFile>();
 
-        for (var i = 0; i < sourcePdfDocument.PageCount; i++)
+        for (var pageIndex = 0; pageIndex < sourcePdfDocument.PageCount; pageIndex++)
         {
-            var currentPageNumber = i + 1;
+            var currentPageNumber = pageIndex + 1;
 
-            var splitPdfFile = SplitPdfFile(sourcePdfDocument, i, currentPageNumber);
+            var splitPdfFile = SplitPdfFile(sourcePdfDocument, pageIndex, currentPageNumber);
 
             splitPdfStreams.Add(splitPdfFile);
         }
@@ -116,11 +116,11 @@ public class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDisposable
         return splitPdfStreams;
     }
 
-    private static InMemoryFile SplitPdfFile(PdfDocument sourcePdfDocument, int i, int currentPageNumber)
+    private static InMemoryFile SplitPdfFile(PdfDocument sourcePdfDocument, int pageIndex, int currentPageNumber)
     {
         var outputPdfDocument = new PdfDocument();
 
-        outputPdfDocument.AddPage(sourcePdfDocument.Pages[i]);
+        outputPdfDocument.AddPage(sourcePdfDocument.Pages[pageIndex]);
 
         var fileName = $"{currentPageNumber}_of_{sourcePdfDocument.PageCount}.pdf";
 
@@ -154,13 +154,12 @@ public class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDisposable
 
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            DisposeTemporaryStreams();
+        if (!disposing) return;
+        
+        DisposeTemporaryStreams();
 
-            _splitPdfStreams = new List<InMemoryFile>();
-            _convertedJpgStreams = new List<InMemoryFile>();
-        }
+        _splitPdfStreams = new List<InMemoryFile>();
+        _convertedJpgStreams = new List<InMemoryFile>();
     }
 
     private void DisposeTemporaryStreams()

@@ -11,6 +11,7 @@ using ConvertX.To.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Graph;
 using NSubstitute;
+using Directory = System.IO.Directory;
 
 namespace ConvertX.To.Tests.Unit;
 
@@ -42,8 +43,9 @@ public class SharedTestContext
             fileName: fileName
         );
     }
-    
-    
+
+    public static FileInfo GetSampleFile(string name) => new FileInfo(Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), $"../../../../SampleFiles/{name}")));
+
     private static string GetRandomFormat()
     {
         var index = new Random().Next(Formats.Count);
