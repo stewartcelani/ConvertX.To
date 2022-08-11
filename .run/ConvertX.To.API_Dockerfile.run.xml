@@ -1,13 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="ConvertX.To.API/Dockerfile" type="docker-deploy" factoryName="dockerfile"
-                   server-name="Docker">
-        <deployment type="dockerfile">
-            <settings>
-                <option name="containerName" value=""/>
-                <option name="sourceFilePath" value="src/Presentation/ConvertX.To.API/Dockerfile"/>
-            </settings>
-        </deployment>
-        <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isPublishEnabled="true"/>
-        <method v="2"/>
-    </configuration>
+  <configuration default="false" name="ConvertX.To.API/Dockerfile" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+    <deployment type="dockerfile">
+      <settings>
+        <option name="buildOnly" value="true" />
+        <option name="containerName" value="" />
+        <option name="sourceFilePath" value="src/Presentation/ConvertX.To.API/Dockerfile" />
+      </settings>
+    </deployment>
+    <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isPublishEnabled="true" />
+    <method v="2" />
+  </configuration>
 </component>

@@ -1,4 +1,5 @@
 version: '3.9'
+# docker-compose up --build --force-recreate --no-deps
 
 networks:
   local:
@@ -8,8 +9,8 @@ services:
   api:
     container_name: api
     build:
-      context: src/Presentation/ConvertX.To.API
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: src/Presentation/ConvertX.To.API/Dockerfile
       args:
         - Mode=Debug
     restart: always
@@ -28,6 +29,7 @@ services:
       - local
     volumes:
       - ~/.aspnet/https:/https:ro
+      - .conversionStorage:/conversionStorage
     
   postgres:
     image: postgres:latest

@@ -1,0 +1,51 @@
+version: '3.9'
+
+networks:
+  test:
+    name: test
+    
+services:
+  convertxto-test-api:
+    container_name: testapi
+    build:
+      context: ../../.
+      dockerfile: src/Presentation/ConvertX.To.API/Dockerfile
+      args:
+        - Mode=Debug
+    ports:
+      - "7780:443"
+      - "7779:80"
+    environment:
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Password1!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Environment=Production
+      - ASPNETCORE_HTTPS_PORT=7780
+      - ConvertXToApi_DatabaseSettings__ConnectionString=Host=convertxto-test-db;Username=postgres;Password=rydA191NNtUv;Database=ConvertXToTest;Port=5439;
+      - ConvertXToApi_DatabaseSettings__EnableSensitiveDataLogging=false
+    volumes:
+      - ~/.aspnet/https:/https:ro
+      - .conversionStorage:/conversionStorage
+    networks:
+      - test
+    depends_on:
+      convertxto-test-db:
+        condition: service_healthy
+  
+  convertxto-test-db:
+    container_name: testdb
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rydA191NNtUv
+      - POSTGRES_DB=ConvertXToTest
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+    ports:
+      - '5439:5432'
+    networks:
+      - test

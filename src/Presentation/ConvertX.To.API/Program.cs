@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.secret.json"); // Microsoft Graph Settings, ignored by .gitignore
+builder.Configuration.AddEnvironmentVariables("ConvertXToApi_");
 
 builder.Services.AddApplication();
 builder.Services.AddPersistenceInfrastructure(builder.Configuration);
