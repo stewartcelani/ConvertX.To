@@ -7,5 +7,4 @@ namespace ConvertX.To.Tests.Integration;
 [CollectionDefinition(nameof(SharedTestCollection))]
 public class SharedTestCollection : ICollectionFixture<SharedTestContext>
 {
-    
 }

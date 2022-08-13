@@ -8,7 +8,7 @@ public class App
     private readonly IConversionService _conversionService;
     private readonly ILogger<App> _logger;
 
-    private readonly DirectoryInfo _directory = new(@"C:\dev\convertx.to\sample_files\");
+    private readonly DirectoryInfo _directory = new(@"C:\dev\convertx.to\tests\samplefiles\");
 
     public App(ILogger<App> logger, IConversionService conversionService)
     {
@@ -22,7 +22,7 @@ public class App
 
         var files = _directory
             .GetFiles("*.*", SearchOption.AllDirectories)
-            .Where(x => !x.Name.Contains("ConvertX.To"))
+            .Where(x => !x.Name.Contains(".converted."))
             .ToList();
 
         var parallelOptions = new ParallelOptions

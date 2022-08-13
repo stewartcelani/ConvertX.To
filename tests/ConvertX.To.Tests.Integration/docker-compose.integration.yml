@@ -21,7 +21,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ASPNETCORE_Environment=Production
       - ASPNETCORE_HTTPS_PORT=7780
-      - ConvertXToApi_DatabaseSettings__ConnectionString=Host=convertxto-test-db;Username=postgres;Password=rydA191NNtUv;Database=ConvertXToTest;Port=5439;
+      - ConvertXToApi_DatabaseSettings__ConnectionString=Host=convertxto-test-db;Username=postgres;Password=rydA191NNtUv;Database=ConvertXToTest;Port=5432;
       - ConvertXToApi_DatabaseSettings__EnableSensitiveDataLogging=false
     volumes:
       - ~/.aspnet/https:/https:ro

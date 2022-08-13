@@ -58,6 +58,7 @@ public static class DependencyInjection
 
         services.AddTransient<RetryHandler>();
         
+        // TODO: Integration tests, figure out how to refactor this so the baseaddress can be swapped out for the wiremock server in tests
         services.AddHttpClient(nameof(MsGraphFileConversionService))
             .AddHttpMessageHandler<RetryHandler>() // Was making my own when came across Microsoft's own 429 retry handler used by their SDK, might as well use that!
             .AddPolicyHandler(transientRetryPolicy);

@@ -98,7 +98,7 @@ public class ConversionService : IConversionService
         string convertedFileExtension)
     {
         return targetFormat == convertedFileExtension
-            ? $"{sourceFileName}.ConvertX.To.{targetFormat}"
-            : $"{sourceFileName}.ConvertX.To.{targetFormat}.{convertedFileExtension}";
+            ? $"{sourceFileName}.converted.{targetFormat}"
+            : $"{sourceFileName}.converted.{targetFormat}.{convertedFileExtension}";
     }
 }

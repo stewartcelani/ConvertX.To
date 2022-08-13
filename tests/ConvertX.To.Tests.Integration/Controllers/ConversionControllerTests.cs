@@ -1,7 +1,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Bogus;
@@ -23,15 +25,17 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
 {
     private readonly HttpClient _httpClient;
     private readonly IServiceScope _serviceScope;
+    private readonly MicrosoftGraphApiServer.MicrosoftGraphApiServer _microsoftGraphApiServer;
     private readonly IConversionService _conversionService;
     private readonly Faker<Conversion> _conversionGenerator;
 
-    public ConversionControllerTests(ConvertXToApiFactory apiFactory)
+    public ConversionControllerTests(ConvertXToApiFactory apiFactory, SharedTestContext testContext)
     {
         _httpClient = apiFactory.CreateClient();
         _serviceScope = apiFactory.Services.CreateScope();
         _conversionService = _serviceScope.ServiceProvider.GetRequiredService<IConversionService>();
         _conversionGenerator = SharedTestContext.ConversionGenerator;
+        _microsoftGraphApiServer = testContext.MicrosoftGraphApiServer;
     }
 
     [Fact]
@@ -50,7 +54,29 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
         supportedConversionsResponse.Should().BeEquivalentTo(expectedSupportedConversionsResponse);
     }
     
-    
+    [Theory]
+    [InlineData("sample_pages.doc", "pdf")]
+    public async Task ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(string sampleFileName, string targetFormat)
+    {
+        // Arrange
+        var tempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{Path.GetExtension(sampleFileName)}";
+        var sourceFile = SharedTestContext.GetSampleFile(sampleFileName);
+        await _microsoftGraphApiServer.SetupUploadFileAsyncEndpoint(tempFileName, sourceFile.OpenRead());
+        await _microsoftGraphApiServer.SetupGetFileInTargetFormatAsyncEndpoint(sampleFileName, targetFormat);
+        var fileStreamContent = new StreamContent(sourceFile.OpenRead());
+        fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue(SharedTestContext.GetMimeType(sampleFileName));
+        using var multipartFormContent = new MultipartFormDataContent();
+        multipartFormContent.Add(fileStreamContent, name: "file", fileName: sampleFileName);
+        
+        // TODO: Integration tests, figure out how to refactor the MsGraphHttpClient so the baseaddress can be swapped out for the wiremock server in tests
+
+        // Act
+        var response = await _httpClient.PostAsync(ApiRoutesV1.Convert.Post.UrlFor(targetFormat), multipartFormContent);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+    }
+
     public void Dispose()
     {
         _httpClient.Dispose();

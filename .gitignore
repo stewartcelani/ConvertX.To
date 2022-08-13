@@ -268,4 +268,6 @@ appsettings.secret.json
 .hide
 .hidden
 .secret
-.conversionStorage
+.conversionStorage/
+.postgres/
+*.secret.json
