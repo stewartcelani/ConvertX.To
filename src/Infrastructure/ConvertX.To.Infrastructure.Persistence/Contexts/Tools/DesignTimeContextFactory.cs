@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Helpers;
 using ConvertX.To.Application.Interfaces;
@@ -13,6 +14,7 @@ namespace ConvertX.To.Infrastructure.Persistence.Contexts.Tools;
 /// <summary>
 ///     Used by dotnet ef migrations tool
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class DesignTimeContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
     public ApplicationDbContext CreateDbContext(string[] args)

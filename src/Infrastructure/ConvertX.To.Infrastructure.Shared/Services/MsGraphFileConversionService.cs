@@ -25,6 +25,8 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
 
     private HttpClient? _httpClient;
 
+    public const int LargeFileThreshold = 3900000;
+
     public MsGraphFileConversionService(IHttpClientFactory httpClientFactory, MsGraphSettings msGraphSettings,
         ILoggerAdapter<MsGraphFileConversionService> logger)
     {
@@ -35,7 +37,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
 
     public async Task<string> UploadFileAsync(string sourceFormat, Stream source)
     {
-        if (source.Length > 3900000)
+        if (source.Length > LargeFileThreshold)
             return await UploadLargeFileAsync(sourceFormat, source); // Using Graph SDK for > 3.9 MB
 
         var httpClient = await CreateAuthorizedHttpClient();

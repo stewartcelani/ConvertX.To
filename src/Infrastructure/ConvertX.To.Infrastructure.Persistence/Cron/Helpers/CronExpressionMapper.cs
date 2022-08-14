@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace ConvertX.To.Infrastructure.Persistence.Cron.Helpers;
 
+[ExcludeFromCodeCoverage]
 public static class CronExpressionHelper
 {
     public static string EverySeconds(int seconds)

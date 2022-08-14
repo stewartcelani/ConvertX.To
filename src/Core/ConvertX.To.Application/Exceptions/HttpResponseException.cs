@@ -1,6 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace ConvertX.To.Application.Exceptions;
 
-public class HttpResponseException : ConvertXToExceptionBase, IBusinessException
+[ExcludeFromCodeCoverage]
+public class HttpResponseException : ConvertXToExceptionBase
 {
     protected HttpResponseException(string message, HttpResponseMessage httpResponseMessage) : base(message)
     {

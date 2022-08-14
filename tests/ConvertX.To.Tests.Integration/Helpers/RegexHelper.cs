@@ -1,7 +1,6 @@
-using System;
 using System.Text.RegularExpressions;
 
-namespace ConvertX.To.Tests.Integration;
+namespace ConvertX.To.Tests.Integration.Helpers;
 
 public class RegexHelper
 {

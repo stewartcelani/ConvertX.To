@@ -1,7 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Graph;
 
 namespace ConvertX.To.Application.Exceptions;
 
+[ExcludeFromCodeCoverage]
 public class MsGraphUploadLargeFileException : ConvertXToExceptionBase
 {
     public MsGraphUploadLargeFileException(UploadResult<DriveItem> uploadResult) : base(Message)

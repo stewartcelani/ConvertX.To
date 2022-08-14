@@ -5,7 +5,7 @@ namespace ConvertX.To.Application.Exceptions;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
-public class ConversionNotFoundException : ConvertXToExceptionBase, IBusinessException
+public class ConversionNotFoundException : ConvertXToExceptionBase
 {
     public ConversionNotFoundException()
     {

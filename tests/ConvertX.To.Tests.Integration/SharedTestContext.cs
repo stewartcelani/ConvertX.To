@@ -8,6 +8,7 @@ using Bogus;
 using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Domain;
+using ConvertX.To.Infrastructure.Shared.Services;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
@@ -22,8 +23,8 @@ public class SharedTestContext : IAsyncLifetime
 {
     public const int WireMockServerPort = 51923;
 
-    public static readonly string WireMockServerUrl = $"http://localhost:{WireMockServerPort}";
-    
+    private static readonly string WireMockServerUrl = $"http://localhost:{WireMockServerPort}";
+
     public MicrosoftGraphApiServer.MicrosoftGraphApiServer MicrosoftGraphApiServer { get; }
 
     public static readonly Faker<Conversion> ConversionGenerator = new Faker<Conversion>()
@@ -61,10 +62,22 @@ public class SharedTestContext : IAsyncLifetime
         await _dbContainer.DisposeAsync();
     }
 
+
     public static FileInfo GetSampleFile(string name)
     {
         return new FileInfo(Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(),
             $"../../../../SampleFiles/{name}")));
+    }
+
+    public static List<FileInfo> GetSampleFilesUnderLargeFileThreshold()
+    {
+        var sampleFileDirectory = new DirectoryInfo(Path.GetFullPath(Path.Combine(
+            Directory.GetCurrentDirectory(),
+            $"../../../../SampleFiles")));
+        return sampleFileDirectory
+            .GetFiles("*.*", SearchOption.AllDirectories)
+            .Where(x => !x.Name.Contains(".converted.") && x.Length < MsGraphFileConversionService.LargeFileThreshold)
+            .ToList();
     }
 
     public static string GetMimeType(string fileName)
@@ -105,7 +118,7 @@ public class SharedTestContext : IAsyncLifetime
             return _formats;
         }
     }
-    
+
     private static string GetRandomFormat()
     {
         var index = new Random().Next(Formats.Count);

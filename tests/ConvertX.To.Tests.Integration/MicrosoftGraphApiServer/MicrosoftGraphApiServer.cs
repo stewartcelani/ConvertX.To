@@ -114,7 +114,22 @@ public class MicrosoftGraphApiServer : IDisposable
             .RespondWith(Response.Create()
                 .WithStatusCode(204));
     }
-    
+
+    private string GenerateCreateUploadSessionResponseBody()
+    {
+        var thirtyMinutesFromNow = DateTime.UtcNow.AddMinutes(30).ToString("s") + "Z";
+
+        return $@"{{
+                  ""@odata.context"": ""https://graph.microsoft.com/beta/$metadata#microsoft.graph.uploadSession"",
+                  ""expirationDateTime"": ""{thirtyMinutesFromNow}"",
+                  ""nextExpectedRanges"": [
+                    ""0-""
+                  ],
+                  ""uploadUrl"": ""{Url}""
+                }}
+                ";
+    }
+
 
     private static string GenerateUploadFileResponseBody(string tempFileName, Stream source)
     {

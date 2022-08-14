@@ -1,11 +1,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using ConvertX.To.API;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Logging;
-using Xunit;
 
 namespace ConvertX.To.Tests.Integration;
 
