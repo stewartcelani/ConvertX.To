@@ -13,15 +13,22 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
 {
     private readonly ConverterFactory _converterFactory;
     private readonly ILoggerAdapter<IConverter> _logger;
-    
-    private List<InMemoryFile> _splitPdfStreams = new ();
-    private List<InMemoryFile> _convertedJpgStreams = new ();
+    private List<InMemoryFile> _convertedJpgStreams = new();
+
+    private List<InMemoryFile> _splitPdfStreams = new();
 
     public ToJpgConverterBase(ConverterFactory converterFactory, string sourceFormat, string targetFormat,
-        ILoggerAdapter<IConverter> logger, IMsGraphFileConversionService msGraphFileConversionService) : base(sourceFormat, targetFormat, logger, msGraphFileConversionService)
+        ILoggerAdapter<IConverter> logger, IMsGraphFileConversionService msGraphFileConversionService) : base(
+        sourceFormat, targetFormat, logger, msGraphFileConversionService)
     {
         _converterFactory = converterFactory;
         _logger = logger;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     public override async Task<(string, Stream)> ConvertAsync(Stream source, ConversionOptions conversionOptions)
@@ -29,27 +36,29 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
         if (!conversionOptions.ToJpgOptions.SplitIfPossible) return await base.ConvertAsync(source, conversionOptions);
 
         IConverter? toPdfConverter;
-        
+
         try
         {
             toPdfConverter = _converterFactory.Create(_sourceFormat, "pdf");
         }
         catch (UnsupportedConversionException _)
         {
-            _logger.LogTrace("{option} was requested but there is no {sourceFormat} to {targetFormat} converter to use as an intermediary (proceeding with non-split conversion)", nameof(conversionOptions.ToJpgOptions.SplitIfPossible), _sourceFormat, "pdf"); 
+            _logger.LogTrace(
+                "{option} was requested but there is no {sourceFormat} to {targetFormat} converter to use as an intermediary (proceeding with non-split conversion)",
+                nameof(conversionOptions.ToJpgOptions.SplitIfPossible), _sourceFormat, "pdf");
             return await base.ConvertAsync(source, conversionOptions);
         }
 
-        var newConversionOptions = new ConversionOptions()
+        var newConversionOptions = new ConversionOptions
         {
-            ToJpgOptions = new ToJpgOptions()
+            ToJpgOptions = new ToJpgOptions
             {
                 SplitIfPossible = false
             }
         };
-        
+
         var (_, pdfStream) = await toPdfConverter.ConvertAsync(source, newConversionOptions);
-                
+
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         var sourcePdfDocument = PdfReader.Open(pdfStream, PdfDocumentOpenMode.Import);
 
@@ -58,19 +67,20 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
             source.Position = 0;
             return await base.ConvertAsync(source, conversionOptions);
         }
-        
+
         _splitPdfStreams = SplitPdf(sourcePdfDocument);
 
         _convertedJpgStreams = await ConvertSplitPdfsToIndividualJpgs(_splitPdfStreams, newConversionOptions);
 
         var zippedJpgs = await ZipFilesAsync(_convertedJpgStreams);
-        
+
         DisposeTemporaryStreams();
-        
+
         return ("zip", zippedJpgs);
     }
 
-    private async Task<List<InMemoryFile>> ConvertSplitPdfsToIndividualJpgs(List<InMemoryFile> splitPdfStreams, ConversionOptions newConversionOptions)
+    private async Task<List<InMemoryFile>> ConvertSplitPdfsToIndividualJpgs(List<InMemoryFile> splitPdfStreams,
+        ConversionOptions newConversionOptions)
     {
         var convertedPdfStreams = new List<InMemoryFile>();
 
@@ -78,7 +88,8 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
 
         foreach (var splitPdfStream in splitPdfStreams)
         {
-            var convertedPdfStream = await ConvertPdfStreamFileToJpgStreamFile(newConversionOptions, splitPdfStream, pdfToJpgConverter);
+            var convertedPdfStream =
+                await ConvertPdfStreamFileToJpgStreamFile(newConversionOptions, splitPdfStream, pdfToJpgConverter);
             convertedPdfStreams.Add(convertedPdfStream);
         }
 
@@ -133,11 +144,11 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
         outputPdfDocument.Save(splitPdfFile.Stream);
         return splitPdfFile;
     }
-    
+
     private static async Task<Stream> ZipFilesAsync(IEnumerable<InMemoryFile> files)
     {
         var zipStream = new MemoryStream();
-        
+
         using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
         {
             foreach (var file in files)
@@ -147,7 +158,7 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
                 await file.Stream.CopyToAsync(entryStream);
             }
         }
-        
+
         zipStream.Position = 0;
         return zipStream;
     }
@@ -155,7 +166,7 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
     protected virtual void Dispose(bool disposing)
     {
         if (!disposing) return;
-        
+
         DisposeTemporaryStreams();
 
         _splitPdfStreams = new List<InMemoryFile>();
@@ -164,23 +175,8 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
 
     private void DisposeTemporaryStreams()
     {
-        foreach (var splitPdfStream in _splitPdfStreams)
-        {
-            splitPdfStream.Stream.Dispose();
-        }
+        foreach (var splitPdfStream in _splitPdfStreams) splitPdfStream.Stream.Dispose();
 
-        foreach (var convertedJpgStream in _convertedJpgStreams)
-        {
-            convertedJpgStream.Stream.Dispose();
-        }
+        foreach (var convertedJpgStream in _convertedJpgStreams) convertedJpgStream.Stream.Dispose();
     }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-
-   
 }
-

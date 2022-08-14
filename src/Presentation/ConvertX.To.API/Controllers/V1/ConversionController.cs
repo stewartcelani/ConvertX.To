@@ -4,14 +4,12 @@ using ConvertX.To.API.Contracts.V1.Mappers;
 using ConvertX.To.API.Contracts.V1.Queries;
 using ConvertX.To.API.Services;
 using ConvertX.To.Application.Converters;
-using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Extensions;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Application.Validators.Helpers;
 using ConvertX.To.Domain;
-using ConvertX.To.Domain.Options;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConvertX.To.API.Controllers.V1;
@@ -19,11 +17,11 @@ namespace ConvertX.To.API.Controllers.V1;
 [ApiController]
 public class ConversionController : ControllerBase
 {
-    private readonly IConversionService _conversionService;
     private readonly IConversionEngine _conversionEngine;
+    private readonly ConversionLifecycleManagerSettings _conversionLifecycleManagerSettings;
+    private readonly IConversionService _conversionService;
     private readonly IConversionStorageService _conversionStorageService;
     private readonly ILoggerAdapter<ConversionController> _logger;
-    private readonly ConversionLifecycleManagerSettings _conversionLifecycleManagerSettings;
     private readonly IUriService _uriService;
 
     public ConversionController(IConversionService conversionService, IConversionEngine conversionEngine,
@@ -40,7 +38,7 @@ public class ConversionController : ControllerBase
                                                   nameof(conversionLifecycleManagerSettings));
         _uriService = uriService ?? throw new NullReferenceException(nameof(uriService));
     }
-    
+
     /// <summary>
     ///     Returns list of supported conversions
     /// </summary>
@@ -52,18 +50,19 @@ public class ConversionController : ControllerBase
 
     [HttpPost(ApiRoutesV1.Convert.Post.Url)]
     [Consumes("multipart/form-data")]
-    public async Task<IActionResult> ConvertAsync([FromRoute] string targetFormat, [FromForm] IFormFile file, [FromQuery] ConversionOptionsQuery conversionOptionsQuery)
+    public async Task<IActionResult> ConvertAsync([FromRoute] string targetFormat, [FromForm] IFormFile file,
+        [FromQuery] ConversionOptionsQuery conversionOptionsQuery)
     {
         if (file.Length == 0) throw new InvalidFileLengthException();
 
         var requestDate = DateTimeOffset.Now;
-        
+
         var sourceFormat = Path.GetExtension(file.FileName).ToLower().Replace(".", "");
 
         _logger.LogInformation("Conversion request: {sourceFormat} to {targetFormat}", sourceFormat, targetFormat);
-        
+
         var conversionOptions = conversionOptionsQuery.ToConversionOptions();
-        
+
         var (convertedFileExtension, convertedStream) =
             await _conversionEngine.ConvertAsync(sourceFormat, targetFormat, file.OpenReadStream(), conversionOptions);
 
@@ -100,7 +99,4 @@ public class ConversionController : ControllerBase
 
         return Created(_uriService.GetFileUri(conversion.Id), conversionResponse);
     }
-
-
-   
 }

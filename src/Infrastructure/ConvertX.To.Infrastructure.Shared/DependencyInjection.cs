@@ -7,7 +7,6 @@ using ConvertX.To.Application.Validators;
 using ConvertX.To.Infrastructure.Shared.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Polly;
@@ -18,6 +17,8 @@ namespace ConvertX.To.Infrastructure.Shared;
 
 public static class DependencyInjection
 {
+    private static bool InDocker => Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+
     public static void AddSharedInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         Log.Logger = new LoggerConfiguration()
@@ -36,15 +37,18 @@ public static class DependencyInjection
 
         var conversionStorageSettings = new ConversionStorageSettings
         {
-            RootDirectory = InDocker ? configuration.GetValue<string>("ConversionStorageSettings:DockerRootDirectory") : configuration.GetValue<string>("ConversionStorageSettings:WindowsRootDirectory")
+            RootDirectory = InDocker
+                ? configuration.GetValue<string>("ConversionStorageSettings:DockerRootDirectory")
+                : configuration.GetValue<string>("ConversionStorageSettings:WindowsRootDirectory")
         };
         services.AddSingleton(conversionStorageSettings);
 
         services.AddHttpClient();
 
         ILoggerAdapter<MsGraphFileConversionService> msGraphLogger =
-            new LoggerAdapter<MsGraphFileConversionService>(new LoggerFactory().CreateLogger<MsGraphFileConversionService>());
-        
+            new LoggerAdapter<MsGraphFileConversionService>(new LoggerFactory()
+                .CreateLogger<MsGraphFileConversionService>());
+
         var transientRetryPolicy = HttpPolicyExtensions
             .HandleTransientHttpError()
             .WaitAndRetryAsync(5,
@@ -57,10 +61,10 @@ public static class DependencyInjection
                 });
 
         services.AddTransient<RetryHandler>();
-        
-        // TODO: Integration tests, figure out how to refactor this so the baseaddress can be swapped out for the wiremock server in tests
+
         services.AddHttpClient(nameof(MsGraphFileConversionService))
-            .AddHttpMessageHandler<RetryHandler>() // Was making my own when came across Microsoft's own 429 retry handler used by their SDK, might as well use that!
+            .AddHttpMessageHandler<
+                RetryHandler>() // Was making my own when came across Microsoft's own 429 retry handler used by their SDK, might as well use that!
             .AddPolicyHandler(transientRetryPolicy);
 
         services.AddScoped<IFileService, LocalFileService>();
@@ -71,6 +75,4 @@ public static class DependencyInjection
         services.AddScoped<IConversionService, ConversionService>();
         services.AddScoped<IConversionLifecycleManagerService, ConversionLifecycleManagerService>();
     }
-    
-    private static bool InDocker => Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
 }

@@ -6,12 +6,8 @@ using System.Linq;
 using System.Text;
 using Bogus;
 using ConvertX.To.Application.Converters;
-using ConvertX.To.Application.Domain;
 using ConvertX.To.Domain;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Graph;
-using NSubstitute;
-using Directory = System.IO.Directory;
 
 namespace ConvertX.To.Tests.Unit;
 
@@ -30,29 +26,8 @@ public class SharedTestContext
         .RuleFor(x => x.DateRequestCompleted,
             faker => DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(faker.Random.Int(5, 35))));
 
-    public static IFormFile GenerateFormFile(string fileName, string? content)
-    {
-        var bytes = Array.Empty<byte>();
-        if (!string.IsNullOrEmpty(content)) bytes = Encoding.UTF8.GetBytes(content); 
-
-        return new FormFile(
-            baseStream: new MemoryStream(bytes),
-            baseStreamOffset: 0,
-            length: bytes.Length,
-            name: "Data",
-            fileName: fileName
-        );
-    }
-
-    public static FileInfo GetSampleFile(string name) => new FileInfo(Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), $"../../../../SampleFiles/{name}")));
-
-    private static string GetRandomFormat()
-    {
-        var index = new Random().Next(Formats.Count);
-        return Formats[index];
-    }
-    
     private static List<string>? _formats;
+
     private static List<string> Formats
     {
         get
@@ -62,18 +37,39 @@ public class SharedTestContext
             var supportedConversions = ConversionEngine.GetSupportedConversions();
 
             var formats = new List<string>();
-            
+
             foreach (var key in supportedConversions.SourceFormatTo.Keys.Where(key => !formats.Contains(key)))
-            {
                 formats.Add(key);
-            }
             foreach (var key in supportedConversions.TargetFormatFrom.Keys.Where(key => !formats.Contains(key)))
-            {
                 formats.Add(key);
-            }
 
             _formats = formats;
             return _formats;
         }
+    }
+
+    public static IFormFile GenerateFormFile(string fileName, string? content)
+    {
+        var bytes = Array.Empty<byte>();
+        if (!string.IsNullOrEmpty(content)) bytes = Encoding.UTF8.GetBytes(content);
+
+        return new FormFile(
+            new MemoryStream(bytes),
+            0,
+            bytes.Length,
+            "Data",
+            fileName
+        );
+    }
+
+    public static FileInfo GetSampleFile(string name)
+    {
+        return new(Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), $"../../../../SampleFiles/{name}")));
+    }
+
+    private static string GetRandomFormat()
+    {
+        var index = new Random().Next(Formats.Count);
+        return Formats[index];
     }
 }

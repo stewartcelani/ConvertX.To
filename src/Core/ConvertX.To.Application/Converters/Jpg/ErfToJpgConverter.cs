@@ -4,8 +4,10 @@ namespace ConvertX.To.Application.Converters.Jpg;
 
 public class ErfToJpgConverter : ToJpgConverterBase
 {
-    public ErfToJpgConverter(ConverterFactory converterFactory, string sourceFormat, string targetFormat, ILoggerAdapter<IConverter> logger,
-        IMsGraphFileConversionService msGraphFileConversionService) : base(converterFactory, sourceFormat, targetFormat, logger,
+    public ErfToJpgConverter(ConverterFactory converterFactory, string sourceFormat, string targetFormat,
+        ILoggerAdapter<IConverter> logger,
+        IMsGraphFileConversionService msGraphFileConversionService) : base(converterFactory, sourceFormat, targetFormat,
+        logger,
         msGraphFileConversionService)
     {
     }

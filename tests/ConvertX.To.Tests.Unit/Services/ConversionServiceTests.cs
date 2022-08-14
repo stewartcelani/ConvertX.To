@@ -6,10 +6,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Bogus;
-using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Domain.Entities;
 using ConvertX.To.Application.Domain.Filters;
-using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Application.Interfaces.Repositories;
 using ConvertX.To.Application.Mappers;
 using ConvertX.To.Domain;
@@ -26,11 +24,10 @@ namespace ConvertX.To.Tests.Unit.Services;
 [ExcludeFromCodeCoverage]
 public class ConversionServiceTests
 {
-    private readonly ConversionService _sut;
     private readonly Faker<Conversion> _conversionGenerator;
     private readonly IConversionRepository _conversionRepository = Substitute.For<IConversionRepository>();
-    
-    
+    private readonly ConversionService _sut;
+
 
     public ConversionServiceTests()
     {
@@ -109,7 +106,7 @@ public class ConversionServiceTests
         var predicate = GetPredicateForConversionFilter(new ConversionFilter());
         _conversionRepository.GetManyAsync(
                 Arg.Is<Expression<Func<ConversionEntity, bool>>?>(expr => Lambda.Eq(expr, predicate)),
-                null, 
+                null,
                 Arg.Any<Func<IQueryable<ConversionEntity>, IOrderedQueryable<ConversionEntity>>?>())
             .Returns(conversionEntities);
 
@@ -119,7 +116,7 @@ public class ConversionServiceTests
         // Assert
         result.Should().BeEquivalentTo(conversions);
     }
-    
+
     [Fact]
     public async Task GetAsync_ShouldReturnEmptyList_WhenNoConversionsExist()
     {
@@ -127,7 +124,7 @@ public class ConversionServiceTests
         var predicate = GetPredicateForConversionFilter(new ConversionFilter());
         _conversionRepository.GetManyAsync(
                 Arg.Is<Expression<Func<ConversionEntity, bool>>?>(expr => Lambda.Eq(expr, predicate)),
-                null, 
+                null,
                 Arg.Any<Func<IQueryable<ConversionEntity>, IOrderedQueryable<ConversionEntity>>?>())
             .Returns(Enumerable.Empty<ConversionEntity>());
 
@@ -137,7 +134,7 @@ public class ConversionServiceTests
         // Assert
         result.Should().BeEmpty();
     }
-    
+
     [Fact]
     public async Task GetAsync_ShouldReturnConversions_WhenConversionsMatchConversionFilter()
     {
@@ -146,16 +143,14 @@ public class ConversionServiceTests
         var conversionEntities = conversions.Select(x => x.ToConversionEntity()).ToList();
         var random = new Random();
         foreach (var conversionEntity in conversionEntities.Where(_ => random.Next(0, 2) == 1))
-        {
             conversionEntity.DateDeleted = DateTimeOffset.Now;
-        }
         var deletedConversionEntities = conversionEntities.Where(x => x.DateDeleted != null).ToImmutableList();
         var deletedConversions = deletedConversionEntities.Select(x => x.ToConversion()).ToImmutableList();
         var conversionFilter = new ConversionFilter { Deleted = true };
         var predicate = GetPredicateForConversionFilter(conversionFilter);
         _conversionRepository.GetManyAsync(
                 Arg.Is<Expression<Func<ConversionEntity, bool>>?>(expr => Lambda.Eq(expr, predicate)),
-                null, 
+                null,
                 Arg.Any<Func<IQueryable<ConversionEntity>, IOrderedQueryable<ConversionEntity>>?>())
             .Returns(deletedConversionEntities);
 
@@ -178,7 +173,7 @@ public class ConversionServiceTests
         var predicate = GetPredicateForConversionFilter(new ConversionFilter());
         _conversionRepository.GetManyAsync(
                 Arg.Is<Expression<Func<ConversionEntity, bool>>?>(expr => Lambda.Eq(expr, predicate)),
-                null, 
+                null,
                 Arg.Any<Func<IQueryable<ConversionEntity>, IOrderedQueryable<ConversionEntity>>?>(),
                 paginationFilter)
             .Returns(conversionEntities.Take(pageSize));
@@ -206,7 +201,7 @@ public class ConversionServiceTests
         conversionEntity.Should().BeEquivalentTo(conversion);
         result.Should().BeTrue();
     }
-    
+
     [Fact]
     public async Task CreateAsync_ShouldReturnFalse_WhenRepositoryCouldNotChangeDatabase()
     {
@@ -223,22 +218,22 @@ public class ConversionServiceTests
         conversionEntity.Should().BeEquivalentTo(conversion);
         result.Should().BeFalse();
     }
-    
+
     [Fact]
     public async Task CreateAsync_ShouldThrowValidationException_WhenConversionAlreadyExists()
     {
         // Arrange
         var conversion = _conversionGenerator.Generate();
         _conversionRepository.ExistsAsync(conversion.Id).Returns(true);
-        var expectedExceptionMessage =  $"A conversion with id {conversion.Id} already exists";
-        
+        var expectedExceptionMessage = $"A conversion with id {conversion.Id} already exists";
+
         // Act
         var action = async () => await _sut.CreateAsync(conversion);
 
         // Assert
         await action.Should().ThrowAsync<ValidationException>().WithMessage(expectedExceptionMessage);
     }
-    
+
     [Fact]
     public async Task UpdateAsync_ShouldUpdateConversionAndReturnTrue_WhenConversionIsValid()
     {
@@ -255,7 +250,7 @@ public class ConversionServiceTests
         conversionEntity.Should().BeEquivalentTo(conversion);
         result.Should().BeTrue();
     }
-    
+
     [Fact]
     public async Task UpdateAsync_ShouldReturnFalse_WhenRepositoryCouldNotChangeDatabase()
     {
@@ -272,15 +267,15 @@ public class ConversionServiceTests
         conversionEntity.Should().BeEquivalentTo(conversion);
         result.Should().BeFalse();
     }
-    
+
     [Fact]
     public async Task UpdateAsync_ShouldThrowValidationException_WhenConversionDoesNotExist()
     {
         // Arrange
         var conversion = _conversionGenerator.Generate();
         _conversionRepository.ExistsAsync(conversion.Id).Returns(false);
-        var expectedExceptionMessage =  $"Can not update conversion with id {conversion.Id} as it does not exist";
-        
+        var expectedExceptionMessage = $"Can not update conversion with id {conversion.Id} as it does not exist";
+
         // Act
         var action = async () => await _sut.UpdateAsync(conversion);
 
@@ -302,7 +297,7 @@ public class ConversionServiceTests
         // Assert
         result.Should().BeTrue();
     }
-    
+
     [Fact]
     public async Task DeleteAsync_ShouldReturnFalse_WhenRepositoryCouldNotChangeDatabase()
     {
@@ -317,7 +312,7 @@ public class ConversionServiceTests
         // Assert
         result.Should().BeFalse();
     }
-    
+
     [Fact]
     public async Task DeleteAsync_ShouldReturnTrue_FromGuardClause_WhenConversionDoesNotExist()
     {
@@ -340,21 +335,23 @@ public class ConversionServiceTests
         var conversionEntities = conversions.Select(x => x.ToConversionEntity()).ToList();
         const int timeToLiveInMinutes = 30;
         var timeToLive = DateTimeOffset.Now.AddHours(2).Subtract(TimeSpan.FromMinutes(timeToLiveInMinutes));
-        Expression<Func<ConversionEntity, bool>> predicate = x => (x.DateDeleted == null) & (x.DateCreated < timeToLive);
+        Expression<Func<ConversionEntity, bool>>
+            predicate = x => (x.DateDeleted == null) & (x.DateCreated < timeToLive);
         var conversionEntitiesMatchingPredicate = conversionEntities.Where(predicate.Compile()).ToList();
         _conversionRepository
             .GetManyAsync(Arg.Is<Expression<Func<ConversionEntity, bool>>?>(expr => Lambda.Eq(expr, predicate)))
             .Returns(conversionEntitiesMatchingPredicate);
         // ReSharper disable twice PossibleMultipleEnumeration
-        _conversionRepository.UpdateAsync(Arg.Is<IEnumerable<ConversionEntity>>(x => x.Count() == x.Select(conversionEntity => conversionEntity.DateDeleted != null).Count())).Returns(true);
-        
+        _conversionRepository.UpdateAsync(Arg.Is<IEnumerable<ConversionEntity>>(x =>
+            x.Count() == x.Select(conversionEntity => conversionEntity.DateDeleted != null).Count())).Returns(true);
+
         // Act
         var result = await _sut.ExpireConversions(timeToLive);
 
         // Assert
         result.Should().BeTrue();
     }
-    
+
     [Fact]
     public async Task IncrementDownloadCounter_ShouldIncreaseDownloadFieldByOne_WhenConversionExists()
     {
@@ -382,15 +379,16 @@ public class ConversionServiceTests
         // Arrange
         var conversion = _conversionGenerator.Generate();
         _conversionRepository.GetAsync(conversion.Id).ReturnsNull();
-        var expectedExceptionMessage =  $"Can not increment download counter for conversion with id {conversion.Id} as it does not exist";
-        
+        var expectedExceptionMessage =
+            $"Can not increment download counter for conversion with id {conversion.Id} as it does not exist";
+
         // Act
         var action = async () => await _sut.IncrementDownloadCounter(conversion.Id);
 
         // Assert
         await action.Should().ThrowAsync<ValidationException>().WithMessage(expectedExceptionMessage);
     }
-    
+
     [Fact]
     public async Task IncrementDownloadCounter_ShouldThrowValidationException_WhenConversionHasBeenSoftDeleted()
     {
@@ -399,8 +397,9 @@ public class ConversionServiceTests
         var conversionEntity = conversion.ToConversionEntity();
         conversionEntity.DateDeleted = DateTimeOffset.Now;
         _conversionRepository.GetAsync(conversion.Id).Returns(conversionEntity);
-        var expectedExceptionMessage =  $"Can not increment download counter for conversion with id {conversion.Id} as it has been deleted from disk";
-        
+        var expectedExceptionMessage =
+            $"Can not increment download counter for conversion with id {conversion.Id} as it has been deleted from disk";
+
         // Act
         var action = async () => await _sut.IncrementDownloadCounter(conversion.Id);
 
@@ -422,7 +421,7 @@ public class ConversionServiceTests
         // Assert
         result.Should().Be($"{fileNameWithoutExtension}.{convertedFormat}");
     }
-    
+
     [Fact]
     public void GetConvertedFileName_ShouldReturnCorrectFileName_WhenTargetFormatAndConvertedFormatAreDifferent()
     {
@@ -437,13 +436,12 @@ public class ConversionServiceTests
         // Assert
         result.Should().Be($"{fileNameWithoutExtension}.{targetFormat}.{convertedFormat}");
     }
-    
-    private static Expression<Func<ConversionEntity, bool>> GetPredicateForConversionFilter(ConversionFilter conversionFilter)
+
+    private static Expression<Func<ConversionEntity, bool>> GetPredicateForConversionFilter(
+        ConversionFilter conversionFilter)
     {
         Expression<Func<ConversionEntity, bool>>? predicate = x => x.DateDeleted == null;
         if (conversionFilter.Deleted) predicate = x => x.DateDeleted != null;
         return predicate;
     }
-
-
 }

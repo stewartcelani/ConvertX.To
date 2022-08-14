@@ -19,10 +19,11 @@ public class ConversionLifecycleManagerService : IConversionLifecycleManagerServ
         _conversionStorageService = conversionStorageService;
         _conversionLifecycleManagerSettings = conversionLifecycleManagerSettings;
     }
-    
+
     public async Task ExpireConversionsAndCleanUpTemporaryStorage()
     {
-        var timeToLive = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(_conversionLifecycleManagerSettings.TimeToLiveInMinutes));
+        var timeToLive =
+            DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(_conversionLifecycleManagerSettings.TimeToLiveInMinutes));
         await _conversionService.ExpireConversions(timeToLive);
         await CleanUpTemporaryStorage();
     }
@@ -39,5 +40,4 @@ public class ConversionLifecycleManagerService : IConversionLifecycleManagerServ
             _conversionStorageService.DeleteConvertedFile(Guid.Parse(directoryInfo.Name));
         }
     }
-
 }

@@ -8,35 +8,35 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation.AspNetCore" Version="11.1.2" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.1.2"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="appsettings.json" CopyToPublishDirectory="Always" />
-        <None Include="appsettings.secret.json" CopyToPublishDirectory="Always" />
-        <None Include="appsettings.Development.json" CopyToPublishDirectory="Always" />
-        <None Remove="logs\**" />
+        <None Include="appsettings.json" CopyToPublishDirectory="Always"/>
+        <None Include="appsettings.secret.json" CopyToPublishDirectory="Always"/>
+        <None Include="appsettings.Development.json" CopyToPublishDirectory="Always"/>
+        <None Remove="logs\**"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Core\ConvertX.To.Application\ConvertX.To.Application.csproj" />
-        <ProjectReference Include="..\..\Infrastructure\ConvertX.To.Infrastructure.Persistence\ConvertX.To.Infrastructure.Persistence.csproj" />
-        <ProjectReference Include="..\..\Infrastructure\ConvertX.To.Infrastructure.Shared\ConvertX.To.Infrastructure.Shared.csproj" />
-        <ProjectReference Include="..\ConvertX.To.API.Contracts\ConvertX.To.API.Contracts.csproj" />
+        <ProjectReference Include="..\..\Core\ConvertX.To.Application\ConvertX.To.Application.csproj"/>
+        <ProjectReference Include="..\..\Infrastructure\ConvertX.To.Infrastructure.Persistence\ConvertX.To.Infrastructure.Persistence.csproj"/>
+        <ProjectReference Include="..\..\Infrastructure\ConvertX.To.Infrastructure.Shared\ConvertX.To.Infrastructure.Shared.csproj"/>
+        <ProjectReference Include="..\ConvertX.To.API.Contracts\ConvertX.To.API.Contracts.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="logs\**" />
+        <Compile Remove="logs\**"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Remove="logs\**" />
+        <EmbeddedResource Remove="logs\**"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Content Remove="logs\**" />
+        <Content Remove="logs\**"/>
     </ItemGroup>
 
 </Project>

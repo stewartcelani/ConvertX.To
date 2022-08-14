@@ -28,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Presentation\ConvertX.To.API\ConvertX.To.API.csproj" />
+        <ProjectReference Include="..\..\src\Presentation\ConvertX.To.API\ConvertX.To.API.csproj" />
     </ItemGroup>
 
 </Project>

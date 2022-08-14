@@ -1,5 +1,4 @@
 ﻿using ConvertX.To.Application.Exceptions;
-using ConvertX.To.Application.Extensions;
 using ConvertX.To.Application.Interfaces;
 
 namespace ConvertX.To.Application.Converters;
@@ -28,15 +27,15 @@ public class ConverterFactory : IConverterFactory
         {
             var typeFullName = typeof(ConverterFactory).Namespace + "." + targetFormatProper + "." +
                                sourceFormatProper + "To" + targetFormatProper + "Converter";
-            
+
             var type = Type.GetType(typeFullName);
-            
+
             var constructorParams = new object[] { sourceFormat, targetFormat, _converterLogger };
-            
+
             if (type?.BaseType == typeof(ToJpgConverterBase))
                 constructorParams = new object[]
                     { this, sourceFormat, targetFormat, _converterLogger, _msGraphFileConversionService };
-            
+
             if (type?.BaseType == typeof(MsGraphDriveItemConverterBase))
                 constructorParams = new object[]
                     { sourceFormat, targetFormat, _converterLogger, _msGraphFileConversionService };

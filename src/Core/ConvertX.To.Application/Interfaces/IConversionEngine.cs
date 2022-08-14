@@ -1,5 +1,4 @@
-﻿using ConvertX.To.Application.Domain;
-using ConvertX.To.Domain.Options;
+﻿using ConvertX.To.Domain.Options;
 
 namespace ConvertX.To.Application.Interfaces;
 

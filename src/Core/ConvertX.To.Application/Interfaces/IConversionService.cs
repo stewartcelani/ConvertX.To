@@ -1,5 +1,4 @@
-﻿using ConvertX.To.Application.Domain;
-using ConvertX.To.Application.Domain.Filters;
+﻿using ConvertX.To.Application.Domain.Filters;
 using ConvertX.To.Domain;
 
 namespace ConvertX.To.Application.Interfaces;
@@ -16,6 +15,7 @@ public interface IConversionService
     Task<bool> DeleteAsync(Guid conversionId);
     Task<bool> ExpireConversions(DateTimeOffset timeToLive);
     Task<bool> IncrementDownloadCounter(Guid id);
+
     string GetConvertedFileName(string fileNameWithoutExtension, string targetFormat,
         string convertedFormat);
 }

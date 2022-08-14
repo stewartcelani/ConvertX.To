@@ -23,12 +23,12 @@ namespace ConvertX.To.Tests.Integration.Controllers;
 [Collection(nameof(SharedTestCollection))]
 public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, IDisposable
 {
-    private readonly HttpClient _httpClient;
-    private readonly IServiceScope _serviceScope;
-    private readonly MicrosoftGraphApiServer.MicrosoftGraphApiServer _microsoftGraphApiServer;
-    private readonly IConversionService _conversionService;
     private readonly Faker<Conversion> _conversionGenerator;
-
+    private readonly IConversionService _conversionService;
+    private readonly HttpClient _httpClient;
+    private readonly MicrosoftGraphApiServer.MicrosoftGraphApiServer _microsoftGraphApiServer;
+    private readonly IServiceScope _serviceScope;
+    
     public ConversionControllerTests(ConvertXToApiFactory apiFactory, SharedTestContext testContext)
     {
         _httpClient = apiFactory.CreateClient();
@@ -36,6 +36,12 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
         _conversionService = _serviceScope.ServiceProvider.GetRequiredService<IConversionService>();
         _conversionGenerator = SharedTestContext.ConversionGenerator;
         _microsoftGraphApiServer = testContext.MicrosoftGraphApiServer;
+    }
+
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        _serviceScope.Dispose();
     }
 
     [Fact]
@@ -47,39 +53,35 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
 
         // Act
         var response = await _httpClient.GetAsync(ApiRoutesV1.Convert.Get.Url);
-        
+
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var supportedConversionsResponse = await response.Content.ReadFromJsonAsync<SupportedConversionsResponse>();
         supportedConversionsResponse.Should().BeEquivalentTo(expectedSupportedConversionsResponse);
     }
-    
+
     [Theory]
     [InlineData("sample_pages.doc", "pdf")]
-    public async Task ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(string sampleFileName, string targetFormat)
+    public async Task
+        ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(
+            string sampleFileName, string targetFormat)
     {
         // Arrange
         var tempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{Path.GetExtension(sampleFileName)}";
         var sourceFile = SharedTestContext.GetSampleFile(sampleFileName);
-        await _microsoftGraphApiServer.SetupUploadFileAsyncEndpoint(tempFileName, sourceFile.OpenRead());
+        _microsoftGraphApiServer.SetupUploadFileAsyncEndpoint(tempFileName, sourceFile.OpenRead());
         await _microsoftGraphApiServer.SetupGetFileInTargetFormatAsyncEndpoint(sampleFileName, targetFormat);
         var fileStreamContent = new StreamContent(sourceFile.OpenRead());
         fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue(SharedTestContext.GetMimeType(sampleFileName));
         using var multipartFormContent = new MultipartFormDataContent();
-        multipartFormContent.Add(fileStreamContent, name: "file", fileName: sampleFileName);
+        multipartFormContent.Add(fileStreamContent, "file", sampleFileName);
         
-        // TODO: Integration tests, figure out how to refactor the MsGraphHttpClient so the baseaddress can be swapped out for the wiremock server in tests
-
         // Act
         var response = await _httpClient.PostAsync(ApiRoutesV1.Convert.Post.UrlFor(targetFormat), multipartFormContent);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
-    }
-
-    public void Dispose()
-    {
-        _httpClient.Dispose();
-        _serviceScope.Dispose();
+        var conversionResponse = await response.Content.ReadFromJsonAsync<ConversionResponse>();
+        conversionResponse!.Id.Should().MatchRegex(RegexHelper.Guid);
     }
 }

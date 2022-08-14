@@ -12,5 +12,4 @@ public class Conversion
 
     public DateTimeOffset DateRequestCompleted { get; init; }
     /*public ConversionOptions ConversionOptions { get; init; } = new ();*/
-    
 }

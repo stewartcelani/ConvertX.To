@@ -17,7 +17,7 @@ public class LocalFileService : IFileService
     public async Task<Stream> ZipFilesAsync(IEnumerable<FileInfo> files)
     {
         var zipStream = new MemoryStream();
-        
+
         using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
         {
             foreach (var file in files)
@@ -28,7 +28,7 @@ public class LocalFileService : IFileService
                 await fileStream.CopyToAsync(entryStream);
             }
         }
-        
+
         zipStream.Position = 0;
         return zipStream;
     }

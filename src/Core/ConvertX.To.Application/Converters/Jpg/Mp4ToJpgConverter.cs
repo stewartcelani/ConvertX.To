@@ -4,8 +4,10 @@ namespace ConvertX.To.Application.Converters.Jpg;
 
 public class Mp4ToJpgConverter : ToJpgConverterBase
 {
-    public Mp4ToJpgConverter(ConverterFactory converterFactory, string sourceFormat, string targetFormat, ILoggerAdapter<IConverter> logger,
-        IMsGraphFileConversionService msGraphFileConversionService) : base(converterFactory, sourceFormat, targetFormat, logger,
+    public Mp4ToJpgConverter(ConverterFactory converterFactory, string sourceFormat, string targetFormat,
+        ILoggerAdapter<IConverter> logger,
+        IMsGraphFileConversionService msGraphFileConversionService) : base(converterFactory, sourceFormat, targetFormat,
+        logger,
         msGraphFileConversionService)
     {
     }

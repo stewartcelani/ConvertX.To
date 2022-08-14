@@ -28,7 +28,7 @@ public static class DependencyInjection
 
         services.AddScoped<ApplicationDbContext>(); // Config is within class as DI is required
 
-        
+
         // TODO: In integration test application factory remove hangfire and re-add with the test connection string.
         services.AddHangfire(x => x.UsePostgreSqlStorage(databaseSettings.ConnectionString));
         services.AddHangfireServer();

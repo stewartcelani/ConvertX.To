@@ -1,58 +1,85 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ConvertX.To.Application.Domain.Settings;
-using MimeTypes.Core;
+using ConvertX.To.Domain.External.MicrosoftGraph.Responses;
+using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
-using Xunit.Sdk;
-using Request = WireMock.RequestBuilders.Request;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ConvertX.To.Tests.Integration.MicrosoftGraphApiServer;
 
 [ExcludeFromCodeCoverage]
 public class MicrosoftGraphApiServer : IDisposable
 {
-    private WireMockServer _server;
-    private readonly MsGraphSettings _msGraphSettings;
+    public MsGraphSettings MsGraphSettings { get; }
+    public WireMockServer? Server { get; set; }
+    public string Url => Server?.Urls.First() ?? "";
 
     public MicrosoftGraphApiServer(MsGraphSettings msGraphSettings)
     {
-        _msGraphSettings = msGraphSettings;
+        MsGraphSettings = msGraphSettings;
     }
-
-    public string Url => _server.Url!;
 
     public async Task StartAsync()
     {
-        _server = WireMockServer.Start();
-        await SetupAuthenticationEndpoint();
+        Server = WireMockServer.Start(SharedTestContext.WireMockServerPort);
+        await Task.Delay(1000);
+        SetupPingEndpoint();
+        SetupAuthenticationEndpoint();
         SetupDeleteFileAsyncEndpoint();
     }
 
-    private async Task SetupAuthenticationEndpoint()
+    private void SetupPingEndpoint()
     {
-        var requestUrl = $"{_msGraphSettings.AuthenticationEndpoint}/{_msGraphSettings.TenantId}/oauth2/v2.0/token";
+        Server!.Given(Request.Create()
+                .WithPath("/ping")
+                .UsingGet())
+            .RespondWith(Response.Create().WithStatusCode(200));
+    }
 
-        _server.Given(Request.Create()
+    public void Dispose()
+    {
+        Server?.Stop();
+        Server?.Dispose();
+    }
+
+    private void SetupAuthenticationEndpoint()
+    {
+        var requestUrl = $"{MsGraphSettings.AuthenticationEndpoint}/{MsGraphSettings.TenantId}/oauth2/v2.0/token";
+
+        var authenticationResponse = new AuthenticationResponse
+        {
+            AccessToken =
+                "eyJ0eXAiOiJKV1QiLCJub25jZSI6IjM4amdMYjc3NTZFZUJiUlEtTjFSb0xOSzFrbW5QWWk3Wnd3aUVOaG9RM0UiLCJhbGciOiJSUzI1NiIsIng1dCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSIsImtpZCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSJ9.eyJhdWQiOiJodHRwczovL2dyYXBoLm1pY3Jvc29mdC5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC81MzVkNTU5Yy03M2Y3LTQwMzQtODlmZC0xYTk0Y2UwZjkwNTgvIiwiaWF0IjoxNjYwMzUwODYxLCJuYmYiOjE2NjAzNTA4NjEsImV4cCI6MTY2MDM1NDc2MSwiYWlvIjoiRTJaZ1lEQTlJbnJqQnU4RUR3c1ZuLzhHNXJNTUFBPT0iLCJhcHBfZGlzcGxheW5hbWUiOiJDb252ZXJ0WC5UbyIsImFwcGlkIjoiYTEwNDc4MmMtNWE3NC00YmIwLWJmYmYtNTA0ZWRlNTlhYzk5IiwiYXBwaWRhY3IiOiIxIiwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNTM1ZDU1OWMtNzNmNy00MDM0LTg5ZmQtMWE5NGNlMGY5MDU4LyIsImlkdHlwIjoiYXBwIiwib2lkIjoiM2ZjODE4M2EtZDc4My00ODk2LWE3OTUtYTVhZDc1N2QwZjRlIiwicmgiOiIwLkFYVUFuRlZkVV9kek5FQ0pfUnFVemctUVdBTUFBQUFBQUFBQXdBQUFBQUFBQUFCMUFBQS4iLCJyb2xlcyI6WyJGaWxlcy5SZWFkV3JpdGUuQWxsIiwiRmlsZXMuUmVhZC5BbGwiXSwic3ViIjoiM2ZjODE4M2EtZDc4My00ODk2LWE3OTUtYTVhZDc1N2QwZjRlIiwidGVuYW50X3JlZ2lvbl9zY29wZSI6Ik5BIiwidGlkIjoiNTM1ZDU1OWMtNzNmNy00MDM0LTg5ZmQtMWE5NGNlMGY5MDU4IiwidXRpIjoiaHlKWkxNM1lMVWlQeldkQWg2clVBQSIsInZlciI6IjEuMCIsIndpZHMiOlsiMDk5N2ExZDAtMGQxZC00YWNiLWI0MDgtZDVjYTczMTIxZTkwIl0sInhtc190Y2R0IjoxNjU2NjIwMzUxfQ.nDwfWKXWl73CgmMP5T3jvSR7HxJzcqoJLI2qB9Lp6Ha489czs4oFFbMmYSQ7Zm8pIWfe2W3-I6JjlkIagCTGLoyA1M6BdbfPgRKbtf8kl7869ElUTOz7N8qkBdEzoId4IclzfZAfj_Gy04MW-IfAtLiKplJhq6j4qgLAn1NSQEdcrdstTPhFp75jb1cRN64amKd4FmfQGvGhQrP2WpSQxn4UNdTVuzZ7t0-M4Plp-zEUIXIa4JSkvmKlikWbtuIca74vIEtVEbUZvubf619UeNJF0c-EqSlk8u1ocZOKIakYhXx9kyXWKNSm2vHjlkKGqusDV6K3Cfzlz_BHpPzdDQ",
+            ExpiresIn = 3599,
+            ExtExpiresIn = 3599,
+            TokenType = "Bearer"
+        };
+
+        var serializedAuthenticationResponse = JsonSerializer.Serialize(authenticationResponse);
+
+        Server!.Given(Request.Create()
                 .WithUrl(requestUrl)
                 .UsingPost())
             .RespondWith(Response.Create()
-                .WithBodyAsJson(await new StreamReader(@"Responses\AuthenticationResponse.json").ReadToEndAsync())
+                .WithBody(serializedAuthenticationResponse)
                 .WithStatusCode(200));
     }
 
-    public async Task SetupUploadFileAsyncEndpoint(string tempFileName, Stream source)
+    public void SetupUploadFileAsyncEndpoint(string tempFileName, Stream source)
     {
         var extension = Path.GetExtension(tempFileName);
-        var requestUrl = $"{_msGraphSettings.GraphEndpoint}/root:/*.{extension}:/content";
+        var requestUrl = $"{MsGraphSettings.GraphEndpoint}/root:/*{extension}:/content";
 
-        _server.Given(Request.Create()
+        Server!.Given(Request.Create()
                 .WithUrl(requestUrl)
                 .UsingPut())
             .RespondWith(Response.Create()
-                .WithBodyAsJson(GenerateUploadFileResponseBody(tempFileName, source))
+                .WithBody(GenerateUploadFileResponseBody(tempFileName, source))
                 .WithHeader("content-type",
                     "application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false; charset=utf-8")
                 .WithStatusCode(201));
@@ -60,14 +87,14 @@ public class MicrosoftGraphApiServer : IDisposable
 
     public async Task SetupGetFileInTargetFormatAsyncEndpoint(string sampleFileName, string targetFormat)
     {
-        var requestUrl = $"{_msGraphSettings.GraphEndpoint}/*/content?format={targetFormat}";
+        var requestUrl = $"{MsGraphSettings.GraphEndpoint}/*/content?format={targetFormat}";
 
         if (targetFormat.Equals("jpg"))
             requestUrl += "&width=1920&height=1080";
 
         var responseBodyMimeType = SharedTestContext.GetMimeType(targetFormat);
 
-        _server.Given(Request.Create()
+        Server!.Given(Request.Create()
                 .WithUrl(requestUrl)
                 .UsingGet())
             .RespondWith(Response.Create()
@@ -77,22 +104,17 @@ public class MicrosoftGraphApiServer : IDisposable
                 .WithStatusCode(200));
     }
 
-    public void SetupDeleteFileAsyncEndpoint()
+    private void SetupDeleteFileAsyncEndpoint()
     {
-        var requestUrl = $"{_msGraphSettings.GraphEndpoint}/*";
+        var requestUrl = $"{MsGraphSettings.GraphEndpoint}/*";
 
-        _server.Given(Request.Create()
+        Server!.Given(Request.Create()
                 .WithUrl(requestUrl)
                 .UsingDelete())
             .RespondWith(Response.Create()
                 .WithStatusCode(204));
     }
-
-    public void Dispose()
-    {
-        _server.Stop();
-        _server.Dispose();
-    }
+    
 
     private static string GenerateUploadFileResponseBody(string tempFileName, Stream source)
     {

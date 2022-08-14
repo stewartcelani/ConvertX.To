@@ -17,17 +17,18 @@ namespace ConvertX.To.Tests.Unit.Converters;
 [ExcludeFromCodeCoverage]
 public class ConversionEngineTests
 {
-    private readonly ConversionEngine _sut;
-    private readonly ILoggerAdapter<ConversionEngine> _logger = Substitute.For<ILoggerAdapter<ConversionEngine>>();
-    private readonly ILoggerAdapter<IConverter> _converterLogger = Substitute.For<ILoggerAdapter<IConverter>>();
-
     private readonly ILoggerAdapter<ConverterFactory> _converterFactoryLogger =
         Substitute.For<ILoggerAdapter<ConverterFactory>>();
+
+    private readonly ILoggerAdapter<IConverter> _converterLogger = Substitute.For<ILoggerAdapter<IConverter>>();
+
+    private readonly ConversionOptions _defaultConversionOptions;
+    private readonly ILoggerAdapter<ConversionEngine> _logger = Substitute.For<ILoggerAdapter<ConversionEngine>>();
 
     private readonly IMsGraphFileConversionService _msGraphFileConversionService =
         Substitute.For<IMsGraphFileConversionService>();
 
-    private readonly ConversionOptions _defaultConversionOptions;
+    private readonly ConversionEngine _sut;
 
     public ConversionEngineTests()
     {
@@ -67,11 +68,13 @@ public class ConversionEngineTests
     }
 
     /// <summary>
-    /// This will test all converters with default conversion options
+    ///     This will test all converters with default conversion options
     /// </summary>
     [Theory]
     [MemberData(nameof(ConvertAsync_GetAllConverters_AsParams))]
-    public async Task ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(string sourceFormat, string targetFormat)
+    public async Task
+        ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(
+            string sourceFormat, string targetFormat)
     {
         // Arrange
         var source = new MemoryStream(new byte[2]);
@@ -81,20 +84,23 @@ public class ConversionEngineTests
         _msGraphFileConversionService.GetFileInTargetFormatAsync(fileId, targetFormat).Returns(convertedStream);
 
         // Act
-        var (convertedFormatResult, convertedStreamResult) = await _sut.ConvertAsync(sourceFormat, targetFormat, source, _defaultConversionOptions);
-        
+        var (convertedFormatResult, convertedStreamResult) =
+            await _sut.ConvertAsync(sourceFormat, targetFormat, source, _defaultConversionOptions);
+
         // Assert
         convertedFormatResult.Should().Be(targetFormat);
         convertedStreamResult.Length.Should().BePositive();
     }
-    
+
     /// <summary>
-    /// Tests all ToJpg converters that also have a ToPdf converter to use as an intermediary when
-    /// ConversionOptions -> ToJpgOptions -> SplitIfPossible = true
+    ///     Tests all ToJpg converters that also have a ToPdf converter to use as an intermediary when
+    ///     ConversionOptions -> ToJpgOptions -> SplitIfPossible = true
     /// </summary>
     [Theory]
     [MemberData(nameof(ConvertAsync_GetAllJpgConvertersSupportingMultiplePageSplitting_AsParams))]
-    public async Task ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(string sourceFormat, string targetFormat)
+    public async Task
+        ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(
+            string sourceFormat, string targetFormat)
     {
         // Arrange
         var conversionOptions = new ConversionOptions
@@ -112,25 +118,30 @@ public class ConversionEngineTests
         var intermediaryPdfStream = intermediaryPdfFile.OpenRead();
         const string fileId = "01RFUB5G3LKSY7W5O3WRTY45I3L2DZ3UYZ";
         _msGraphFileConversionService.UploadFileAsync(Arg.Any<string>(), Arg.Any<Stream>()).Returns(fileId);
-        _msGraphFileConversionService.GetFileInTargetFormatAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(convertedStream);
-        _msGraphFileConversionService.GetFileInTargetFormatAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(intermediaryPdfStream);
+        _msGraphFileConversionService.GetFileInTargetFormatAsync(Arg.Any<string>(), Arg.Any<string>())
+            .Returns(convertedStream);
+        _msGraphFileConversionService.GetFileInTargetFormatAsync(Arg.Any<string>(), Arg.Any<string>())
+            .Returns(intermediaryPdfStream);
 
         // Act
-        var (convertedFormatResult, convertedStreamResult) = await _sut.ConvertAsync(sourceFormat, targetFormat, sourceStream, conversionOptions);
-        
+        var (convertedFormatResult, convertedStreamResult) =
+            await _sut.ConvertAsync(sourceFormat, targetFormat, sourceStream, conversionOptions);
+
         // Assert
         convertedFormatResult.Should().Be("zip");
         convertedStreamResult.Length.Should().BePositive();
-        
+
         // Cleanup
         await sourceStream.DisposeAsync();
         await convertedStream.DisposeAsync();
         await intermediaryPdfStream.DisposeAsync();
     }
-    
+
     [Theory]
     [MemberData(nameof(ConvertAsync_GetAllJpgConvertersSupportingMultiplePageSplitting_AsParams))]
-    public async Task ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(string sourceFormat, string targetFormat)
+    public async Task
+        ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(
+            string sourceFormat, string targetFormat)
     {
         // Arrange
         var conversionOptions = new ConversionOptions
@@ -148,22 +159,25 @@ public class ConversionEngineTests
         var intermediaryPdfStream = intermediaryPdfFile.OpenRead();
         const string fileId = "01RFUB5G3LKSY7W5O3WRTY45I3L2DZ3UYZ";
         _msGraphFileConversionService.UploadFileAsync(Arg.Any<string>(), Arg.Any<Stream>()).Returns(fileId);
-        _msGraphFileConversionService.GetFileInTargetFormatAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(convertedStream);
-        _msGraphFileConversionService.GetFileInTargetFormatAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(intermediaryPdfStream);
+        _msGraphFileConversionService.GetFileInTargetFormatAsync(Arg.Any<string>(), Arg.Any<string>())
+            .Returns(convertedStream);
+        _msGraphFileConversionService.GetFileInTargetFormatAsync(Arg.Any<string>(), Arg.Any<string>())
+            .Returns(intermediaryPdfStream);
 
         // Act
-        var (convertedFormatResult, convertedStreamResult) = await _sut.ConvertAsync(sourceFormat, targetFormat, sourceStream, conversionOptions);
-        
+        var (convertedFormatResult, convertedStreamResult) =
+            await _sut.ConvertAsync(sourceFormat, targetFormat, sourceStream, conversionOptions);
+
         // Assert
         convertedFormatResult.Should().Be(targetFormat);
         convertedStreamResult.Length.Should().BePositive();
-        
+
         // Cleanup
         await sourceStream.DisposeAsync();
         await convertedStream.DisposeAsync();
         await intermediaryPdfStream.DisposeAsync();
     }
-    
+
     private static IEnumerable<object[]> ConvertAsync_GetAllJpgConvertersSupportingMultiplePageSplitting_AsParams()
     {
         var supportedConversions = ConversionEngine.GetSupportedConversions();
@@ -172,21 +186,20 @@ public class ConversionEngineTests
 
         var toPdfConverters = supportedConversions.TargetFormatFrom["pdf"];
 
-        return (from sourceFormat in toJpgConverters where toPdfConverters.Contains(sourceFormat) select new object[] { sourceFormat, "jpg" }).ToList();
-    } 
-    
+        return (from sourceFormat in toJpgConverters
+            where toPdfConverters.Contains(sourceFormat)
+            select new object[] { sourceFormat, "jpg" }).ToList();
+    }
+
     private static IEnumerable<object[]> ConvertAsync_GetAllConverters_AsParams()
     {
         var testParams = new List<object[]>();
-        
+
         var supportedConversions = ConversionEngine.GetSupportedConversions();
-        
+
         foreach (var (key, value) in supportedConversions.SourceFormatTo)
-        {
             testParams.AddRange(value.Select(s => new object[] { key, s }));
-        }
 
         return testParams;
-    } 
-    
+    }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Threading.Tasks;
 using ConvertX.To.API.Controllers.V1;
 using ConvertX.To.Application.Interfaces;
@@ -14,9 +13,9 @@ namespace ConvertX.To.Tests.Unit.Controllers;
 [ExcludeFromCodeCoverage]
 public class FileControllerTests
 {
-    private readonly FileController _sut;
     private readonly IConversionService _conversionService = Substitute.For<IConversionService>();
     private readonly IConversionStorageService _conversionStorageService = Substitute.For<IConversionStorageService>();
+    private readonly FileController _sut;
 
     public FileControllerTests()
     {
@@ -35,7 +34,7 @@ public class FileControllerTests
 
         // Act
         var result = (FileStreamResult)await _sut.GetFileAsync(conversionId);
-        
+
         // Assert
         result.FileStream.Length.Should().Be(sampleFile.Length);
     }
@@ -49,7 +48,7 @@ public class FileControllerTests
 
         // Act
         var result = (NotFoundResult)await _sut.GetFileAsync(conversionId);
-        
+
         // Assert
         result.StatusCode.Should().Be(404);
     }
@@ -69,7 +68,7 @@ public class FileControllerTests
         // Assert
         result.StatusCode.Should().Be(200);
     }
-    
+
     [Fact]
     public async Task
         DeleteFileAsync_ShouldReturnNotFound_WhenConversionDoesNotExistOrHasBeenSoftDeleted()
@@ -80,11 +79,8 @@ public class FileControllerTests
 
         // Act
         var result = (NotFoundResult)await _sut.DeleteFileAsync(conversionId);
-        
+
         // Assert
         result.StatusCode.Should().Be(404);
     }
-
-
-
 }

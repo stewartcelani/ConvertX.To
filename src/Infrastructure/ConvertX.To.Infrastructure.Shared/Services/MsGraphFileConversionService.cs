@@ -1,11 +1,12 @@
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using Azure.Identity;
 using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Domain.External.MicrosoftGraph.Responses;
 using Microsoft.Graph;
 using MimeTypes.Core;
-using Newtonsoft.Json;
 
 namespace ConvertX.To.Infrastructure.Shared.Services;
 
@@ -45,9 +46,8 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         var response = await httpClient.PutAsync(requestUrl, requestContent);
         if (!response.IsSuccessStatusCode)
             throw new MsGraphUploadFileException(response);
-        var responseBody = await response.Content.ReadAsStringAsync();
-        dynamic fileResponse = JsonConvert.DeserializeObject(responseBody);
-        return fileResponse?.id ?? throw new NullReferenceException(nameof(fileResponse.id));
+        var fileResponse = await response.Content.ReadFromJsonAsync<UploadFileResponse>();
+        return fileResponse?.Id ?? throw new NullReferenceException(nameof(fileResponse.Id));
     }
 
     public async Task<Stream> GetFileInTargetFormatAsync(string fileId, string targetFormat)
@@ -163,9 +163,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         var response = await client.PostAsync(requestUrl, requestContent);
         if (!response.IsSuccessStatusCode)
             throw new MsGraphAuthorizationException(response);
-        var responseBody = await response.Content.ReadAsStringAsync();
-
-        dynamic tokenResponse = JsonConvert.DeserializeObject(responseBody);
-        return tokenResponse?.access_token ?? throw new NullReferenceException(nameof(tokenResponse.access_token));
+        var tokenResponse = await response.Content.ReadFromJsonAsync<AuthenticationResponse>();
+        return tokenResponse?.AccessToken ?? throw new NullReferenceException(nameof(tokenResponse.AccessToken));
     }
 }

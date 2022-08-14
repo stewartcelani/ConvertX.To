@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using ConvertX.To.Application.Converters;
 using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Interfaces;
@@ -10,10 +9,10 @@ namespace ConvertX.To.ConsoleUI.Core;
 public class App
 {
     private readonly IConversionEngine _conversionEngine;
-    private readonly IFileService _fileService;
-    private readonly ILogger<App> _logger;
 
     private readonly DirectoryInfo _directory = new(@"C:\dev\convertx.to\sample_files");
+    private readonly IFileService _fileService;
+    private readonly ILogger<App> _logger;
 
     public App(ILogger<App> logger, IConversionEngine conversionEngine, IFileService fileService)
     {

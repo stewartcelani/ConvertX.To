@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using ConvertX.To.Application.Domain;
 using ConvertX.To.Application.Domain.Entities;
 using ConvertX.To.Application.Domain.Filters;
 using ConvertX.To.Application.Interfaces;
@@ -30,7 +29,7 @@ public class ConversionService : IConversionService
         var conversionEntity = await _conversionRepository.GetAsync(id);
         return conversionEntity?.ToConversion();
     }
-    
+
     public async Task<IEnumerable<Conversion>> GetAsync()
     {
         return await GetAsync(new ConversionFilter());
@@ -56,7 +55,7 @@ public class ConversionService : IConversionService
         return conversionEntities.Select(x => x.ToConversion());
     }
 
-    
+
     public async Task<bool> CreateAsync(Conversion conversion)
     {
         if (await _conversionRepository.ExistsAsync(conversion.Id))
@@ -130,8 +129,9 @@ public class ConversionService : IConversionService
             ? $"{fileNameWithoutExtension}.{targetFormat}"
             : $"{fileNameWithoutExtension}.{targetFormat}.{convertedFormat}";
     }
-    
-    private static Expression<Func<ConversionEntity, bool>> GetPredicateForConversionFilter(ConversionFilter conversionFilter)
+
+    private static Expression<Func<ConversionEntity, bool>> GetPredicateForConversionFilter(
+        ConversionFilter conversionFilter)
     {
         Expression<Func<ConversionEntity, bool>>? predicate = x => x.DateDeleted == null;
         if (conversionFilter.Deleted) predicate = x => x.DateDeleted != null;

@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
@@ -15,7 +14,6 @@ using ConvertX.To.Application.Extensions;
 using ConvertX.To.Application.Interfaces;
 using ConvertX.To.Domain;
 using ConvertX.To.Domain.Options;
-using ConvertX.To.Infrastructure.Shared.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
@@ -27,12 +25,14 @@ namespace ConvertX.To.Tests.Unit.Controllers;
 [ExcludeFromCodeCoverage]
 public class ConversionControllerTests
 {
-    private readonly ConversionController _sut;
+    private readonly IConversionEngine _conversionEngine = Substitute.For<IConversionEngine>();
     private readonly IConversionService _conversionService = Substitute.For<IConversionService>();
     private readonly IConversionStorageService _conversionStorageService = Substitute.For<IConversionStorageService>();
-    private readonly IConversionEngine _conversionEngine = Substitute.For<IConversionEngine>();
+
     private readonly ILoggerAdapter<ConversionController> _logger =
         Substitute.For<ILoggerAdapter<ConversionController>>();
+
+    private readonly ConversionController _sut;
 
     public ConversionControllerTests()
     {
@@ -84,9 +84,10 @@ public class ConversionControllerTests
         expectedConversionResponse.DateScheduledForDeletion = conversionResponse.DateScheduledForDeletion;
         conversionResponse.Should().BeEquivalentTo(expectedConversionResponse);
         result.Location.Should().EndWith(ApiRoutesV1.Files.Get.UrlFor(conversion!.Id));
-        _logger.Received(1).LogInformation("Conversion request: {sourceFormat} to {targetFormat}", sourceFormat, targetFormat);
+        _logger.Received(1).LogInformation("Conversion request: {sourceFormat} to {targetFormat}", sourceFormat,
+            targetFormat);
     }
-    
+
     [Fact]
     public async Task ConvertAsync_ShouldThrowInvalidFileLengthException_WhenFileLengthIsZero()
     {
@@ -96,16 +97,17 @@ public class ConversionControllerTests
         const string targetFormat = "pdf";
         var file = SharedTestContext.GenerateFormFile($"{fileNameWithoutExtension}.{sourceFormat}", null);
         var conversionOptionsQuery = new ConversionOptionsQuery();
-      
+
         // Act
         var action = async () => (CreatedResult)await _sut.ConvertAsync(targetFormat, file, conversionOptionsQuery);
 
         // Assert
         await action.Should().ThrowAsync<InvalidFileLengthException>();
     }
-    
+
     [Fact]
-    public async Task ConvertAsync_ShouldThrowUnsupportedConversionException_WhenNoConverterForSourceToTargetFormatExists()
+    public async Task
+        ConvertAsync_ShouldThrowUnsupportedConversionException_WhenNoConverterForSourceToTargetFormatExists()
     {
         // Arrange
         const string fileNameWithoutExtension = "test";
@@ -117,14 +119,14 @@ public class ConversionControllerTests
             $"Converting from {sourceFormat.Proper()} to {targetFormat.Proper()} is not supported.";
         _conversionEngine.ConvertAsync(sourceFormat, targetFormat, Arg.Any<Stream>(), Arg.Any<ConversionOptions>())
             .ThrowsAsync(new UnsupportedConversionException(expectedExceptionMessage));
-      
+
         // Act
         var action = async () => (CreatedResult)await _sut.ConvertAsync(targetFormat, file, conversionOptionsQuery);
 
         // Assert
         await action.Should().ThrowAsync<UnsupportedConversionException>().WithMessage(expectedExceptionMessage);
     }
-    
+
     [Fact]
     public async Task ConvertAsync_ShouldThrowApiException_WhenThereIsAnErrorSavingConversionToDatabase()
     {
@@ -141,15 +143,12 @@ public class ConversionControllerTests
         _conversionService.GetConvertedFileName(fileNameWithoutExtension, targetFormat, convertedFormat)
             .Returns($"{fileNameWithoutExtension}.{convertedFormat}");
         _conversionService.CreateAsync(Arg.Any<Conversion>()).Returns(false);
-        const string expectedExceptionMessageWildcardPattern = "There was an unexpected error creating conversion:*"; 
-      
+        const string expectedExceptionMessageWildcardPattern = "There was an unexpected error creating conversion:*";
+
         // Act
         var action = async () => (CreatedResult)await _sut.ConvertAsync(targetFormat, file, conversionOptionsQuery);
 
         // Assert
         await action.Should().ThrowAsync<ApiException>().WithMessage(expectedExceptionMessageWildcardPattern);
     }
-
-    
-    
 }
