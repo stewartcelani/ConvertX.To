@@ -270,4 +270,5 @@ appsettings.secret.json
 .secret
 .conversionStorage/
 .postgres/
+.postgres
 *.secret.json
