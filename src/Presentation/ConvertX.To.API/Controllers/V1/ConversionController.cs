@@ -50,6 +50,7 @@ public class ConversionController : ControllerBase
 
     [HttpPost(ApiRoutesV1.Convert.Post.Url)]
     [Consumes("multipart/form-data")]
+    [RequestSizeLimit(50000000)] // 50 MB FILE UPLOAD LIMIT
     public async Task<IActionResult> ConvertAsync([FromRoute] string targetFormat, [FromForm] IFormFile file,
         [FromQuery] ConversionOptionsQuery conversionOptionsQuery)
     {

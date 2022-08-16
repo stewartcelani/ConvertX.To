@@ -32,7 +32,7 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
     private readonly HttpClient _httpClient;
     private readonly MicrosoftGraphApiServer.MicrosoftGraphApiServer _microsoftGraphApiServer;
     private readonly IServiceScope _serviceScope;
-    
+
     public ConversionControllerTests(ConvertXToApiFactory apiFactory, SharedTestContext testContext)
     {
         _httpClient = apiFactory.CreateClient();
@@ -74,7 +74,7 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
     [Theory]
     [MemberData(nameof(ConvertAsync_GetParamsForSampleFilesUnderLargeFileThreshold_WhenConversionIsSupported))]
     public async Task
-        ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndFileIsUnderLargeFileThresholdAndDefaultConversionOptionsAreUsed(
+        ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupportedAndFileIsUnderLargeFileThreshold(
             string sampleFileName, string targetFormat)
     {
         // Arrange
@@ -86,7 +86,7 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
         fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue(SharedTestContext.GetMimeType(sampleFileName));
         using var multipartFormContent = new MultipartFormDataContent();
         multipartFormContent.Add(fileStreamContent, "file", sampleFileName);
-        
+
         // Act
         var response = await _httpClient.PostAsync(ApiRoutesV1.Convert.Post.UrlFor(targetFormat), multipartFormContent);
 
@@ -96,20 +96,24 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
         conversionResponse!.Id.Should().MatchRegex(RegexHelper.Guid);
     }
 
-    private static IEnumerable<object[]> ConvertAsync_GetParamsForSampleFilesUnderLargeFileThreshold_WhenConversionIsSupported()
+    private static IEnumerable<object[]>
+        ConvertAsync_GetParamsForSampleFilesUnderLargeFileThreshold_WhenConversionIsSupported()
     {
         var testParams = new List<object[]>();
 
         var sampleFiles = SharedTestContext.GetSampleFilesUnderLargeFileThreshold();
 
         var supportedConversions = ConversionEngine.GetSupportedConversions();
-        
+
         foreach (var sampleFile in sampleFiles)
         {
-            var supportedTargetFormats = supportedConversions.SourceFormatTo[sampleFile.Extension.Replace(".", "")];
-            testParams.AddRange(supportedTargetFormats.Select(supportedTargetFormat => new object[] { sampleFile.Name, supportedTargetFormat }));
+            var sampleFileExtension = sampleFile.Extension.Replace(".", "").ToLower();
+            if (!supportedConversions.SourceFormatTo.ContainsKey(sampleFileExtension)) continue;
+            var supportedTargetFormats = supportedConversions.SourceFormatTo[sampleFileExtension];
+            testParams.AddRange(supportedTargetFormats.Select(supportedTargetFormat =>
+                new object[] { sampleFile.Name, supportedTargetFormat }));
         }
-        
+
         return testParams;
     }
 }
