@@ -1,6 +1,5 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using Azure.Identity;
 using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Application.Exceptions;
 using ConvertX.To.Application.Interfaces;
@@ -38,13 +37,40 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
     public async Task<string> UploadFileAsync(string sourceFormat, Stream source)
     {
         if (source.Length > LargeFileThreshold)
-            return await UploadLargeFileAsync(sourceFormat, source); // Using Graph SDK for > 3.9 MB
+            return await UploadLargeFileAsync(sourceFormat, source);
 
         var httpClient = await CreateAuthorizedHttpClient();
         var tempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{sourceFormat}";
         var requestUrl = $"{_msGraphSettings.GraphEndpoint}/root:/{tempFileName}:/content";
         var requestContent = new StreamContent(source);
         requestContent.Headers.ContentType = new MediaTypeHeaderValue(MimeTypeMap.GetMimeType(sourceFormat));
+        var response = await httpClient.PutAsync(requestUrl, requestContent);
+        if (!response.IsSuccessStatusCode)
+            throw new MsGraphUploadFileException(response);
+        var fileResponse = await response.Content.ReadFromJsonAsync<UploadFileResponse>();
+        return fileResponse?.Id ?? throw new NullReferenceException(nameof(fileResponse.Id));
+    }
+    
+    /// <summary>
+    /// https://docs.microsoft.com/en-us/graph/api/driveitem-createuploadsession?view=graph-rest-1.0
+    /// Since our max file upload size to ConversionController is 50 MB and graph lets uploading 60 MB in one put
+    /// request we wont be chunking the upload into multiple parts
+    /// </summary>
+    private async Task<string> UploadLargeFileAsync(string sourceFormat, Stream source)
+    {
+        var httpClient = await CreateAuthorizedHttpClient();
+        var tempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{sourceFormat}";
+        var createUploadSessionUrl = $"{_msGraphSettings.GraphEndpoint}/root:/{tempFileName}:/createUploadSession";
+        var createUploadSessionResponse = await httpClient.PostAsync(createUploadSessionUrl, null);
+        if (!createUploadSessionResponse.IsSuccessStatusCode)
+            throw new MsGraphUploadFileException(createUploadSessionResponse);
+        var uploadSessionResponse =
+            await createUploadSessionResponse.Content.ReadFromJsonAsync<CreateUploadSessionResponse>();
+        var requestUrl = uploadSessionResponse?.UploadUrl ?? throw new NullReferenceException(uploadSessionResponse?.UploadUrl);
+        var requestContent = new StreamContent(source);
+        requestContent.Headers.ContentType = new MediaTypeHeaderValue(MimeTypeMap.GetMimeType(sourceFormat));
+        requestContent.Headers.ContentLength = source.Length;
+        requestContent.Headers.ContentRange = new ContentRangeHeaderValue(0, source.Length-1, source.Length);
         var response = await httpClient.PutAsync(requestUrl, requestContent);
         if (!response.IsSuccessStatusCode)
             throw new MsGraphUploadFileException(response);
@@ -85,57 +111,7 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         if (!response.IsSuccessStatusCode)
             throw new MsGraphDeleteFileException(response);
     }
-
-    /// <summary>
-    ///     File sizes >= 4 MB require file sessions so using the Graph SDK for this
-    /// </summary>
-    private async Task<string> UploadLargeFileAsync(string sourceFormat, Stream stream)
-    {
-        var graphServiceClient = CreateGraphServiceClient();
-        var tempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{sourceFormat}";
-        var requestUrl = $"{_msGraphSettings.GraphEndpoint}/root:/{tempFileName}:/microsoft.graph.createUploadSession";
-        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, requestUrl);
-        await graphServiceClient.AuthenticationProvider.AuthenticateRequestAsync(httpRequestMessage);
-        var httpResponseMessage = await graphServiceClient.HttpProvider.SendAsync(httpRequestMessage);
-        var content = await httpResponseMessage.Content.ReadAsStringAsync();
-        var uploadSession = graphServiceClient.HttpProvider.Serializer.DeserializeObject<UploadSession>(content);
-        var largeFileUploadTask = new LargeFileUploadTask<DriveItem>(uploadSession, stream);
-        try
-        {
-            var uploadResult = await largeFileUploadTask.UploadAsync();
-
-            if (!uploadResult.UploadSucceeded) throw new MsGraphUploadLargeFileException(uploadResult);
-
-            await stream.DisposeAsync();
-            return uploadResult.ItemResponse.Id;
-        }
-        catch (ServiceException e)
-        {
-            _logger.LogError(e, e.Message);
-            await stream.DisposeAsync();
-            throw;
-        }
-    }
-
-    private GraphServiceClient CreateGraphServiceClient()
-    {
-        if (_graphServiceClient is not null) return _graphServiceClient;
-
-        var options = new TokenCredentialOptions
-        {
-            AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
-        };
-        var clientSecretCredential = new ClientSecretCredential(_msGraphSettings.TenantId, _msGraphSettings.ClientId,
-            _msGraphSettings.ClientSecret, options);
-        var scopes = new[]
-        {
-            _msGraphSettings.Scope
-        };
-        _graphServiceClient = new GraphServiceClient(clientSecretCredential, scopes);
-
-        return _graphServiceClient;
-    }
-
+    
     private async Task<HttpClient> CreateAuthorizedHttpClient()
     {
         if (_httpClient is not null) return _httpClient;
