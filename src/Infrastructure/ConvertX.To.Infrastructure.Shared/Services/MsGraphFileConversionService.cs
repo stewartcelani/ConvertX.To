@@ -64,10 +64,11 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         var createUploadSessionResponse = await httpClient.PostAsync(createUploadSessionUrl, null);
         if (!createUploadSessionResponse.IsSuccessStatusCode)
             throw new MsGraphUploadFileException(createUploadSessionResponse);
+        var temp = await createUploadSessionResponse.Content.ReadAsStringAsync();
         var uploadSessionResponse =
             await createUploadSessionResponse.Content.ReadFromJsonAsync<CreateUploadSessionResponse>();
-        var requestUrl = uploadSessionResponse?.UploadUrl ?? throw new NullReferenceException(uploadSessionResponse?.UploadUrl);
-        var requestContent = new StreamContent(source);
+        var requestUrl = uploadSessionResponse?.UploadUrl ?? throw new NullReferenceException(uploadSessionResponse?.UploadUrl); // 
+        var requestContent = new StreamContent(source); 
         requestContent.Headers.ContentType = new MediaTypeHeaderValue(MimeTypeMap.GetMimeType(sourceFormat));
         requestContent.Headers.ContentLength = source.Length;
         requestContent.Headers.ContentRange = new ContentRangeHeaderValue(0, source.Length-1, source.Length);

@@ -29,7 +29,7 @@ public class ConversionService : IConversionService
 
     public async Task ConvertFileToAllSupportedFormatsAsync(FileInfo file, SupportedConversions supportedConversions)
     {
-        var sourceFormat = file.Extension.Replace(".", "");
+        var sourceFormat = file.Extension.Replace(".", "").ToLower();
         if (!supportedConversions.SourceFormatTo.ContainsKey(sourceFormat)) return;
 
         var supportedTargetFormats = supportedConversions.SourceFormatTo[sourceFormat];

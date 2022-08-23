@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ConvertX.To.Application.Domain.Settings;
 using ConvertX.To.Domain.External.MicrosoftGraph.Responses;
+using ConvertX.To.Infrastructure.Shared.Services;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
@@ -28,6 +29,85 @@ public class MicrosoftGraphApiServer : IDisposable
     {
         Server = WireMockServer.Start(SharedTestContext.WireMockServerPort);
         await Task.Delay(1000);
+        SetupCommonEndpoints();
+    }
+
+    public void ResetMappings()
+    {
+        Server!.ResetMappings();
+        SetupCommonEndpoints();
+    }
+
+    public void SetupUploadFileAsyncEndpoint(string tempFileName, Stream source)
+    {
+        var extension = Path.GetExtension(tempFileName).ToLower();
+
+        if (source.Length < MsGraphFileConversionService.LargeFileThreshold)
+        {
+            var requestUrl = $"{MsGraphSettings.GraphEndpoint}/root:/*{extension}:/content";
+
+            Server!.Given(Request.Create()
+                    .WithUrl(requestUrl)
+                    .UsingPut())
+                .RespondWith(Response.Create()
+                    .WithBody(GenerateUploadFileResponseBody(tempFileName, source))
+                    .WithHeader("content-type",
+                        "application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false; charset=utf-8")
+                    .WithStatusCode(201));
+        }
+        else
+        {
+            var driveItemId = Guid.NewGuid().ToString();
+            var createUploadSessionUrl = $"{MsGraphSettings.GraphEndpoint}/root:/*{extension}:/createUploadSession";
+            Server!.Given(Request.Create()
+                    .WithUrl(createUploadSessionUrl)
+                    .UsingPost())
+                .RespondWith(Response.Create()
+                    .WithBody(GenerateCreateUploadSessionResponse(driveItemId))
+                    .WithHeader("content-type",
+                        "Content-Type: application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false; charset=utf-8")
+                    .WithStatusCode(200));
+
+            var requestUrl =
+                $"{MsGraphSettings.GraphEndpoint}/sites/ConvertX.To/_api/v2.0/drive/items/{driveItemId}/uploadSession?guid='483e5072-76a1-4d00-ae7f-930b91b89175'&overwrite=True&rename=False&dc=0&tempauth=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvN3B5cm5tLnNoYXJlcG9pbnQuY29tQDUzNWQ1NTljLTczZjctNDAzNC04OWZkLTFhOTRjZTBmOTA1OCIsImlzcyI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMCIsIm5iZiI6IjE2NjEyODQ2ODMiLCJleHAiOiIxNjYxMzcxMDgzIiwiZW5kcG9pbnR1cmwiOiJwOFhrRkJQRkpzNzE4MFhNVnVoWWpWZ0dRM240OExMVERVT2QzakFhLytnPSIsImVuZHBvaW50dXJsTGVuZ3RoIjoiMTk1IiwiaXNsb29wYmFjayI6IlRydWUiLCJjaWQiOiJaREF3TjJJd05ETXRaVGhtT1MwMFptTXlMVGcxWXpNdFlUSmlaamt5T0dZd1pqazMiLCJ2ZXIiOiJoYXNoZWRwcm9vZnRva2VuIiwic2l0ZWlkIjoiWVRBME5qTXpOalV0T1dRNE5TMDBNR1JtTFRrNVpUVXRPR1ZsT0dJNE1UaGpORGt4IiwiYXBwX2Rpc3BsYXluYW1lIjoiQ29udmVydFguVG8iLCJuYW1laWQiOiJhMTA0NzgyYy01YTc0LTRiYjAtYmZiZi01MDRlZGU1OWFjOTlANTM1ZDU1OWMtNzNmNy00MDM0LTg5ZmQtMWE5NGNlMGY5MDU4Iiwicm9sZXMiOiJhbGxmaWxlcy53cml0ZSBhbGxmaWxlcy5yZWFkIiwidHQiOiIxIiwidXNlUGVyc2lzdGVudENvb2tpZSI6bnVsbCwiaXBhZGRyIjoiMjAuMTkwLjE0Mi4xNjkifQ.ZldEVUx1a1BXMTFZajhjYXBEcTAyME40QnlsRjlCTmZiNXNHNllYY0JIdz0";
+            Server!.Given(Request.Create()
+                    .WithUrl(requestUrl)
+                    .UsingPut())
+                .RespondWith(Response.Create()
+                    .WithBody(GenerateUploadFileResponseBody(tempFileName, source))
+                    .WithHeader("content-type",
+                        "application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false; charset=utf-8")
+                    .WithStatusCode(201));
+        }
+    }
+
+    public async Task SetupGetFileInTargetFormatAsyncEndpoint(string sampleFileName, string targetFormat)
+    {
+        var requestUrl = $"{MsGraphSettings.GraphEndpoint}/*/content?format={targetFormat}";
+
+        if (targetFormat.Equals("jpg"))
+            requestUrl += "&width=1920&height=1080";
+
+        var responseBodyMimeType = SharedTestContext.GetMimeType(targetFormat);
+
+        Server!.Given(Request.Create()
+                .WithUrl(requestUrl)
+                .UsingGet())
+            .RespondWith(Response.Create()
+                .WithBody(await File.ReadAllBytesAsync(SharedTestContext
+                    .GetSampleFile($"{sampleFileName}.converted.{targetFormat}").FullName))
+                .WithHeader("content-type", responseBodyMimeType)
+                .WithStatusCode(200));
+    }
+
+    public void Dispose()
+    {
+        Server?.Stop();
+        Server?.Dispose();
+    }
+
+    private void SetupCommonEndpoints()
+    {
         SetupPingEndpoint();
         SetupAuthenticationEndpoint();
         SetupDeleteFileAsyncEndpoint();
@@ -39,12 +119,6 @@ public class MicrosoftGraphApiServer : IDisposable
                 .WithPath("/ping")
                 .UsingGet())
             .RespondWith(Response.Create().WithStatusCode(200));
-    }
-
-    public void Dispose()
-    {
-        Server?.Stop();
-        Server?.Dispose();
     }
 
     private void SetupAuthenticationEndpoint()
@@ -70,39 +144,6 @@ public class MicrosoftGraphApiServer : IDisposable
                 .WithStatusCode(200));
     }
 
-    public void SetupUploadFileAsyncEndpoint(string tempFileName, Stream source)
-    {
-        var extension = Path.GetExtension(tempFileName);
-        var requestUrl = $"{MsGraphSettings.GraphEndpoint}/root:/*{extension}:/content";
-
-        Server!.Given(Request.Create()
-                .WithUrl(requestUrl)
-                .UsingPut())
-            .RespondWith(Response.Create()
-                .WithBody(GenerateUploadFileResponseBody(tempFileName, source))
-                .WithHeader("content-type",
-                    "application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false; charset=utf-8")
-                .WithStatusCode(201));
-    }
-
-    public async Task SetupGetFileInTargetFormatAsyncEndpoint(string sampleFileName, string targetFormat)
-    {
-        var requestUrl = $"{MsGraphSettings.GraphEndpoint}/*/content?format={targetFormat}";
-
-        if (targetFormat.Equals("jpg"))
-            requestUrl += "&width=1920&height=1080";
-
-        var responseBodyMimeType = SharedTestContext.GetMimeType(targetFormat);
-
-        Server!.Given(Request.Create()
-                .WithUrl(requestUrl)
-                .UsingGet())
-            .RespondWith(Response.Create()
-                .WithBody(await File.ReadAllBytesAsync(SharedTestContext
-                    .GetSampleFile($"{sampleFileName}.converted.{targetFormat}").FullName))
-                .WithHeader("content-type", responseBodyMimeType)
-                .WithStatusCode(200));
-    }
 
     private void SetupDeleteFileAsyncEndpoint()
     {
@@ -115,21 +156,17 @@ public class MicrosoftGraphApiServer : IDisposable
                 .WithStatusCode(204));
     }
 
-    private string GenerateCreateUploadSessionResponseBody()
+    private string GenerateCreateUploadSessionResponse(string driveItemId)
     {
         var thirtyMinutesFromNow = DateTime.UtcNow.AddMinutes(30).ToString("s") + "Z";
-
-        return $@"{{
-                  ""@odata.context"": ""https://graph.microsoft.com/beta/$metadata#microsoft.graph.uploadSession"",
-                  ""expirationDateTime"": ""{thirtyMinutesFromNow}"",
-                  ""nextExpectedRanges"": [
-                    ""0-""
-                  ],
-                  ""uploadUrl"": ""{Url}""
-                }}
+        return
+            $@"{{
+                ""@odata.context"":""https://graph.microsoft.com/beta/$metadata#microsoft.graph.uploadSession"",
+                ""expirationDateTime"":""{thirtyMinutesFromNow}"",
+                ""nextExpectedRanges"":[""0-""],
+                ""uploadUrl"":""{MsGraphSettings.GraphEndpoint}/sites/ConvertX.To/_api/v2.0/drive/items/{driveItemId}/uploadSession?guid='483e5072-76a1-4d00-ae7f-930b91b89175'&overwrite=True&rename=False&dc=0&tempauth=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvN3B5cm5tLnNoYXJlcG9pbnQuY29tQDUzNWQ1NTljLTczZjctNDAzNC04OWZkLTFhOTRjZTBmOTA1OCIsImlzcyI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMCIsIm5iZiI6IjE2NjEyODQ2ODMiLCJleHAiOiIxNjYxMzcxMDgzIiwiZW5kcG9pbnR1cmwiOiJwOFhrRkJQRkpzNzE4MFhNVnVoWWpWZ0dRM240OExMVERVT2QzakFhLytnPSIsImVuZHBvaW50dXJsTGVuZ3RoIjoiMTk1IiwiaXNsb29wYmFjayI6IlRydWUiLCJjaWQiOiJaREF3TjJJd05ETXRaVGhtT1MwMFptTXlMVGcxWXpNdFlUSmlaamt5T0dZd1pqazMiLCJ2ZXIiOiJoYXNoZWRwcm9vZnRva2VuIiwic2l0ZWlkIjoiWVRBME5qTXpOalV0T1dRNE5TMDBNR1JtTFRrNVpUVXRPR1ZsT0dJNE1UaGpORGt4IiwiYXBwX2Rpc3BsYXluYW1lIjoiQ29udmVydFguVG8iLCJuYW1laWQiOiJhMTA0NzgyYy01YTc0LTRiYjAtYmZiZi01MDRlZGU1OWFjOTlANTM1ZDU1OWMtNzNmNy00MDM0LTg5ZmQtMWE5NGNlMGY5MDU4Iiwicm9sZXMiOiJhbGxmaWxlcy53cml0ZSBhbGxmaWxlcy5yZWFkIiwidHQiOiIxIiwidXNlUGVyc2lzdGVudENvb2tpZSI6bnVsbCwiaXBhZGRyIjoiMjAuMTkwLjE0Mi4xNjkifQ.ZldEVUx1a1BXMTFZajhjYXBEcTAyME40QnlsRjlCTmZiNXNHNllYY0JIdz0""}}
                 ";
     }
-
 
     private static string GenerateUploadFileResponseBody(string tempFileName, Stream source)
     {

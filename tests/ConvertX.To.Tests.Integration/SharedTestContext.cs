@@ -69,14 +69,14 @@ public class SharedTestContext : IAsyncLifetime
             $"../../../../SampleFiles/{name}")));
     }
 
-    public static List<FileInfo> GetSampleFilesUnderLargeFileThreshold()
+    public static List<FileInfo> GetSampleFiles()
     {
         var sampleFileDirectory = new DirectoryInfo(Path.GetFullPath(Path.Combine(
             Directory.GetCurrentDirectory(),
             $"../../../../SampleFiles")));
         return sampleFileDirectory
             .GetFiles("*.*", SearchOption.AllDirectories)
-            .Where(x => !x.Name.Contains(".converted.") && x.Length < MsGraphFileConversionService.LargeFileThreshold)
+            .Where(x => !x.Name.Contains(".converted."))
             .ToList();
     }
 

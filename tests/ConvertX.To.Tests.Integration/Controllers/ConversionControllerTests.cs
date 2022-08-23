@@ -64,18 +64,10 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
         supportedConversionsResponse.Should().BeEquivalentTo(expectedSupportedConversionsResponse);
     }
 
-    /// <summary>
-    /// Mocking the multi-part large file uploads the Graph SDK uses via WireMockServer isn't possible as the client
-    /// uses a base address pointing to Microsoft Graph. Due to the fact we will need live E2E tests as relying on
-    /// WireMockServer for the core part of the application I'll make sure to test all small + large file uploads
-    /// for all formats there. Here we will just test the small file uploads which essentially passes through all the
-    /// same code except for the upload part.
-    /// </summary>
-    /// TODO: Can now mock the LargeFileUploads so make this do all samples
     [Theory]
-    [MemberData(nameof(ConvertAsync_GetParamsForSampleFilesUnderLargeFileThreshold_WhenConversionIsSupported))]
+    [MemberData(nameof(ConvertAsync_GetParamsForSampleFiles_WhenConversionIsSupported))]
     public async Task
-        ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupportedAndFileIsUnderLargeFileThreshold(
+        ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(
             string sampleFileName, string targetFormat)
     {
         // Arrange
@@ -95,14 +87,47 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         var conversionResponse = await response.Content.ReadFromJsonAsync<ConversionResponse>();
         conversionResponse!.Id.Should().MatchRegex(RegexHelper.Guid);
+        
+        // Cleanup
+        _microsoftGraphApiServer.ResetMappings();
+    }
+
+    [Theory]
+    /*[MemberData(nameof(ConvertAsync_GetParamsForSampleFiles_WhenConversionToJpgIsSupported))]*/
+    [InlineData("sample2.docx", "jpg")]
+    public async Task
+        ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionIsSupportedAndAnIntermediatePdfConverterExistsAndThereAreMultiplePagesInSourceFile(string sampleFileName, string targetFormat)
+    {
+        // Arrange
+        // TODO: Need to set up the mappings for the toPdfConverter.ConvertAsync intermediary if this file supports it
+        var tempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{Path.GetExtension(sampleFileName)}";
+        var sourceFile = SharedTestContext.GetSampleFile(sampleFileName);
+        _microsoftGraphApiServer.SetupUploadFileAsyncEndpoint(tempFileName, sourceFile.OpenRead());
+        await _microsoftGraphApiServer.SetupGetFileInTargetFormatAsyncEndpoint(sampleFileName, targetFormat);
+        var fileStreamContent = new StreamContent(sourceFile.OpenRead());
+        fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue(SharedTestContext.GetMimeType(sampleFileName));
+        using var multipartFormContent = new MultipartFormDataContent();
+        multipartFormContent.Add(fileStreamContent, "file", sampleFileName);
+        var requestUrl = ApiRoutesV1.Convert.Post.UrlFor(targetFormat) + "?splitjpg=true";
+
+        // Act
+        var response = await _httpClient.PostAsync(requestUrl, multipartFormContent);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        var conversionResponse = await response.Content.ReadFromJsonAsync<ConversionResponse>();
+        conversionResponse!.Id.Should().MatchRegex(RegexHelper.Guid);
+
+        // Cleanup
+        _microsoftGraphApiServer.ResetMappings();
     }
 
     private static IEnumerable<object[]>
-        ConvertAsync_GetParamsForSampleFilesUnderLargeFileThreshold_WhenConversionIsSupported()
+        ConvertAsync_GetParamsForSampleFiles_WhenConversionIsSupported()
     {
         var testParams = new List<object[]>();
 
-        var sampleFiles = SharedTestContext.GetSampleFilesUnderLargeFileThreshold();
+        var sampleFiles = SharedTestContext.GetSampleFiles();
 
         var supportedConversions = ConversionEngine.GetSupportedConversions();
 
@@ -117,4 +142,30 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
 
         return testParams;
     }
+    
+    private static IEnumerable<object[]>
+        ConvertAsync_GetParamsForSampleFiles_WhenConversionToJpgIsSupported()
+    {
+        var testParams = new List<object[]>();
+
+        var sampleFiles = SharedTestContext.GetSampleFiles();
+
+        var supportedConversions = ConversionEngine.GetSupportedConversions();
+
+        foreach (var sampleFile in sampleFiles)
+        {
+            var sampleFileExtension = sampleFile.Extension.Replace(".", "").ToLower();
+            if (!supportedConversions.SourceFormatTo.ContainsKey(sampleFileExtension)) continue;
+            var supportedTargetFormats = supportedConversions.SourceFormatTo[sampleFileExtension];
+            if (supportedTargetFormats.Contains("jpg"))
+            {
+                testParams.Add(new object[] { sampleFile.Name, "jpg" });
+            }
+            /*testParams.AddRange(supportedTargetFormats.Select(supportedTargetFormat =>
+                new object[] { sampleFile.Name, supportedTargetFormat }));*/
+        }
+
+        return testParams;
+    }
+    
 }
