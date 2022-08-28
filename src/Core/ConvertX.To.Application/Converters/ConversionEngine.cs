@@ -33,6 +33,14 @@ public class ConversionEngine : IConversionEngine
         return await converter.ConvertAsync(source, conversionOptions);
     }
 
+    public static bool IsConversionSupported(string sourceFormat, string targetFormat)
+    {
+        var source = sourceFormat.ToLower().Replace(".", "");
+        var target = targetFormat.ToLower().Replace(".", "");
+        var supportedConversions = GetSupportedConversions();
+        return supportedConversions.SourceFormatTo.ContainsKey(source) && supportedConversions.SourceFormatTo[source].Contains(target);
+    }
+
     public static SupportedConversions GetSupportedConversions()
     {
         var convertersByTargetFormat = new Dictionary<string, List<string>>();

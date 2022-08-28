@@ -64,7 +64,6 @@ public class MsGraphFileConversionService : IMsGraphFileConversionService
         var createUploadSessionResponse = await httpClient.PostAsync(createUploadSessionUrl, null);
         if (!createUploadSessionResponse.IsSuccessStatusCode)
             throw new MsGraphUploadFileException(createUploadSessionResponse);
-        var temp = await createUploadSessionResponse.Content.ReadAsStringAsync();
         var uploadSessionResponse =
             await createUploadSessionResponse.Content.ReadFromJsonAsync<CreateUploadSessionResponse>();
         var requestUrl = uploadSessionResponse?.UploadUrl ?? throw new NullReferenceException(uploadSessionResponse?.UploadUrl); // 

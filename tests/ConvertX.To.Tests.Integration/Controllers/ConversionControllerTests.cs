@@ -93,17 +93,18 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
     }
 
     [Theory]
-    /*[MemberData(nameof(ConvertAsync_GetParamsForSampleFiles_WhenConversionToJpgIsSupported))]*/
-    [InlineData("sample2.docx", "jpg")]
+    [MemberData(nameof(ConvertAsync_GetParamsForSampleFiles_WhenConversionToJpgIsSupportedAndIntermediaryPdfConverterExists))]
     public async Task
-        ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionIsSupportedAndAnIntermediatePdfConverterExistsAndThereAreMultiplePagesInSourceFile(string sampleFileName, string targetFormat)
+        ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(string sampleFileName, string targetFormat)
     {
         // Arrange
-        // TODO: Need to set up the mappings for the toPdfConverter.ConvertAsync intermediary if this file supports it
-        var tempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{Path.GetExtension(sampleFileName)}";
+        var sourceTempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.{Path.GetExtension(sampleFileName)}";
+        var intermediaryTempFileName = $"{Guid.NewGuid().ToString().Replace("-", "")}.pdf";
         var sourceFile = SharedTestContext.GetSampleFile(sampleFileName);
-        _microsoftGraphApiServer.SetupUploadFileAsyncEndpoint(tempFileName, sourceFile.OpenRead());
-        await _microsoftGraphApiServer.SetupGetFileInTargetFormatAsyncEndpoint(sampleFileName, targetFormat);
+        _microsoftGraphApiServer.SetupUploadFileAsyncEndpoint(sourceTempFileName, sourceFile.OpenRead());
+        _microsoftGraphApiServer.SetupUploadFileAsyncEndpoint(intermediaryTempFileName, new MemoryStream());
+        await _microsoftGraphApiServer.SetupGetFileInTargetFormatAsyncEndpoint(sourceFile.Name, "pdf"); // sourceFormat to Pdf intermediary
+        await _microsoftGraphApiServer.SetupGetFileInTargetFormatAsyncEndpoint(sourceFile.Name, "jpg"); // pdf to jpg
         var fileStreamContent = new StreamContent(sourceFile.OpenRead());
         fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue(SharedTestContext.GetMimeType(sampleFileName));
         using var multipartFormContent = new MultipartFormDataContent();
@@ -117,6 +118,8 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         var conversionResponse = await response.Content.ReadFromJsonAsync<ConversionResponse>();
         conversionResponse!.Id.Should().MatchRegex(RegexHelper.Guid);
+        conversionResponse!.TargetFormat.Should().Be(targetFormat);
+        conversionResponse!.ConvertedFormat.Should().BeOneOf(targetFormat, "zip");
 
         // Cleanup
         _microsoftGraphApiServer.ResetMappings();
@@ -144,25 +147,21 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
     }
     
     private static IEnumerable<object[]>
-        ConvertAsync_GetParamsForSampleFiles_WhenConversionToJpgIsSupported()
+        ConvertAsync_GetParamsForSampleFiles_WhenConversionToJpgIsSupportedAndIntermediaryPdfConverterExists()
     {
         var testParams = new List<object[]>();
 
         var sampleFiles = SharedTestContext.GetSampleFiles();
-
-        var supportedConversions = ConversionEngine.GetSupportedConversions();
-
+        
         foreach (var sampleFile in sampleFiles)
         {
             var sampleFileExtension = sampleFile.Extension.Replace(".", "").ToLower();
-            if (!supportedConversions.SourceFormatTo.ContainsKey(sampleFileExtension)) continue;
-            var supportedTargetFormats = supportedConversions.SourceFormatTo[sampleFileExtension];
-            if (supportedTargetFormats.Contains("jpg"))
+
+            if (ConversionEngine.IsConversionSupported(sampleFileExtension, "pdf") &&
+                ConversionEngine.IsConversionSupported(sampleFileExtension, "jpg"))
             {
                 testParams.Add(new object[] { sampleFile.Name, "jpg" });
             }
-            /*testParams.AddRange(supportedTargetFormats.Select(supportedTargetFormat =>
-                new object[] { sampleFile.Name, supportedTargetFormat }));*/
         }
 
         return testParams;
