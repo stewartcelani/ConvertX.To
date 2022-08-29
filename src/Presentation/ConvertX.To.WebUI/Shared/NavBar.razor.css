@@ -1,0 +1,11 @@
+.navbar-wrapper-outer, header {
+    width: 100%;    
+}
+.navbar-wrapper-inner {
+    position: relative;
+    z-index: 20;
+}
+header {
+    display: block;
+    margin: 0 auto;
+}
