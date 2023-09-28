@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Infrastructure\ConvertX.To.Infrastructure.Persistence\Contexts\ValueConverters\DateTimeOffsetConverter.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+namespace ConvertX.To.Infrastructure.Persistence.Contexts.ValueConverters;
+
+/// &lt;summary&gt;
+///     When converting from Mssql to Postgres I encountered the following error when trying to save DateTimeOffsets:
+///     &#39;Cannot write DateTimeOffset with Offset=09:30:00 to PostgreSQL type &#39;timestamp with time zone&#39;, only offset 0
+///     (UTC) is supported. Note that it&#39;s not possible to mix DateTimes with different Kinds in an array/range. See the
+///     Npgsql.EnableLegacyTimestampBehavior AppContext switch to enable legacy behavior.&#39;
+///     This is a great workaround from the following issue:
+///     https://github.com/npgsql/npgsql/issues/4176
+///     Which makes use of inbuilt EF ValueConverters:
+///     https://docs.microsoft.com/en-us/ef/core/modeling/value-conversions?tabs=data-annotations#bulk-configuring-a-value-converter
+/// &lt;/summary&gt;
+public class DateTimeOffsetConverter : ValueConverter&lt;DateTimeOffset, DateTimeOffset&gt;
+{
+    public DateTimeOffsetConverter()
+        : base(
+            d =&gt; d.ToUniversalTime(),
+            d =&gt; d.ToUniversalTime())
+    {
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,11,20,38,1],[21,5,21,6,1],[22,5,22,6,1]]);
+    </script>
+  </body>
+</html>

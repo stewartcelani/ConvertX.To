@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Infrastructure\ConvertX.To.Infrastructure.Persistence\Migrations\ApplicationDbContextModelSnapshot.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// &lt;auto-generated /&gt;
+using System;
+using ConvertX.To.Infrastructure.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
+
+namespace ConvertX.To.Infrastructure.Persistence.Migrations
+{
+    [DbContext(typeof(ApplicationDbContext))]
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
+#pragma warning disable 612, 618
+            modelBuilder
+                .HasAnnotation(&quot;ProductVersion&quot;, &quot;6.0.5&quot;)
+                .HasAnnotation(&quot;Relational:MaxIdentifierLength&quot;, 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity(&quot;ConvertX.To.Application.Domain.Entities.ConversionEntity&quot;, b =&gt;
+                {
+                    b.Property&lt;Guid&gt;(&quot;Id&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;uuid&quot;);
+
+                    b.Property&lt;string&gt;(&quot;ConvertedFormat&quot;)
+                        .IsRequired()
+                        .HasColumnType(&quot;text&quot;);
+
+                    b.Property&lt;decimal&gt;(&quot;ConvertedMegabytes&quot;)
+                        .HasPrecision(18, 4)
+                        .HasColumnType(&quot;numeric(18,4)&quot;);
+
+                    b.Property&lt;DateTimeOffset&gt;(&quot;DateCreated&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;timestamp with time zone&quot;)
+                        .HasDefaultValueSql(&quot;now()&quot;);
+
+                    b.Property&lt;DateTimeOffset?&gt;(&quot;DateDeleted&quot;)
+                        .HasColumnType(&quot;timestamp with time zone&quot;);
+
+                    b.Property&lt;DateTimeOffset&gt;(&quot;DateRequestCompleted&quot;)
+                        .HasColumnType(&quot;timestamp with time zone&quot;);
+
+                    b.Property&lt;DateTimeOffset&gt;(&quot;DateRequestReceived&quot;)
+                        .HasColumnType(&quot;timestamp with time zone&quot;);
+
+                    b.Property&lt;DateTimeOffset?&gt;(&quot;DateUpdated&quot;)
+                        .HasColumnType(&quot;timestamp with time zone&quot;);
+
+                    b.Property&lt;int&gt;(&quot;Downloads&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;integer&quot;)
+                        .HasDefaultValue(0);
+
+                    b.Property&lt;decimal&gt;(&quot;RequestSeconds&quot;)
+                        .HasPrecision(18, 2)
+                        .HasColumnType(&quot;numeric(18,2)&quot;);
+
+                    b.Property&lt;string&gt;(&quot;SourceFormat&quot;)
+                        .IsRequired()
+                        .HasColumnType(&quot;text&quot;);
+
+                    b.Property&lt;decimal&gt;(&quot;SourceMegabytes&quot;)
+                        .HasPrecision(18, 4)
+                        .HasColumnType(&quot;numeric(18,4)&quot;);
+
+                    b.Property&lt;string&gt;(&quot;TargetFormat&quot;)
+                        .IsRequired()
+                        .HasColumnType(&quot;text&quot;);
+
+                    b.HasKey(&quot;Id&quot;);
+
+                    b.ToTable(&quot;Conversions&quot;);
+                });
+#pragma warning restore 612, 618
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,10,0],[19,13,21,70,0],[23,13,23,84,0],[25,13,26,17,0],[26,17,26,18,0],[26,18,27,21,0],[27,21,29,48,0],[29,48,31,21,0],[31,21,33,48,0],[33,48,35,21,0],[35,21,37,57,0],[37,57,39,21,0],[39,21,42,54,0],[42,54,44,21,0],[44,21,45,68,0],[45,68,47,21,0],[47,21,48,68,0],[48,68,50,21,0],[50,21,51,68,0],[51,68,53,21,0],[53,21,54,68,0],[54,68,56,21,0],[56,21,59,45,0],[59,45,61,21,0],[61,21,63,57,0],[63,57,65,21,0],[65,21,67,48,0],[67,48,69,21,0],[69,21,71,57,0],[71,57,73,21,0],[73,21,75,48,0],[75,48,77,21,0],[77,21,77,36,0],[77,36,79,21,0],[79,21,79,46,0],[79,46,80,17,0],[80,17,80,18,0],[80,18,80,20,0],[82,9,82,10,0]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Infrastructure\ConvertX.To.Infrastructure.Persistence\Contexts\Configurations\ConversionConfiguration.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.Application.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace ConvertX.To.Infrastructure.Persistence.Contexts.Configurations;
+
+public class ConversionConfiguration : IEntityTypeConfiguration&lt;ConversionEntity&gt;
+{
+    public void Configure(EntityTypeBuilder&lt;ConversionEntity&gt; builder)
+    {
+        builder.Property(x =&gt; x.Id)
+            .IsRequired();
+
+        builder.Property(x =&gt; x.SourceFormat)
+            .IsRequired();
+
+        builder.Property(x =&gt; x.ConvertedFormat)
+            .IsRequired();
+
+        builder.Property(x =&gt; x.SourceMegabytes)
+            .HasPrecision(18, 4)
+            .IsRequired();
+
+        builder.Property(x =&gt; x.ConvertedMegabytes)
+            .HasPrecision(18, 4)
+            .IsRequired();
+
+        builder.Property(x =&gt; x.DateRequestReceived)
+            .IsRequired();
+
+        builder.Property(x =&gt; x.DateRequestCompleted)
+            .IsRequired();
+
+        builder.Property(x =&gt; x.RequestSeconds)
+            .HasPrecision(18, 2)
+            .IsRequired();
+
+        builder.Property(x =&gt; x.Downloads)
+            .HasDefaultValue(0);
+
+        builder.Property(x =&gt; x.DateDeleted)
+            .HasDefaultValue(null);
+
+        builder.Property(x =&gt; x.DateUpdated)
+            .HasDefaultValue(null);
+
+        builder.Property(x =&gt; x.DateCreated)
+            .HasDefaultValueSql(&quot;now()&quot;);
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[10,5,10,6,1],[11,9,12,27,1],[14,9,15,27,1],[17,9,18,27,1],[20,9,22,27,1],[24,9,26,27,1],[28,9,29,27,1],[31,9,32,27,1],[34,9,36,27,1],[38,9,39,33,1],[41,9,42,36,1],[44,9,45,36,1],[47,9,48,42,1],[49,5,49,6,1]]);
+    </script>
+  </body>
+</html>

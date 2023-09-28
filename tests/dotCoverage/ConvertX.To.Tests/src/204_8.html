@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Infrastructure\ConvertX.To.Infrastructure.Shared\Services\LocalFileService.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.IO.Compression;
+using ConvertX.To.Application.Interfaces;
+
+namespace ConvertX.To.Infrastructure.Shared.Services;
+
+public class LocalFileService : IFileService
+{
+    public async Task SaveFileAsync(string path, Stream stream)
+    {
+        EnsureDirectory(path);
+        await using var fileStream = new FileStream(path, FileMode.Create);
+        await stream.CopyToAsync(fileStream);
+        await stream.DisposeAsync();
+        await fileStream.DisposeAsync();
+    }
+
+    public async Task&lt;Stream&gt; ZipFilesAsync(IEnumerable&lt;FileInfo&gt; files)
+    {
+        var zipStream = new MemoryStream();
+
+        using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+        {
+            foreach (var file in files)
+            {
+                var entry = zip.CreateEntry(file.Name);
+                await using var entryStream = entry.Open();
+                await using var fileStream = file.OpenRead();
+                await fileStream.CopyToAsync(entryStream);
+            }
+        }
+
+        zipStream.Position = 0;
+        return zipStream;
+    }
+
+    private static void EnsureDirectory(string path)
+    {
+        var directory = Path.GetDirectoryName(path);
+        if (directory is not null &amp;&amp; !Directory.Exists(directory)) Directory.CreateDirectory(directory);
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[9,5,9,6,0],[10,9,10,31,0],[11,9,11,76,0],[12,9,12,46,0],[13,9,13,37,0],[14,9,14,41,0],[15,5,15,6,0],[18,5,18,6,0],[19,9,19,44,0],[21,16,21,80,0],[22,9,22,10,0],[23,13,23,20,0],[23,22,23,30,0],[23,31,23,33,0],[23,34,23,39,0],[24,13,24,14,0],[25,17,25,56,0],[26,17,26,60,0],[27,17,27,62,0],[28,17,28,59,0],[29,13,29,14,0],[30,9,30,10,0],[32,9,32,32,0],[33,9,33,26,0],[34,5,34,6,0],[37,5,37,6,0],[38,9,38,53,0],[39,9,39,67,0],[39,68,39,105,0],[40,5,40,6,0]]);
+    </script>
+  </body>
+</html>

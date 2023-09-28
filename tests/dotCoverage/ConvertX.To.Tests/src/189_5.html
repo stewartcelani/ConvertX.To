@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Application\Mappers\DomainToEntityMapper.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.Application.Domain.Entities;
+using ConvertX.To.Domain;
+
+namespace ConvertX.To.Application.Mappers;
+
+public static class DomainToEntityMapper
+{
+    public static ConversionEntity ToConversionEntity(this Conversion conversion)
+    {
+        return new ConversionEntity
+        {
+            Id = conversion.Id,
+            SourceFormat = conversion.SourceFormat,
+            TargetFormat = conversion.TargetFormat,
+            ConvertedFormat = conversion.ConvertedFormat,
+            SourceMegabytes = conversion.SourceMegabytes,
+            ConvertedMegabytes = conversion.ConvertedMegabytes,
+            DateRequestReceived = conversion.DateRequestReceived,
+            DateRequestCompleted = conversion.DateRequestCompleted,
+            RequestSeconds =
+                Math.Round((decimal)(conversion.DateRequestCompleted - conversion.DateRequestReceived).TotalSeconds, 2)
+        };
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[9,5,9,6,1],[10,9,22,11,1],[23,5,23,6,1]]);
+    </script>
+  </body>
+</html>

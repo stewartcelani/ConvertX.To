@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Application\Converters\ToJpgConverterBase.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.IO.Compression;
+using System.Text;
+using ConvertX.To.Application.Domain;
+using ConvertX.To.Application.Exceptions;
+using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Domain.Options;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+
+namespace ConvertX.To.Application.Converters;
+
+public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDisposable
+{
+    private readonly ConverterFactory _converterFactory;
+    private readonly ILoggerAdapter&lt;IConverter&gt; _logger;
+    private List&lt;InMemoryFile&gt; _convertedJpgStreams = new();
+
+    private List&lt;InMemoryFile&gt; _splitPdfStreams = new();
+
+    public ToJpgConverterBase(ConverterFactory converterFactory, string sourceFormat, string targetFormat,
+        ILoggerAdapter&lt;IConverter&gt; logger, IMsGraphFileConversionService msGraphFileConversionService) : base(
+        sourceFormat, targetFormat, logger, msGraphFileConversionService)
+    {
+        _converterFactory = converterFactory;
+        _logger = logger;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    public override async Task&lt;(string, Stream)&gt; ConvertAsync(Stream source, ConversionOptions conversionOptions)
+    {
+        if (!conversionOptions.ToJpgOptions.SplitIfPossible) return await base.ConvertAsync(source, conversionOptions);
+
+        IConverter? toPdfConverter;
+
+        try
+        {
+            toPdfConverter = _converterFactory.Create(_sourceFormat, &quot;pdf&quot;);
+        }
+        catch (UnsupportedConversionException _)
+        {
+            _logger.LogTrace(
+                &quot;{option} was requested but there is no {sourceFormat} to {targetFormat} converter to use as an intermediary (proceeding with non-split conversion)&quot;,
+                nameof(conversionOptions.ToJpgOptions.SplitIfPossible), _sourceFormat, &quot;pdf&quot;);
+            return await base.ConvertAsync(source, conversionOptions);
+        }
+
+        var newConversionOptions = new ConversionOptions
+        {
+            ToJpgOptions = new ToJpgOptions
+            {
+                SplitIfPossible = false
+            }
+        };
+
+        var (_, pdfStream) = await toPdfConverter.ConvertAsync(source, newConversionOptions);
+
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var sourcePdfDocument = PdfReader.Open(pdfStream, PdfDocumentOpenMode.Import);
+
+        if (sourcePdfDocument.PageCount == 1)
+        {
+            source.Position = 0;
+            return await base.ConvertAsync(source, conversionOptions);
+        }
+
+        _splitPdfStreams = SplitPdf(sourcePdfDocument);
+
+        _convertedJpgStreams = await ConvertSplitPdfsToIndividualJpgs(_splitPdfStreams, newConversionOptions);
+
+        var zippedJpgs = await ZipFilesAsync(_convertedJpgStreams);
+
+        DisposeTemporaryStreams();
+
+        return (&quot;zip&quot;, zippedJpgs);
+    }
+
+    private async Task&lt;List&lt;InMemoryFile&gt;&gt; ConvertSplitPdfsToIndividualJpgs(List&lt;InMemoryFile&gt; splitPdfStreams,
+        ConversionOptions newConversionOptions)
+    {
+        var convertedPdfStreams = new List&lt;InMemoryFile&gt;();
+
+        var pdfToJpgConverter = _converterFactory.Create(&quot;pdf&quot;, &quot;jpg&quot;);
+
+        foreach (var splitPdfStream in splitPdfStreams)
+        {
+            var convertedPdfStream =
+                await ConvertPdfStreamFileToJpgStreamFile(newConversionOptions, splitPdfStream, pdfToJpgConverter);
+            convertedPdfStreams.Add(convertedPdfStream);
+        }
+
+        return convertedPdfStreams;
+    }
+
+    private static async Task&lt;InMemoryFile&gt; ConvertPdfStreamFileToJpgStreamFile(ConversionOptions newConversionOptions,
+        InMemoryFile splitPdfInMemory, IConverter pdfToJpgConverter)
+    {
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(splitPdfInMemory.Name);
+
+        var (_, jpgStream) = await pdfToJpgConverter.ConvertAsync(splitPdfInMemory.Stream, newConversionOptions);
+
+        var convertedPdfStream = new InMemoryFile
+        {
+            Name = $&quot;{fileNameWithoutExtension}.jpg&quot;,
+            Stream = jpgStream
+        };
+        return convertedPdfStream;
+    }
+
+    private static List&lt;InMemoryFile&gt; SplitPdf(PdfDocument sourcePdfDocument)
+    {
+        var splitPdfStreams = new List&lt;InMemoryFile&gt;();
+
+        for (var pageIndex = 0; pageIndex &lt; sourcePdfDocument.PageCount; pageIndex++)
+        {
+            var currentPageNumber = pageIndex + 1;
+
+            var splitPdfFile = SplitPdfFile(sourcePdfDocument, pageIndex, currentPageNumber);
+
+            splitPdfStreams.Add(splitPdfFile);
+        }
+
+        return splitPdfStreams;
+    }
+
+    private static InMemoryFile SplitPdfFile(PdfDocument sourcePdfDocument, int pageIndex, int currentPageNumber)
+    {
+        var outputPdfDocument = new PdfDocument();
+
+        outputPdfDocument.AddPage(sourcePdfDocument.Pages[pageIndex]);
+
+        var fileName = $&quot;{currentPageNumber}_of_{sourcePdfDocument.PageCount}.pdf&quot;;
+
+        var splitPdfFile = new InMemoryFile
+        {
+            Name = fileName,
+            Stream = new MemoryStream()
+        };
+
+        outputPdfDocument.Save(splitPdfFile.Stream);
+        return splitPdfFile;
+    }
+
+    private static async Task&lt;Stream&gt; ZipFilesAsync(IEnumerable&lt;InMemoryFile&gt; files)
+    {
+        var zipStream = new MemoryStream();
+
+        using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+        {
+            foreach (var file in files)
+            {
+                var entry = zip.CreateEntry(file.Name);
+                await using var entryStream = entry.Open();
+                await file.Stream.CopyToAsync(entryStream);
+            }
+        }
+
+        zipStream.Position = 0;
+        return zipStream;
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing) return;
+
+        DisposeTemporaryStreams();
+
+        _splitPdfStreams = new List&lt;InMemoryFile&gt;();
+        _convertedJpgStreams = new List&lt;InMemoryFile&gt;();
+    }
+
+    private void DisposeTemporaryStreams()
+    {
+        foreach (var splitPdfStream in _splitPdfStreams) splitPdfStream.Stream.Dispose();
+
+        foreach (var convertedJpgStream in _convertedJpgStreams) convertedJpgStream.Stream.Dispose();
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,5,16,61,1],[18,5,18,57,1],[21,106,22,74,1],[23,5,23,6,1],[24,9,24,46,1],[25,9,25,26,1],[26,5,26,6,1],[29,5,29,6,0],[30,9,30,23,0],[31,9,31,35,0],[32,5,32,6,0],[35,5,35,6,1],[36,9,36,61,1],[36,62,36,120,1],[41,9,41,10,1],[42,13,42,77,1],[43,9,43,10,1],[44,9,44,49,0],[45,9,45,10,0],[46,13,48,95,0],[49,13,49,71,0],[52,9,58,11,1],[60,9,60,94,1],[62,9,62,71,1],[63,9,63,87,1],[65,9,65,46,1],[66,9,66,10,1],[67,13,67,33,1],[68,13,68,71,1],[71,9,71,56,1],[73,9,73,111,1],[75,9,75,68,1],[77,9,77,35,1],[79,9,79,36,1],[80,5,80,6,1],[84,5,84,6,1],[85,9,85,60,1],[87,9,87,72,1],[89,9,89,16,1],[89,18,89,36,1],[89,37,89,39,1],[89,40,89,55,1],[90,9,90,10,1],[91,13,92,116,1],[93,13,93,57,1],[94,9,94,10,1],[96,9,96,36,1],[97,5,97,6,1],[101,5,101,6,1],[102,9,102,96,1],[104,9,104,114,1],[106,9,110,11,1],[111,9,111,35,1],[112,5,112,6,1],[115,5,115,6,1],[116,9,116,56,1],[118,14,118,31,1],[118,33,118,72,1],[118,74,118,85,1],[119,9,119,10,1],[120,13,120,51,1],[122,13,122,94,1],[124,13,124,47,1],[125,9,125,10,1],[127,9,127,32,1],[128,5,128,6,1],[131,5,131,6,1],[132,9,132,51,1],[134,9,134,71,1],[136,9,136,84,1],[138,9,142,11,1],[144,9,144,53,1],[145,9,145,29,1],[146,5,146,6,1],[149,5,149,6,1],[150,9,150,44,1],[152,16,152,80,1],[153,9,153,10,1],[154,13,154,20,1],[154,22,154,30,1],[154,31,154,33,1],[154,34,154,39,1],[155,13,155,14,1],[156,17,156,56,1],[157,17,157,60,1],[158,17,158,60,1],[159,13,159,14,1],[160,9,160,10,1],[162,9,162,32,1],[163,9,163,26,1],[164,5,164,6,1],[167,5,167,6,0],[168,9,168,24,0],[168,25,168,32,0],[170,9,170,35,0],[172,9,172,53,0],[173,9,173,57,0],[174,5,174,6,0],[177,5,177,6,1],[178,9,178,16,1],[178,18,178,36,1],[178,37,178,39,1],[178,40,178,56,1],[178,58,178,90,1],[180,9,180,16,1],[180,18,180,40,1],[180,41,180,43,1],[180,44,180,64,1],[180,66,180,102,1],[181,5,181,6,1]]);
+    </script>
+  </body>
+</html>

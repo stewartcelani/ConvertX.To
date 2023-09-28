@@ -1,0 +1,261 @@
+{
+	"info": {
+		"_postman_id": "22db914c-d12e-4fbf-a060-530ba2b8c66a",
+		"name": "ConvertX.To",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20044448"
+	},
+	"item": [
+		{
+			"name": "GET /api/v1/convert",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8001/api/v1/convert",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"api",
+						"v1",
+						"convert"
+					]
+				},
+				"description": "Get list of supported conversions."
+			},
+			"response": []
+		},
+		{
+			"name": "POST /api/v1/convert/{targetFormat}",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/stewartcelani/OneDrive - Lai Switchboards/Documents/IMS.P.IT.01.CIUP rev.01 Computer and Internet Usage.docx"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost:8001/api/v1/convert/jpg?splitjpg=true",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"api",
+						"v1",
+						"convert",
+						"jpg"
+					],
+					"query": [
+						{
+							"key": "splitjpg",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /api/v1/convert/{targetFormat} Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/stewartcelani/OneDrive - Lai Switchboards/Documents/IMS.P.IT.01.CIUP rev.01 Computer and Internet Usage.docx"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost:8001/api/v1/convert/jpg?splitjpg=true",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"api",
+						"v1",
+						"convert",
+						"jpg"
+					],
+					"query": [
+						{
+							"key": "splitjpg",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /api/v1/file/{fileId}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8001/api/v1/file/d2ce7212-78ba-4596-abd0-9bb39908e1cf",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"api",
+						"v1",
+						"file",
+						"d2ce7212-78ba-4596-abd0-9bb39908e1cf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUploadSession",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJub25jZSI6Ii1LSGV1REJsUU56aGpDbWxPTFNrZ2l3MHM1N2QzVl80M0N2RXEweE05VlUiLCJhbGciOiJSUzI1NiIsIng1dCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSIsImtpZCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSJ9.eyJhdWQiOiJodHRwczovL2dyYXBoLm1pY3Jvc29mdC5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC81MzVkNTU5Yy03M2Y3LTQwMzQtODlmZC0xYTk0Y2UwZjkwNTgvIiwiaWF0IjoxNjYwODUyOTM2LCJuYmYiOjE2NjA4NTI5MzYsImV4cCI6MTY2MDg1NjgzNiwiYWlvIjoiRTJaZ1lFamN2c2FpcFVWMXd4d3hybmUvOUY0WEFBQT0iLCJhcHBfZGlzcGxheW5hbWUiOiJDb252ZXJ0WC5UbyIsImFwcGlkIjoiYTEwNDc4MmMtNWE3NC00YmIwLWJmYmYtNTA0ZWRlNTlhYzk5IiwiYXBwaWRhY3IiOiIxIiwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNTM1ZDU1OWMtNzNmNy00MDM0LTg5ZmQtMWE5NGNlMGY5MDU4LyIsImlkdHlwIjoiYXBwIiwib2lkIjoiM2ZjODE4M2EtZDc4My00ODk2LWE3OTUtYTVhZDc1N2QwZjRlIiwicmgiOiIwLkFYVUFuRlZkVV9kek5FQ0pfUnFVemctUVdBTUFBQUFBQUFBQXdBQUFBQUFBQUFCMUFBQS4iLCJyb2xlcyI6WyJGaWxlcy5SZWFkV3JpdGUuQWxsIiwiRmlsZXMuUmVhZC5BbGwiXSwic3ViIjoiM2ZjODE4M2EtZDc4My00ODk2LWE3OTUtYTVhZDc1N2QwZjRlIiwidGVuYW50X3JlZ2lvbl9zY29wZSI6Ik5BIiwidGlkIjoiNTM1ZDU1OWMtNzNmNy00MDM0LTg5ZmQtMWE5NGNlMGY5MDU4IiwidXRpIjoiNE1MbE5YLVQ5a0tFZXBnS3VIb3ZBQSIsInZlciI6IjEuMCIsIndpZHMiOlsiMDk5N2ExZDAtMGQxZC00YWNiLWI0MDgtZDVjYTczMTIxZTkwIl0sInhtc190Y2R0IjoxNjU2NjIwMzUxfQ.fDq5yRn0lCJlo-xgM-frivdzc9cwRBpqGy_MsDeOjcRJ6N7P-oBCwuW3-i3OwnSsrJc4R6BeCn1qGRQ1yjcO9zNksO8wsG2UIUCuTN_FNQXYbB9E4kIhaXPHWAQ7yLKCnu4b416m8So6GB7Ho4JA237mmccbjScoC9y5Fym-XZfCuMj0aTFiUfQoDBXRmwjJpOecxMn_dXPJm48qBPyHc23T7gmN4gypWmx2dngROxKVPcVvVC67dBk4zSfKheV3fr8C9qXarueI2UXBKYhuWwx71uW3l23H0bHR4vm7uxaEFidJ0Ns3Gq9cKkcfDLR1hG_PfgHANIyE1LsqpvdJOg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://graph.microsoft.com/beta/sites/7pyrnm.sharepoint.com,a0463365-9d85-40df-99e5-8ee8b818c491,31643879-48df-4ff0-aa79-7c9a66159779/drive/items/root:/test.jpg:/createUploadSession",
+					"protocol": "https",
+					"host": [
+						"graph",
+						"microsoft",
+						"com"
+					],
+					"path": [
+						"beta",
+						"sites",
+						"7pyrnm.sharepoint.com,a0463365-9d85-40df-99e5-8ee8b818c491,31643879-48df-4ff0-aa79-7c9a66159779",
+						"drive",
+						"items",
+						"root:",
+						"test.jpg:",
+						"createUploadSession"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "CreateUploadSession",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://graph.microsoft.com/beta/sites/7pyrnm.sharepoint.com,a0463365-9d85-40df-99e5-8ee8b818c491,31643879-48df-4ff0-aa79-7c9a66159779/drive/items/root:/test.jpg:/createUploadSession",
+							"protocol": "https",
+							"host": [
+								"graph",
+								"microsoft",
+								"com"
+							],
+							"path": [
+								"beta",
+								"sites",
+								"7pyrnm.sharepoint.com,a0463365-9d85-40df-99e5-8ee8b818c491,31643879-48df-4ff0-aa79-7c9a66159779",
+								"drive",
+								"items",
+								"root:",
+								"test.jpg:",
+								"createUploadSession"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "no-store, no-cache"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						},
+						{
+							"key": "Location",
+							"value": "https://graph.microsoft.com"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000"
+						},
+						{
+							"key": "request-id",
+							"value": "ca97029b-fa82-43db-9a18-21685b18be7b"
+						},
+						{
+							"key": "client-request-id",
+							"value": "ca97029b-fa82-43db-9a18-21685b18be7b"
+						},
+						{
+							"key": "x-ms-ags-diagnostic",
+							"value": "{\"ServerInfo\":{\"DataCenter\":\"Australia Southeast\",\"Slice\":\"E\",\"Ring\":\"4\",\"ScaleUnit\":\"001\",\"RoleInstance\":\"ML1PEPF00004AF4\"}}"
+						},
+						{
+							"key": "OData-Version",
+							"value": "4.0"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 18 Aug 2022 20:15:06 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"@odata.context\": \"https://graph.microsoft.com/beta/$metadata#microsoft.graph.uploadSession\",\n    \"expirationDateTime\": \"2022-08-18T20:30:06.974Z\",\n    \"nextExpectedRanges\": [\n        \"0-\"\n    ],\n    \"uploadUrl\": \"https://7pyrnm.sharepoint.com/sites/ConvertX.To/_api/v2.0/drive/items/01NFUP5GYX5BB47TEUIVEYNRN7U3GIDDVN/uploadSession?guid='69fffa5e-6d38-4824-9b18-1dba7ffa2182'&overwrite=True&rename=False&dc=0&tempauth=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvN3B5cm5tLnNoYXJlcG9pbnQuY29tQDUzNWQ1NTljLTczZjctNDAzNC04OWZkLTFhOTRjZTBmOTA1OCIsImlzcyI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMCIsIm5iZiI6IjE2NjA4NTM3MDciLCJleHAiOiIxNjYwOTQwMTA3IiwiZW5kcG9pbnR1cmwiOiJ0eDVxZGkvVnJDQjZQb2VSTTVMZDY3cktDdjFIWGp3eUgydUZIVStQZmg0PSIsImVuZHBvaW50dXJsTGVuZ3RoIjoiMTk1IiwiaXNsb29wYmFjayI6IlRydWUiLCJjaWQiOiJZMkU1TnpBeU9XSXRabUU0TWkwME0yUmlMVGxoTVRndE1qRTJPRFZpTVRoaVpUZGkiLCJ2ZXIiOiJoYXNoZWRwcm9vZnRva2VuIiwic2l0ZWlkIjoiWVRBME5qTXpOalV0T1dRNE5TMDBNR1JtTFRrNVpUVXRPR1ZsT0dJNE1UaGpORGt4IiwiYXBwX2Rpc3BsYXluYW1lIjoiQ29udmVydFguVG8iLCJuYW1laWQiOiJhMTA0NzgyYy01YTc0LTRiYjAtYmZiZi01MDRlZGU1OWFjOTlANTM1ZDU1OWMtNzNmNy00MDM0LTg5ZmQtMWE5NGNlMGY5MDU4Iiwicm9sZXMiOiJhbGxmaWxlcy53cml0ZSBhbGxmaWxlcy5yZWFkIiwidHQiOiIxIiwidXNlUGVyc2lzdGVudENvb2tpZSI6bnVsbCwiaXBhZGRyIjoiMjAuMTkwLjE0Mi4xNjkifQ.eDkrcCtXYUFlTmluK3liMzhzbGVmQmNrcVprQ2doa1o3QXNXSmFiT0VQaz0\"\n}"
+				}
+			]
+		}
+	]
+}

@@ -10,7 +10,7 @@ public class App
 {
     private readonly IConversionEngine _conversionEngine;
 
-    private readonly DirectoryInfo _directory = new(@"C:\dev\convertx.to\sample_files");
+    private readonly DirectoryInfo _directory = new(@"C:\dev\convertx.to\tests\samplefiles");
     private readonly IFileService _fileService;
     private readonly ILogger<App> _logger;
 

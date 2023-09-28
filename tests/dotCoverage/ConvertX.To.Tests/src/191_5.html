@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Application\Validators\ConversionStorageSettingsValidator.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.Application.Domain.Settings;
+using FluentValidation;
+
+namespace ConvertX.To.Application.Validators;
+
+public class ConversionStorageSettingsValidator : AbstractValidator&lt;ConversionStorageSettings&gt;
+{
+    public ConversionStorageSettingsValidator()
+    {
+        RuleFor(x =&gt; x.RootDirectory)
+            .Must(x =&gt; !string.IsNullOrEmpty(x));
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[8,5,8,48,0],[9,5,9,6,0],[10,9,11,24,0],[11,24,11,48,0],[11,48,11,50,0],[12,5,12,6,0]]);
+    </script>
+  </body>
+</html>

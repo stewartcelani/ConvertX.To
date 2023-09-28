@@ -1,0 +1,434 @@
+tests (411 tests) Success
+  ConvertX.To.Tests.Integration (220 tests) Success
+    ConvertX.To.Tests.Integration (220 tests) Success
+      Controllers (215 tests) Success
+        ConversionControllerTests (215 tests) Success
+          ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages (42 tests) Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "Alices Adventures in Wonderland.epub", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "Around the World in 28 Languages.epub", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "attachment_pdf.eml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "basic_email.eml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "famouspaintings.epub", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "raw_email_reply.eml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample_1280×853.tif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample_1280×853.tiff", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample_1920×1280.tiff", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample_640×426.tif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample_640×426.tiff", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample_page.doc", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample_pages.doc", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample.docx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample.htm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample.html", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample.odp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample.odt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample.pps", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample.ppsx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample.ppt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample.pptx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample.rtf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample1.htm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample1.html", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample1.md", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample1.odp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample1.odt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample1.rtf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample2.docx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample2.htm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample2.html", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample2.md", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample2.odp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample3.docx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample3.odp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample3.pps", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample3.ppsx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample3.ppt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample3.pptx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "sample4.docx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileIntoMultipleJpgsAndReturnZipFile_WhenConversionSupportedAndIntermediatePdfConverterExistsAndSourceFileIsMultiplePages(sampleFileName: "unicode.msg", targetFormat: "jpg") Success
+          ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported (172 tests) Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "Alices Adventures in Wonderland.epub", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "Alices Adventures in Wonderland.epub", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "Around the World in 28 Languages.epub", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "Around the World in 28 Languages.epub", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "attachment_pdf.eml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "attachment_pdf.eml", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "basic_email.eml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "basic_email.eml", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "famouspaintings.epub", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "famouspaintings.epub", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "microsoft_graph_convert_file_beta_file_formats.pdf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "raw_email_reply.eml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "raw_email_reply.eml", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_1280×853.bmp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_1280×853.pict", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_1280×853.tif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_1280×853.tif", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_1280×853.tiff", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_1280×853.tiff", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_1280×853.xbm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_1920×1280.cur", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_1920×1280.tiff", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_1920×1280.tiff", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_640×426.ico", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_640×426.tif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_640×426.tif", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_640×426.tiff", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_640×426.tiff", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_640×426.xpm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_640x360.asf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_640x360.mp4", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_960x540.avi", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_960x540.m4v", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_960x540.mov", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_architectural.dwg", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_page.doc", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_page.doc", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_page.pdf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_pages.doc", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_pages.doc", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample_pages.pdf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.ai", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.ARW", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.bas", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.bash", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.bat", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.c", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.cbl", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.cmd", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.cpp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.CR2", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.CRW", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.css", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.csv", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.dng", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.docx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.docx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.fppx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.gif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.glb", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.h", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.heic", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.heif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.htm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.htm", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.html", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.html", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.icon", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.java", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.jfif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.js", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.json", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.key", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.log", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.markdown", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.mef", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.mrw", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.nef", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.nrw", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.numbers", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.obj", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.odp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.odp", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.odt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.odt", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.orf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.pages", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.pdf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.pef", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.php", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.pl", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.ply", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.png", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.pot", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.potm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.potx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.pps", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.pps", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.ppsx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.ppsx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.ppt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.ppt", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.pptm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.pptx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.pptx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.ps1", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.psb", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.psd", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.py", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.raw", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.rb", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.rtf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.rtf", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.sh", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.sketch", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.sql", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.sr2", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.stl", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.txt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.vb", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.xaml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.xcf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.xd", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.yaml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample.yml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.htm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.htm", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.html", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.html", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.md", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.md", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.odp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.odp", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.ods", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.odt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.odt", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.rtf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.rtf", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.xls", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample1.xlsx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.cs", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.docx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.docx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.htm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.htm", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.html", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.html", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.md", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.md", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.odp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.odp", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.xls", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.xlsm", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample2.xlsx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.docx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.docx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.odp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.odp", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.pps", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.pps", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.ppsx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.ppsx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.ppt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.ppt", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.pptx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.pptx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.xls", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample3.xlsx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample4.docx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "sample4.docx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "unicode.msg", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileToTargetFormat_WhenConversionIsSupported(sampleFileName: "unicode.msg", targetFormat: "pdf") Success
+          GetSupportedConversions_ShouldReturnSupportedConversions_WhenAtLeastOneConverterExists Success
+      MicrosoftGraphApiServer (5 tests) Success
+        MicrosoftGraphApiServerTests (5 tests) Success
+          AuthenticationEndpoint_ShouldReturnOk_WhenConfiguredCorrectly Success
+          DeleteFileEndpoint_ShouldReturnNoContent_WhenConfiguredCorrectly Success
+          GetFileInTargetFormatEndpoint_ShouldReturnOk_WhenConfiguredCorrectly Success
+          PingEndpoint_ShouldReturnOk_WhenConfiguredCorrectly Success
+          UploadFileEndpoint_ShouldReturnCreated_WhenConfiguredCorrectly Success
+  ConvertX.To.Tests.Unit (191 tests) Success
+    ConvertX.To.Tests.Unit (191 tests) Success
+      Controllers (9 tests) Success
+        ConversionControllerTests (5 tests) Success
+          ConvertAsync_ShouldConvertFile_WhenRequestIsValid Success
+          ConvertAsync_ShouldThrowApiException_WhenThereIsAnErrorSavingConversionToDatabase Success
+          ConvertAsync_ShouldThrowInvalidFileLengthException_WhenFileLengthIsZero Success
+          ConvertAsync_ShouldThrowUnsupportedConversionException_WhenNoConverterForSourceToTargetFormatExists Success
+          GetSupportedConversions_ShouldReturnSupportedConversions_WhenConvertersExist Success
+        FileControllerTests (4 tests) Success
+          DeleteFileAsync_ShouldReturnNotFound_WhenConversionDoesNotExistOrHasBeenSoftDeleted Success
+          DeleteFileAsync_ShouldSoftDeleteConversionAndDeleteConvertedFile_WhenConversionExistsAndHasNotBeenSoftDeleted Success
+          GetFileAsync_ShouldDownloadConvertedFile_WhenConversionExists Success
+          GetFileAsync_ShouldReturnNotFound_WhenConversionDoesNotExistOrHasBeenSoftDeleted Success
+      Converters (153 tests) Success
+        ConversionEngineTests (153 tests) Success
+          ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument (17 tests) Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "doc", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "docx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "eml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "epub", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "htm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "html", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "md", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "msg", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "odp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "odt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "pps", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "ppsx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "ppt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "pptx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "rtf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "tif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnJpg_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExistsAndOnlyOnePageExistsInSourceDocument(sourceFormat: "tiff", targetFormat: "jpg") Success
+          ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed (117 tests) Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "ai", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "arw", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "asf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "avi", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "bas", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "bash", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "bat", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "bmp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "c", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "cbl", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "cmd", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "cpp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "cr2", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "crw", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "cs", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "css", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "csv", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "cur", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "dng", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "doc", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "doc", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "docx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "docx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "dwg", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "eml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "eml", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "epub", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "epub", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "fbx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "fppx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "gif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "glb", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "h", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "heic", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "heif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "htm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "htm", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "html", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "html", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "ico", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "icon", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "java", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "jfif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "js", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "json", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "key", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "log", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "m4v", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "markdown", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "md", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "md", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "mef", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "mov", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "mp4", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "mrw", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "msg", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "msg", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "nef", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "nrw", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "numbers", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "obj", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "odp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "odp", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "ods", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "odt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "odt", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "orf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "pages", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "pdf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "pef", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "php", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "pict", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "pl", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "ply", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "png", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "pot", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "potm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "potx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "pps", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "pps", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "ppsx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "ppsx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "ppt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "ppt", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "pptm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "pptx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "pptx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "ps1", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "psb", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "psd", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "py", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "raw", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "rb", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "rtf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "rtf", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "sh", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "sketch", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "sql", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "sr2", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "stl", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "tif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "tif", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "tiff", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "tiff", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "txt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "vb", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "wmv", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "xaml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "xbm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "xcf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "xd", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "xls", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "xlsm", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "xlsx", targetFormat: "pdf") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "xpm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "yaml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnTargetFormat_WhenConversionIsSupportedAndDefaultConversionOptionsAreUsed(sourceFormat: "yml", targetFormat: "jpg") Success
+          ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists (17 tests) Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "doc", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "docx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "eml", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "epub", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "htm", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "html", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "md", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "msg", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "odp", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "odt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "pps", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "ppsx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "ppt", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "pptx", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "rtf", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "tif", targetFormat: "jpg") Success
+            ConvertAsync_ShouldConvertFileAndReturnZipWithOneJpgPerPage_WhenSplitIfPossibleJpgOptionIsUsedAndAnIntermediaryPdfConverterExists(sourceFormat: "tiff", targetFormat: "jpg") Success
+          ConvertAsync_ShouldThrowUnsupportedConversionException_WhenConversionIsNotSupported Success
+          GetSupportedConversions_ShouldReturnSupportedConversions_WhenConvertersExist Success
+      Logging (6 tests) Success
+        LoggerAdapterTests (6 tests) Success
+          LogCritical_ShouldLogMessage_WhenInvoked Success
+          LogDebug_ShouldLogMessage_WhenInvoked Success
+          LogError_ShouldLogMessage_WhenInvoked Success
+          LogInformation_ShouldLogMessage_WhenInvoked Success
+          LogTrace_ShouldLogMessage_WhenInvoked Success
+          LogWarning_ShouldLogMessage_WhenInvoked Success
+      Services (23 tests) Success
+        ConversionServiceTests (23 tests) Success
+          CreateAsync_ShouldCreateConversionAndReturnTrue_WhenConversionIsValid Success
+          CreateAsync_ShouldReturnFalse_WhenRepositoryCouldNotChangeDatabase Success
+          CreateAsync_ShouldThrowValidationException_WhenConversionAlreadyExists Success
+          DeleteAsync_ShouldDeleteConversion_WhenConversionExists Success
+          DeleteAsync_ShouldReturnFalse_WhenRepositoryCouldNotChangeDatabase Success
+          DeleteAsync_ShouldReturnTrue_FromGuardClause_WhenConversionDoesNotExist Success
+          ExistsAsync_ShouldReturnFalse_WhenConversionDoesNotExist Success
+          ExistsAsync_ShouldReturnTrue_WhenConversionExists Success
+          ExpireConversions_ShouldExpireConversions_WhenConversionsMeetPredicate Success
+          GetAsync_ShouldReturnConversions_WhenConversionsExist Success
+          GetAsync_ShouldReturnConversions_WhenConversionsMatchConversionFilter Success
+          GetAsync_ShouldReturnEmptyList_WhenNoConversionsExist Success
+          GetAsync_ShouldReturnSubsetOfConversions_WhenMoreConversionsExistThanPaginationFilterRequests Success
+          GetByIdAsync_ShouldReturnConversion_WhenConversionExists Success
+          GetByIdAsync_ShouldReturnNull_WhenConversionDoesNotExist Success
+          GetConvertedFileName_ShouldReturnCorrectFileName_WhenTargetFormatAndConvertedFormatAreDifferent Success
+          GetConvertedFileName_ShouldReturnCorrectFileName_WhenTargetFormatAndConvertedFormatAreTheSame Success
+          IncrementDownloadCounter_ShouldIncreaseDownloadFieldByOne_WhenConversionExists Success
+          IncrementDownloadCounter_ShouldThrowValidationException_WhenConversionDoesNotExist Success
+          IncrementDownloadCounter_ShouldThrowValidationException_WhenConversionHasBeenSoftDeleted Success
+          UpdateAsync_ShouldReturnFalse_WhenRepositoryCouldNotChangeDatabase Success
+          UpdateAsync_ShouldThrowValidationException_WhenConversionDoesNotExist Success
+          UpdateAsync_ShouldUpdateConversionAndReturnTrue_WhenConversionIsValid Success

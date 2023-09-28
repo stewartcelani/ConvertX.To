@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Application\Converters\MsGraphDriveItemConverterBase.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Domain.Options;
+
+namespace ConvertX.To.Application.Converters;
+
+public abstract class MsGraphDriveItemConverterBase : IConverter
+{
+    private readonly ILoggerAdapter&lt;IConverter&gt; _logger;
+    private readonly IMsGraphFileConversionService _msGraphFileConversionService;
+    protected readonly string _sourceFormat;
+    protected readonly string _targetFormat;
+
+    protected MsGraphDriveItemConverterBase(string sourceFormat, string targetFormat, ILoggerAdapter&lt;IConverter&gt; logger,
+        IMsGraphFileConversionService msGraphFileConversionService)
+    {
+        _sourceFormat = sourceFormat;
+        _targetFormat = targetFormat;
+        _msGraphFileConversionService = msGraphFileConversionService;
+        _logger = logger;
+    }
+
+    public virtual async Task&lt;(string, Stream)&gt; ConvertAsync(Stream source, ConversionOptions conversionOptions)
+    {
+        var fileId = await _msGraphFileConversionService.UploadFileAsync(_sourceFormat, source);
+        var convertedStream = await _msGraphFileConversionService.GetFileInTargetFormatAsync(fileId, _targetFormat);
+        await _msGraphFileConversionService.DeleteFileAsync(fileId);
+        return (_targetFormat, convertedStream);
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[13,5,14,68,1],[15,5,15,6,1],[16,9,16,38,1],[17,9,17,38,1],[18,9,18,70,1],[19,9,19,26,1],[20,5,20,6,1],[23,5,23,6,1],[24,9,24,97,1],[25,9,25,117,1],[26,9,26,69,1],[27,9,27,49,1],[28,5,28,6,1]]);
+    </script>
+  </body>
+</html>

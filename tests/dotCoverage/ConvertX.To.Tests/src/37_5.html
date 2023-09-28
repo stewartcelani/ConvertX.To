@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Application\Converters\ConverterFactory.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.Application.Exceptions;
+using ConvertX.To.Application.Interfaces;
+
+namespace ConvertX.To.Application.Converters;
+
+public class ConverterFactory : IConverterFactory
+{
+    private readonly ILoggerAdapter&lt;IConverter&gt; _converterLogger;
+    private readonly ILoggerAdapter&lt;ConverterFactory&gt; _logger;
+    private readonly IMsGraphFileConversionService _msGraphFileConversionService;
+
+    public ConverterFactory(ILoggerAdapter&lt;ConverterFactory&gt; logger,
+        ILoggerAdapter&lt;IConverter&gt; converterLogger,
+        IMsGraphFileConversionService msGraphFileConversionService)
+    {
+        _logger = logger ?? throw new NullReferenceException(nameof(logger));
+        _converterLogger = converterLogger ?? throw new NullReferenceException(nameof(converterLogger));
+        _msGraphFileConversionService = msGraphFileConversionService ??
+                                        throw new NullReferenceException(nameof(msGraphFileConversionService));
+    }
+
+    public IConverter Create(string sourceFormat, string targetFormat)
+    {
+        var sourceFormatProper = Proper(sourceFormat);
+        var targetFormatProper = Proper(targetFormat);
+        try
+        {
+            var typeFullName = typeof(ConverterFactory).Namespace + &quot;.&quot; + targetFormatProper + &quot;.&quot; +
+                               sourceFormatProper + &quot;To&quot; + targetFormatProper + &quot;Converter&quot;;
+
+            var type = Type.GetType(typeFullName);
+
+            var constructorParams = new object[] { sourceFormat, targetFormat, _converterLogger };
+
+            if (type?.BaseType == typeof(ToJpgConverterBase))
+                constructorParams = new object[]
+                    { this, sourceFormat, targetFormat, _converterLogger, _msGraphFileConversionService };
+
+            if (type?.BaseType == typeof(MsGraphDriveItemConverterBase))
+                constructorParams = new object[]
+                    { sourceFormat, targetFormat, _converterLogger, _msGraphFileConversionService };
+
+            return (IConverter)Activator.CreateInstance(Type.GetType(typeFullName), constructorParams);
+        }
+        catch
+        {
+            throw new UnsupportedConversionException(
+                $&quot;Converting from {sourceFormatProper} to {targetFormatProper} is not supported.&quot;);
+        }
+    }
+
+    private string Proper(string s)
+    {
+        return s.First().ToString().ToUpper() + s.ToLower()[1..];
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[12,5,14,68,1],[15,5,15,6,1],[16,9,16,78,1],[17,9,17,105,1],[18,9,19,112,1],[20,5,20,6,1],[23,5,23,6,1],[24,9,24,55,1],[25,9,25,55,1],[27,9,27,10,1],[28,13,29,93,1],[31,13,31,51,1],[33,13,33,99,1],[35,13,35,62,1],[36,17,37,107,1],[39,13,39,73,1],[40,17,41,101,1],[43,13,43,104,1],[45,9,45,14,1],[46,9,46,10,1],[47,13,48,100,1],[50,5,50,6,1],[53,5,53,6,1],[54,9,54,66,1],[55,5,55,6,1]]);
+    </script>
+  </body>
+</html>
