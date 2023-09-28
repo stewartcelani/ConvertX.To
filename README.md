@@ -504,7 +504,7 @@ The console application will recursively convert all files within a folder to al
 
 ConvertX.To.ConsoleUI.Core in action:
 
-![ConvertX.To.ConsoleUI.Core example](docs/ConvertX.To.ConsoleUI.Core.gif)
+![ConvertX.To.ConsoleUI.Core example](https://github.com/stewartcelani/ConvertX.To/blob/fcf2248d8b34c7676af0e39af508bad40aeddaed/docs/ConvertX.To.ConsoleUI.Core.gif)
 
 A user can convert multi-page documents (e.g. PDFs, Word documents) to ZIP files containing one jpg per page by passing in the ``splitjpg=true`` flag to the jpg converter. 
 
