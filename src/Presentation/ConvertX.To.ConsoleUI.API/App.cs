@@ -7,7 +7,7 @@ public class App
 {
     private readonly IConversionService _conversionService;
 
-    private readonly DirectoryInfo _directory = new(@"C:\dev\convertx.to\tests\samplefiles\");
+    private readonly DirectoryInfo _directory = new(@"C:\dev\convertx.to\demo\samplefiles\");
     private readonly ILogger<App> _logger;
 
     public App(ILogger<App> logger, IConversionService conversionService)
