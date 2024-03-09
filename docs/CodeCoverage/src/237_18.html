@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Domain\Conversion.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+namespace ConvertX.To.Domain;
+
+public class Conversion
+{
+    public Guid Id { get; init; } = Guid.NewGuid();
+    public string SourceFormat { get; init; }
+    public string TargetFormat { get; init; }
+    public string ConvertedFormat { get; init; } // e.g. SourceFormat: pdf, TargetFormat: jpg, ConvertedFormat: zip
+    public decimal SourceMegabytes { get; init; }
+    public decimal ConvertedMegabytes { get; init; }
+    public DateTimeOffset DateRequestReceived { get; init; }
+
+    public DateTimeOffset DateRequestCompleted { get; init; }
+    /*public ConversionOptions ConversionOptions { get; init; } = new ();*/
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[5,22,5,26,1],[5,27,5,32,1],[5,37,5,51,1],[6,34,6,38,1],[6,39,6,44,1],[7,34,7,38,1],[7,39,7,44,1],[8,37,8,41,1],[8,42,8,47,1],[9,38,9,42,1],[9,43,9,48,1],[10,41,10,45,1],[10,46,10,51,1],[11,49,11,53,1],[11,54,11,59,1],[13,50,13,54,1],[13,55,13,60,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Application\Extensions\StringExtensions.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+namespace ConvertX.To.Application.Extensions;
+
+public static class ConvertXStringExtensions
+{
+    public static string Proper(this string s)
+    {
+        return s.First().ToString().ToUpper() + s.ToLower()[1..];
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[6,5,6,6,1],[7,9,7,66,1],[8,5,8,6,1]]);
+    </script>
+  </body>
+</html>

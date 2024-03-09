@@ -18,7 +18,7 @@ using Xunit;
 
 namespace ConvertX.To.Tests.Integration;
 
-[ExcludeFromCodeCoverage]
+
 public class SharedTestContext : IAsyncLifetime
 {
     public const int WireMockServerPort = 51923;

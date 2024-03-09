@@ -22,7 +22,7 @@ using Xunit;
 
 namespace ConvertX.To.Tests.Unit.Controllers;
 
-[ExcludeFromCodeCoverage]
+
 public class ConversionControllerTests
 {
     private readonly IConversionEngine _conversionEngine = Substitute.For<IConversionEngine>();

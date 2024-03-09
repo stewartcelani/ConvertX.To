@@ -10,7 +10,7 @@ using Xunit;
 
 namespace ConvertX.To.Tests.Unit.Controllers;
 
-[ExcludeFromCodeCoverage]
+
 public class FileControllerTests
 {
     private readonly IConversionService _conversionService = Substitute.For<IConversionService>();

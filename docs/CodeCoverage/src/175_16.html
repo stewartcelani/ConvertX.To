@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Application\Validators\DatabaseSettingsValidator.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.Application.Domain.Settings;
+using FluentValidation;
+
+namespace ConvertX.To.Application.Validators;
+
+public class DatabaseSettingsValidator : AbstractValidator&lt;DatabaseSettings&gt;
+{
+    public DatabaseSettingsValidator()
+    {
+        RuleFor(x =&gt; x.ConnectionString)
+            .Must(s =&gt; !string.IsNullOrEmpty(s))
+            .MinimumLength(6)
+            .WithMessage($&quot;Invalid {nameof(DatabaseSettings.ConnectionString)}&quot;);
+
+        RuleFor(x =&gt; x.UseInMemoryDatabase)
+            .NotNull();
+
+        RuleFor(x =&gt; x.EnableSensitiveDataLogging)
+            .NotNull();
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[8,5,8,39,1],[9,5,9,6,1],[10,9,11,24,1],[11,24,11,48,1],[11,48,13,82,1],[15,9,16,24,1],[18,9,19,24,1],[20,5,20,6,1]]);
+    </script>
+  </body>
+</html>

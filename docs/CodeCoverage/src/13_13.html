@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Presentation\ConvertX.To.API\Middleware\ValidationExceptionMiddleware.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Diagnostics.CodeAnalysis;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ConvertX.To.API.Middleware;
+
+public class ValidationExceptionMiddleware
+{
+    private readonly RequestDelegate _request;
+
+    public ValidationExceptionMiddleware(RequestDelegate request)
+    {
+        _request = request;
+    }
+
+    [ExcludeFromCodeCoverage]
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _request(context);
+        }
+        catch (ValidationException exception)
+        {
+            context.Response.StatusCode = 400;
+
+            var error = new ValidationProblemDetails
+            {
+                Type = &quot;https://tools.ietf.org/html/rfc7231#section-6.5.1&quot;,
+                Status = 400,
+                Extensions =
+                {
+                    [&quot;traceId&quot;] = context.TraceIdentifier
+                }
+            };
+            foreach (var validationFailure in exception.Errors)
+                error.Errors.Add(new KeyValuePair&lt;string, string[]&gt;(
+                    validationFailure.PropertyName,
+                    new[] { validationFailure.ErrorMessage }));
+            await context.Response.WriteAsJsonAsync(error);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[11,5,11,66,1],[12,5,12,6,1],[13,9,13,28,1],[14,5,14,6,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Infrastructure\ConvertX.To.Infrastructure.Persistence\Repositories\GenericRepository.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Linq.Expressions;
+using ConvertX.To.Application.Domain.Entities.Common;
+using ConvertX.To.Application.Domain.Filters;
+using ConvertX.To.Application.Interfaces.Repositories;
+using ConvertX.To.Infrastructure.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
+
+namespace ConvertX.To.Infrastructure.Persistence.Repositories;
+
+public abstract class GenericRepository&lt;TEntity, TKey&gt; : IRepository&lt;TEntity, TKey&gt;
+    where TEntity : BaseEntity&lt;TKey&gt;, IAggregateRoot
+    where TKey : IEquatable&lt;TKey&gt;
+{
+    protected readonly ApplicationDbContext DbContext;
+    protected readonly DbSet&lt;TEntity&gt; DbSet;
+
+    protected GenericRepository(ApplicationDbContext dbContext)
+    {
+        DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        DbSet = DbContext.Set&lt;TEntity&gt;();
+    }
+
+
+    public virtual async Task&lt;TEntity?&gt; GetAsync(TKey id, IEnumerable&lt;string&gt;? includeProperties = null)
+    {
+        IQueryable&lt;TEntity&gt; query = DbSet;
+
+        if (includeProperties is not null)
+            foreach (var property in includeProperties)
+                query = query.Include(property.Trim());
+
+        return await query.AsNoTracking().FirstOrDefaultAsync(x =&gt; x.Id.Equals(id));
+    }
+
+    public virtual async Task&lt;TEntity?&gt; GetAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate,
+        IEnumerable&lt;string&gt;? includeProperties = null)
+    {
+        var query = DbSet.Where(predicate);
+
+        if (includeProperties is not null)
+            foreach (var property in includeProperties)
+                query = query.Include(property.Trim());
+
+        return await query.AsNoTracking().FirstOrDefaultAsync();
+    }
+
+    public virtual async Task&lt;IEnumerable&lt;TEntity&gt;&gt; GetManyAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt;? predicate = null,
+        IEnumerable&lt;string&gt;? includeProperties = null,
+        Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;? orderBy = null,
+        PaginationFilter? paginationFilter = null)
+    {
+        IQueryable&lt;TEntity&gt; query = DbSet;
+
+        if (predicate is not null) query = query.Where(predicate);
+
+        if (includeProperties is not null)
+            foreach (var property in includeProperties)
+                query = query.Include(property.Trim());
+
+        if (orderBy is not null) query = orderBy(query);
+
+        if (paginationFilter is not null)
+        {
+            var skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
+            query = query.Skip(skip).Take(paginationFilter.PageSize);
+        }
+
+        query = query.AsNoTracking();
+
+        return await query.ToListAsync();
+    }
+
+    public async Task&lt;int&gt; CountAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt;? predicate = null)
+    {
+        IQueryable&lt;TEntity&gt; query = DbSet;
+
+        if (predicate is not null) query = query.Where(predicate);
+
+        return await query.AsNoTracking().CountAsync();
+    }
+
+    public virtual async Task&lt;bool&gt; ExistsAsync(TKey id)
+    {
+        return await DbSet.AsNoTracking().AnyAsync(x =&gt; x.Id.Equals(id));
+    }
+
+    public virtual async Task&lt;bool&gt; ExistsAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate)
+    {
+        return await DbSet.AsNoTracking().Where(predicate).AnyAsync();
+    }
+
+    public virtual async Task&lt;bool&gt; CreateAsync(TEntity entity)
+    {
+        DbContext.ChangeTracker.Clear();
+        DbSet.Add(entity);
+        return await DbContext.SaveChangesAsync() &gt; 0;
+    }
+
+    public virtual async Task&lt;bool&gt; CreateAsync(IEnumerable&lt;TEntity&gt; entities)
+    {
+        DbContext.ChangeTracker.Clear();
+        DbSet.AddRange(entities);
+        return await DbContext.SaveChangesAsync() &gt; 0;
+    }
+
+    public virtual async Task&lt;bool&gt; UpdateAsync(TEntity entity)
+    {
+        DbContext.ChangeTracker.Clear();
+        DbSet.Update(entity);
+        return await DbContext.SaveChangesAsync() &gt; 0;
+    }
+
+    public virtual async Task&lt;bool&gt; UpdateAsync(IEnumerable&lt;TEntity&gt; entities)
+    {
+        DbContext.ChangeTracker.Clear();
+        DbSet.UpdateRange(entities);
+        return await DbContext.SaveChangesAsync() &gt; 0;
+    }
+
+    public virtual async Task&lt;bool&gt; DeleteAsync(TKey id)
+    {
+        DbContext.ChangeTracker.Clear();
+        var entity = await GetAsync(id);
+        if (entity is null) return false;
+        DbSet.Remove(entity);
+        return await DbContext.SaveChangesAsync() &gt; 0;
+    }
+
+    public virtual async Task&lt;bool&gt; DeleteAsync(IEnumerable&lt;TKey&gt; ids)
+    {
+        DbContext.ChangeTracker.Clear();
+        var idList = ids.ToList();
+        if (idList.Count == 0) return false;
+        var entities = new List&lt;TEntity&gt;();
+        foreach (var id in idList)
+        {
+            var entity = await GetAsync(id);
+            if (entity is null) continue;
+            entities.Add(entity);
+        }
+
+        DbSet.RemoveRange(entities);
+        return await DbContext.SaveChangesAsync() &gt; 0;
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,5,17,64,1],[18,5,18,6,1],[19,9,19,85,1],[20,9,20,42,1],[21,5,21,6,1],[25,5,25,6,1],[26,9,26,43,1],[28,9,28,43,1],[29,13,29,20,0],[29,22,29,34,0],[29,35,29,37,0],[29,38,29,55,0],[30,17,30,56,0],[32,9,32,85,1],[33,5,33,6,1],[37,5,37,6,0],[38,9,38,44,0],[40,9,40,43,0],[41,13,41,20,0],[41,22,41,34,0],[41,35,41,37,0],[41,38,41,55,0],[42,17,42,56,0],[44,9,44,65,0],[45,5,45,6,0],[51,5,51,6,1],[52,9,52,43,1],[54,9,54,35,1],[54,36,54,67,1],[56,9,56,43,1],[57,13,57,20,0],[57,22,57,34,0],[57,35,57,37,0],[57,38,57,55,0],[58,17,58,56,0],[60,9,60,33,1],[60,34,60,57,1],[62,9,62,42,1],[63,9,63,10,0],[64,13,64,86,0],[65,13,65,70,0],[66,9,66,10,0],[68,9,68,38,1],[70,9,70,42,1],[71,5,71,6,1],[74,5,74,6,0],[75,9,75,43,0],[77,9,77,35,0],[77,36,77,67,0],[79,9,79,56,0],[80,5,80,6,0],[83,5,83,6,1],[84,9,84,74,1],[85,5,85,6,1],[88,5,88,6,1],[89,9,89,71,1],[90,5,90,6,1],[93,5,93,6,1],[94,9,94,41,1],[95,9,95,27,1],[96,9,96,55,1],[97,5,97,6,1],[100,5,100,6,0],[101,9,101,41,0],[102,9,102,34,0],[103,9,103,55,0],[104,5,104,6,0],[107,5,107,6,1],[108,9,108,41,1],[109,9,109,30,1],[110,9,110,55,1],[111,5,111,6,1],[114,5,114,6,1],[115,9,115,41,1],[116,9,116,37,1],[117,9,117,55,1],[118,5,118,6,1],[121,5,121,6,0],[122,9,122,41,0],[123,9,123,41,0],[124,9,124,28,0],[124,29,124,42,0],[125,9,125,30,0],[126,9,126,55,0],[127,5,127,6,0],[130,5,130,6,0],[131,9,131,41,0],[132,9,132,35,0],[133,9,133,31,0],[133,32,133,45,0],[134,9,134,44,0],[135,9,135,16,0],[135,18,135,24,0],[135,25,135,27,0],[135,28,135,34,0],[136,9,136,10,0],[137,13,137,45,0],[138,13,138,32,0],[138,33,138,42,0],[139,13,139,34,0],[140,9,140,10,0],[142,9,142,37,0],[143,9,143,55,0],[144,5,144,6,0]]);
+    </script>
+  </body>
+</html>

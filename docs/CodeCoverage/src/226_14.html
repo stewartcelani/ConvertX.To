@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Presentation\ConvertX.To.API.Contracts\V1\ApiRoutes.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+namespace ConvertX.To.API.Contracts.V1;
+
+public static class ApiRoutesV1
+{
+    private const string Root = &quot;api&quot;;
+    private const string Version = &quot;v1&quot;;
+    private const string Base = $&quot;/{Root}/{Version}&quot;;
+
+    private static string ReplaceConversionId(this string s, Guid conversionId)
+    {
+        return s.Replace(&quot;{conversionId}&quot;, conversionId.ToString());
+    }
+
+    public static class Files
+    {
+        public static class Get
+        {
+            public const string Url = Base + &quot;/file/{conversionId}&quot;;
+
+            public static string UrlFor(Guid conversionId)
+            {
+                return Url.ReplaceConversionId(conversionId);
+            }
+        }
+
+        public static class Delete
+        {
+            public const string Url = Base + &quot;/file/{conversionId}&quot;;
+
+            public static string UrlFor(Guid conversionId)
+            {
+                return Url.ReplaceConversionId(conversionId);
+            }
+        }
+    }
+
+    public static class Convert
+    {
+        public static class Get
+        {
+            public const string Url = Base + &quot;/convert&quot;;
+        }
+
+        public static class Post
+        {
+            public const string Url = Base + &quot;/convert/{targetFormat}&quot;;
+
+            public static string UrlFor(string targetFormat)
+            {
+                return Url.Replace(&quot;{targetFormat}&quot;, targetFormat);
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[10,5,10,6,1],[11,9,11,69,1],[12,5,12,6,1],[21,13,21,14,1],[22,17,22,62,1],[23,13,23,14,1],[31,13,31,14,0],[32,17,32,62,0],[33,13,33,14,0],[49,13,49,14,1],[50,17,50,68,1],[51,13,51,14,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Application\Validators\MsGraphSettingsValidator.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.Application.Domain.Settings;
+using ConvertX.To.Application.Validators.Mappers;
+using FluentValidation;
+
+namespace ConvertX.To.Application.Validators;
+
+public class MsGraphSettingsValidator : AbstractValidator&lt;MsGraphSettings&gt;
+{
+    public MsGraphSettingsValidator()
+    {
+        RuleFor(x =&gt; x.TenantId)
+            .Must(s =&gt; !string.IsNullOrEmpty(s))
+            .Matches(RegexMapper.Guid)
+            .WithMessage(&quot;Invalid guid.&quot;);
+
+        RuleFor(x =&gt; x.ClientId)
+            .Must(s =&gt; !string.IsNullOrEmpty(s))
+            .Matches(RegexMapper.Guid)
+            .WithMessage(&quot;Invalid guid.&quot;);
+
+        RuleFor(x =&gt; x.ClientSecret)
+            .Must(s =&gt; !string.IsNullOrEmpty(s))
+            .MinimumLength(10)
+            .WithMessage(&quot;Invalid client secret.&quot;);
+
+        RuleFor(x =&gt; x.Scope)
+            .Must(s =&gt; !string.IsNullOrEmpty(s))
+            .Must(s =&gt; Uri.TryCreate(s, UriKind.Absolute, out _))
+            .WithMessage(&quot;Invalid uri.&quot;);
+
+        RuleFor(x =&gt; x.AuthenticationEndpoint)
+            .Must(s =&gt; !string.IsNullOrEmpty(s))
+            .Must(s =&gt; Uri.TryCreate(s, UriKind.Absolute, out _))
+            .WithMessage(&quot;Invalid uri.&quot;);
+
+        RuleFor(x =&gt; x.GraphEndpoint)
+            .Must(s =&gt; !string.IsNullOrEmpty(s))
+            .Must(s =&gt; Uri.TryCreate(s, UriKind.Absolute, out _))
+            .WithMessage(&quot;Invalid uri.&quot;);
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[9,5,9,38,1],[10,5,10,6,1],[11,9,12,24,1],[12,24,12,48,1],[12,48,14,43,1],[16,9,17,24,1],[17,24,17,48,1],[17,48,19,43,1],[21,9,22,24,1],[22,24,22,48,1],[22,48,24,52,1],[26,9,27,24,1],[27,24,27,48,1],[27,48,28,24,1],[28,24,28,65,1],[28,65,29,42,1],[31,9,32,24,1],[32,24,32,48,1],[32,48,33,24,1],[33,24,33,65,1],[33,65,34,42,1],[36,9,37,24,1],[37,24,37,48,1],[37,48,38,24,1],[38,24,38,65,1],[38,65,39,42,1],[40,5,40,6,1]]);
+    </script>
+  </body>
+</html>

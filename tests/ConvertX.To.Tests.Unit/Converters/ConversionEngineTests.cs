@@ -14,7 +14,7 @@ using Xunit;
 
 namespace ConvertX.To.Tests.Unit.Converters;
 
-[ExcludeFromCodeCoverage]
+
 public class ConversionEngineTests
 {
     private readonly ILoggerAdapter<ConverterFactory> _converterFactoryLogger =

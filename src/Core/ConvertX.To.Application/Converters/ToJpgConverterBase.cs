@@ -92,11 +92,14 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
                 await ConvertPdfStreamFileToJpgStreamFile(newConversionOptions, splitPdfStream, pdfToJpgConverter);
             convertedPdfStreams.Add(convertedPdfStream);
         }
+        
+        _logger.LogTrace("Converted {SplitPdfStreamsCount} PDFs to {ConvertedPdfStreamsCount} JPGs",
+            splitPdfStreams.Count, convertedPdfStreams.Count);
 
         return convertedPdfStreams;
     }
 
-    private static async Task<InMemoryFile> ConvertPdfStreamFileToJpgStreamFile(ConversionOptions newConversionOptions,
+    private async Task<InMemoryFile> ConvertPdfStreamFileToJpgStreamFile(ConversionOptions newConversionOptions,
         InMemoryFile splitPdfInMemory, IConverter pdfToJpgConverter)
     {
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(splitPdfInMemory.Name);
@@ -108,10 +111,14 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
             Name = $"{fileNameWithoutExtension}.jpg",
             Stream = jpgStream
         };
+        
+        _logger.LogTrace("Converted {SplitPdfInMemoryName} to {ConvertedPdfStreamName}", splitPdfInMemory.Name,
+            convertedPdfStream.Name);
+        
         return convertedPdfStream;
     }
 
-    private static List<InMemoryFile> SplitPdf(PdfDocument sourcePdfDocument)
+    private List<InMemoryFile> SplitPdf(PdfDocument sourcePdfDocument)
     {
         var splitPdfStreams = new List<InMemoryFile>();
 
@@ -123,6 +130,9 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
 
             splitPdfStreams.Add(splitPdfFile);
         }
+        
+        _logger.LogTrace("Split {SourcePdfDocumentPageCount} pages into {SplitPdfStreamsCount} PDFs",
+            sourcePdfDocument.PageCount, splitPdfStreams.Count);
 
         return splitPdfStreams;
     }
@@ -145,7 +155,7 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
         return splitPdfFile;
     }
 
-    private static async Task<Stream> ZipFilesAsync(IEnumerable<InMemoryFile> files)
+    private async Task<Stream> ZipFilesAsync(List<InMemoryFile> files)
     {
         var zipStream = new MemoryStream();
 
@@ -160,6 +170,8 @@ public abstract class ToJpgConverterBase : MsGraphDriveItemConverterBase, IDispo
         }
 
         zipStream.Position = 0;
+        
+        _logger.LogTrace("Zipped {Count} files into a single zip file", files.Count);
         return zipStream;
     }
 

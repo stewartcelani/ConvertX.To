@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ConvertX.To.Tests.Integration;
 
-[ExcludeFromCodeCoverage]
+
 public class ConvertXToApiFactory : WebApplicationFactory<IApiMarker>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -20,10 +20,6 @@ public class ConvertXToApiFactory : WebApplicationFactory<IApiMarker>
         Environment.SetEnvironmentVariable("ConvertXToApi_MsGraphSettings__GraphEndpoint", "http://localhost:51923");
 
         builder.ConfigureLogging(logging => { logging.ClearProviders(); });
-
-        /*builder.ConfigureTestServices(services =>
-        {
-        });*/
     }
 
 }

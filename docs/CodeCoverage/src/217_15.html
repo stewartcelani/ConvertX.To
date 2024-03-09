@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Infrastructure\ConvertX.To.Infrastructure.Shared\DependencyInjection.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.Application.Converters;
+using ConvertX.To.Application.Domain.Settings;
+using ConvertX.To.Application.Helpers;
+using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Application.Logging;
+using ConvertX.To.Application.Validators;
+using ConvertX.To.Infrastructure.Shared.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Graph;
+using Polly;
+using Polly.Extensions.Http;
+using Serilog;
+
+namespace ConvertX.To.Infrastructure.Shared;
+
+public static class DependencyInjection
+{
+    private static bool InDocker =&gt; Environment.GetEnvironmentVariable(&quot;DOTNET_RUNNING_IN_CONTAINER&quot;) == &quot;true&quot;;
+
+    public static void AddSharedInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
+        services.AddLogging(loggingBuilder =&gt;
+        {
+            loggingBuilder.ClearProviders();
+            loggingBuilder.AddSerilog(Log.Logger, true);
+        });
+        services.AddTransient(typeof(ILoggerAdapter&lt;&gt;), typeof(LoggerAdapter&lt;&gt;));
+
+        var msGraphSettings =
+            SettingsBinder.BindAndValidate&lt;MsGraphSettings, MsGraphSettingsValidator&gt;(configuration);
+        services.AddSingleton(msGraphSettings);
+
+        var conversionStorageSettings = new ConversionStorageSettings
+        {
+            RootDirectory = InDocker
+                ? configuration.GetValue&lt;string&gt;(&quot;ConversionStorageSettings:DockerRootDirectory&quot;)
+                : configuration.GetValue&lt;string&gt;(&quot;ConversionStorageSettings:WindowsRootDirectory&quot;)
+        };
+        services.AddSingleton(conversionStorageSettings);
+
+        services.AddHttpClient();
+
+        ILoggerAdapter&lt;MsGraphFileConversionService&gt; msGraphLogger =
+            new LoggerAdapter&lt;MsGraphFileConversionService&gt;(new LoggerFactory()
+                .CreateLogger&lt;MsGraphFileConversionService&gt;());
+
+        var transientRetryPolicy = HttpPolicyExtensions
+            .HandleTransientHttpError()
+            .WaitAndRetryAsync(5,
+                retryAttempt =&gt; TimeSpan.FromSeconds(retryAttempt * 2),
+                (exception, sleepDuration, retryCount, context) =&gt;
+                {
+                    var message =
+                        $&quot;Expecting this to be a transient error. Retry {retryCount}/{5} in {sleepDuration.Seconds} seconds.&quot;;
+                    msGraphLogger?.LogError(exception.Exception, message);
+                });
+
+        services.AddTransient&lt;RetryHandler&gt;();
+
+        services.AddHttpClient(nameof(MsGraphFileConversionService))
+            .AddHttpMessageHandler&lt;
+                RetryHandler&gt;() // Was making my own when came across Microsoft&#39;s own 429 retry handler used by their SDK, might as well use that!
+            .AddPolicyHandler(transientRetryPolicy);
+
+        services.AddScoped&lt;IFileService, LocalFileService&gt;();
+        services.AddScoped&lt;IConversionStorageService, LocalConversionStorageService&gt;();
+        services.AddScoped&lt;IMsGraphFileConversionService, MsGraphFileConversionService&gt;();
+        services.AddScoped&lt;IConverterFactory, ConverterFactory&gt;();
+        services.AddScoped&lt;IConversionEngine, ConversionEngine&gt;();
+        services.AddScoped&lt;IConversionService, ConversionService&gt;();
+        services.AddScoped&lt;IConversionLifecycleManagerService, ConversionLifecycleManagerService&gt;();
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[20,37,20,112,1],[23,5,23,6,1],[24,9,26,29,1],[27,9,28,9,1],[28,9,28,10,1],[28,10,29,13,1],[29,13,29,45,1],[29,45,30,13,1],[30,13,30,57,1],[30,57,31,9,1],[31,9,31,10,1],[31,10,31,12,1],[32,9,32,82,1],[34,9,35,102,1],[36,9,36,48,1],[38,9,43,11,1],[44,9,44,58,1],[46,9,46,34,1],[48,9,50,64,1],[52,9,55,33,1],[55,33,55,71,1],[55,71,57,17,1],[57,17,57,18,1],[57,18,58,21,1],[58,21,59,127,1],[59,127,60,21,1],[60,21,60,75,1],[60,75,61,17,1],[61,17,61,18,1],[61,18,61,20,1],[63,9,63,47,1],[65,9,68,53,1],[70,9,70,62,1],[71,9,71,88,1],[72,9,72,91,1],[73,9,73,67,1],[74,9,74,67,1],[75,9,75,69,1],[76,9,76,101,1],[77,5,77,6,1]]);
+    </script>
+  </body>
+</html>

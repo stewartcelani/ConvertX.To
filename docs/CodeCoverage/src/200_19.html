@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Infrastructure\ConvertX.To.Infrastructure.Persistence\Contexts\ApplicationDbContext.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Reflection;
+using ConvertX.To.Application.Domain.Entities;
+using ConvertX.To.Application.Domain.Entities.Common;
+using ConvertX.To.Application.Domain.Settings;
+using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Infrastructure.Persistence.Contexts.ValueConverters;
+using Microsoft.EntityFrameworkCore;
+
+namespace ConvertX.To.Infrastructure.Persistence.Contexts;
+
+public class ApplicationDbContext : DbContext
+{
+    private readonly DatabaseSettings _databaseSettings;
+    private readonly ILoggerAdapter&lt;ApplicationDbContext&gt; _logger;
+
+    public ApplicationDbContext(DatabaseSettings databaseSettings, ILoggerAdapter&lt;ApplicationDbContext&gt; logger)
+    {
+        _databaseSettings = databaseSettings;
+        _logger = logger;
+    }
+
+    public ApplicationDbContext(DbContextOptions&lt;ApplicationDbContext&gt; options, DatabaseSettings databaseSettings,
+        ILoggerAdapter&lt;ApplicationDbContext&gt; logger)
+        : base(options)
+    {
+        _databaseSettings = databaseSettings;
+        _logger = logger;
+    }
+
+    public DbSet&lt;ConversionEntity&gt; Conversions { get; set; }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder
+            .Properties&lt;DateTimeOffset&gt;()
+            .HaveConversion&lt;DateTimeOffsetConverter&gt;();
+    }
+
+    public override Task&lt;int&gt; SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var now = DateTimeOffset.Now;
+
+        foreach (var entry in ChangeTracker.Entries&lt;IAuditable&gt;())
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.Entity.DateCreated = now;
+                    break;
+                case EntityState.Modified:
+                    entry.Entity.DateUpdated = now;
+                    entry.Property(x =&gt; x.DateCreated).IsModified = false;
+                    break;
+            }
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        base.OnModelCreating(builder);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (_databaseSettings.UseInMemoryDatabase)
+        {
+            optionsBuilder.UseInMemoryDatabase(nameof(ApplicationDbContext));
+        }
+        else
+        {
+            if (_databaseSettings.EnableSensitiveDataLogging)
+                optionsBuilder.UseNpgsql(_databaseSettings.ConnectionString,
+                        sqlOptions =&gt; sqlOptions.EnableRetryOnFailure())
+                    .EnableSensitiveDataLogging()
+                    .LogTo(s =&gt; _logger.LogTrace(s));
+            else
+                optionsBuilder.UseNpgsql(_databaseSettings.ConnectionString,
+                    sqlOptions =&gt; sqlOptions.EnableRetryOnFailure());
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,5,16,112,1],[17,5,17,6,1],[18,9,18,46,1],[19,9,19,26,1],[20,5,20,6,1],[24,11,24,24,0],[25,5,25,6,0],[26,9,26,46,0],[27,9,27,26,0],[28,5,28,6,0],[30,50,30,54,0],[30,55,30,59,1],[33,5,33,6,1],[34,9,36,56,1],[37,5,37,6,1],[40,5,40,6,1],[41,9,41,38,1],[43,9,43,16,1],[43,18,43,27,1],[43,28,43,30,1],[43,31,43,66,1],[44,13,44,33,1],[47,21,47,52,1],[48,21,48,27,1],[50,21,50,52,1],[51,21,51,75,1],[52,21,52,27,1],[55,9,55,57,1],[56,5,56,6,1],[59,5,59,6,1],[60,9,60,82,1],[62,9,62,39,1],[63,5,63,6,1],[66,5,66,6,1],[67,9,67,51,1],[68,9,68,10,0],[69,13,69,78,0],[70,9,70,10,0],[72,9,72,10,1],[73,13,73,62,1],[74,17,75,39,0],[75,39,75,72,0],[75,72,77,33,0],[77,33,77,52,0],[77,52,77,54,0],[79,17,80,35,1],[80,35,80,68,1],[80,68,80,70,1],[81,9,81,10,1],[82,5,82,6,1]]);
+    </script>
+  </body>
+</html>

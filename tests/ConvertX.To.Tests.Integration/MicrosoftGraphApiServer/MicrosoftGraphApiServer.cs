@@ -13,7 +13,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ConvertX.To.Tests.Integration.MicrosoftGraphApiServer;
 
-[ExcludeFromCodeCoverage]
+
 public class MicrosoftGraphApiServer : IDisposable
 {
     public MsGraphSettings MsGraphSettings { get; }

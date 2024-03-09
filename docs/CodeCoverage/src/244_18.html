@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Domain\External\MicrosoftGraph\Responses\AuthenticationResponse.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Text.Json.Serialization;
+
+namespace ConvertX.To.Domain.External.MicrosoftGraph.Responses;
+
+public class AuthenticationResponse
+{
+    [JsonPropertyName(&quot;token_type&quot;)]
+    public string TokenType { get; set; }
+    
+    [JsonPropertyName(&quot;expires_in&quot;)]
+    public int ExpiresIn { get; set; }
+    
+    [JsonPropertyName(&quot;ext_expires_in&quot;)]
+    public int ExtExpiresIn { get; set; }
+    
+    [JsonPropertyName(&quot;access_token&quot;)]
+    public string AccessToken { get; set; }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[8,31,8,35,1],[8,36,8,40,1],[11,28,11,32,1],[11,33,11,37,1],[14,31,14,35,1],[14,36,14,40,1],[17,33,17,37,1],[17,38,17,42,1]]);
+    </script>
+  </body>
+</html>

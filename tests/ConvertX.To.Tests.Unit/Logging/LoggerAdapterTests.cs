@@ -9,7 +9,7 @@ using Xunit;
 
 namespace ConvertX.To.Tests.Unit.Logging;
 
-[ExcludeFromCodeCoverage]
+
 public class LoggerAdapterTests
 {
     private const string testMessage = "This is a test message.";

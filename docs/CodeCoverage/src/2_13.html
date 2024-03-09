@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Presentation\ConvertX.To.API\Controllers\V1\ConversionController.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Text.Json;
+using ConvertX.To.API.Contracts.V1;
+using ConvertX.To.API.Contracts.V1.Mappers;
+using ConvertX.To.API.Contracts.V1.Queries;
+using ConvertX.To.API.Services;
+using ConvertX.To.Application.Converters;
+using ConvertX.To.Application.Domain.Settings;
+using ConvertX.To.Application.Exceptions;
+using ConvertX.To.Application.Extensions;
+using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Application.Validators.Helpers;
+using ConvertX.To.Domain;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ConvertX.To.API.Controllers.V1;
+
+[ApiController]
+public class ConversionController : ControllerBase
+{
+    private readonly IConversionEngine _conversionEngine;
+    private readonly ConversionLifecycleManagerSettings _conversionLifecycleManagerSettings;
+    private readonly IConversionService _conversionService;
+    private readonly IConversionStorageService _conversionStorageService;
+    private readonly ILoggerAdapter&lt;ConversionController&gt; _logger;
+    private readonly IUriService _uriService;
+
+    public ConversionController(IConversionService conversionService, IConversionEngine conversionEngine,
+        IConversionStorageService conversionStorageService, ILoggerAdapter&lt;ConversionController&gt; logger,
+        ConversionLifecycleManagerSettings conversionLifecycleManagerSettings, IUriService uriService)
+    {
+        _conversionService = conversionService ?? throw new NullReferenceException(nameof(conversionService));
+        _conversionEngine = conversionEngine ?? throw new NullReferenceException(nameof(conversionEngine));
+        _conversionStorageService = conversionStorageService ??
+                                    throw new NullReferenceException(nameof(conversionStorageService));
+        _logger = logger ?? throw new NullReferenceException(nameof(logger));
+        _conversionLifecycleManagerSettings = conversionLifecycleManagerSettings ??
+                                              throw new NullReferenceException(
+                                                  nameof(conversionLifecycleManagerSettings));
+        _uriService = uriService ?? throw new NullReferenceException(nameof(uriService));
+    }
+
+    /// &lt;summary&gt;
+    ///     Returns list of supported conversions
+    /// &lt;/summary&gt;
+    [HttpGet(ApiRoutesV1.Convert.Get.Url)]
+    public IActionResult GetSupportedConversions()
+    {
+        return Ok(ConversionEngine.GetSupportedConversions().ToSupportedConversionsResponse());
+    }
+
+    [HttpPost(ApiRoutesV1.Convert.Post.Url)]
+    [Consumes(&quot;multipart/form-data&quot;)]
+    [RequestSizeLimit(50000000)] // 50 MB FILE UPLOAD LIMIT
+    public async Task&lt;IActionResult&gt; ConvertAsync([FromRoute] string targetFormat, [FromForm] IFormFile file,
+        [FromQuery] ConversionOptionsQuery conversionOptionsQuery)
+    {
+        if (file.Length == 0) throw new InvalidFileLengthException();
+
+        var requestDate = DateTimeOffset.Now;
+
+        var sourceFormat = Path.GetExtension(file.FileName).ToLower().Replace(&quot;.&quot;, &quot;&quot;);
+
+        _logger.LogInformation(&quot;Conversion request: {sourceFormat} to {targetFormat}&quot;, sourceFormat, targetFormat);
+
+        var conversionOptions = conversionOptionsQuery.ToConversionOptions();
+
+        var (convertedFileExtension, convertedStream) =
+            await _conversionEngine.ConvertAsync(sourceFormat, targetFormat, file.OpenReadStream(), conversionOptions);
+
+        var now = DateTimeOffset.Now;
+        var conversion = new Conversion
+        {
+            SourceFormat = sourceFormat,
+            TargetFormat = targetFormat,
+            ConvertedFormat = convertedFileExtension,
+            SourceMegabytes = file.Length.ToMegabytes(),
+            ConvertedMegabytes = convertedStream.Length.ToMegabytes(),
+            DateRequestReceived = requestDate,
+            DateRequestCompleted = now
+        };
+
+        var created = await _conversionService.CreateAsync(conversion);
+
+        if (!created)
+        {
+            var message = $&quot;There was an unexpected error creating conversion: {JsonSerializer.Serialize(conversion)}&quot;;
+            throw new ApiException(message, ValidationFailureHelper.Generate(nameof(Conversion), message));
+        }
+
+        var convertedFileName = _conversionService.GetConvertedFileName(Path.GetFileNameWithoutExtension(file.FileName),
+            conversion.TargetFormat, conversion.ConvertedFormat);
+
+        await _conversionStorageService.SaveConversionAsync(conversion.Id, convertedFileName,
+            convertedStream);
+
+        await convertedStream.DisposeAsync();
+
+        var conversionResponse =
+            conversion.ToConversionResponse(_conversionLifecycleManagerSettings.TimeToLiveInMinutes);
+
+        return Created(_uriService.GetFileUri(conversion.Id), conversionResponse);
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[27,5,29,103,1],[30,5,30,6,1],[31,9,31,111,1],[32,9,32,108,1],[33,9,34,104,1],[35,9,35,78,1],[36,9,38,95,1],[39,9,39,90,1],[40,5,40,6,1],[47,5,47,6,1],[48,9,48,96,1],[49,5,49,6,1],[56,5,56,6,1],[57,9,57,30,1],[57,31,57,70,1],[59,9,59,46,1],[61,9,61,88,1],[63,9,63,116,1],[65,9,65,78,1],[67,9,68,120,1],[70,9,70,38,1],[71,9,80,11,1],[82,9,82,72,1],[84,9,84,22,1],[85,9,85,10,1],[86,13,86,120,1],[87,13,87,108,1],[90,9,91,66,1],[93,9,94,30,1],[96,9,96,46,1],[98,9,99,102,1],[101,9,101,83,1],[102,5,102,6,1]]);
+    </script>
+  </body>
+</html>

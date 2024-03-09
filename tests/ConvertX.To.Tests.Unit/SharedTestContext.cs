@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace ConvertX.To.Tests.Unit;
 
-[ExcludeFromCodeCoverage]
+
 public class SharedTestContext
 {
     public static readonly Faker<Conversion> ConversionGenerator = new Faker<Conversion>()

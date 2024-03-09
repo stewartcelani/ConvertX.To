@@ -21,7 +21,7 @@ using ValidationException = FluentValidation.ValidationException;
 
 namespace ConvertX.To.Tests.Unit.Services;
 
-[ExcludeFromCodeCoverage]
+
 public class ConversionServiceTests
 {
     private readonly Faker<Conversion> _conversionGenerator;

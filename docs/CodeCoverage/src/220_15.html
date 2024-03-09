@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Infrastructure\ConvertX.To.Infrastructure.Shared\Services\LocalConversionStorageService.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.Application.Domain.Settings;
+using ConvertX.To.Application.Exceptions;
+using ConvertX.To.Application.Interfaces;
+
+namespace ConvertX.To.Infrastructure.Shared.Services;
+
+public class LocalConversionStorageService : IConversionStorageService
+{
+    private readonly string _rootDirectory;
+
+    public LocalConversionStorageService(ConversionStorageSettings conversionStorageSettings)
+    {
+        _rootDirectory = conversionStorageSettings.RootDirectory ??
+                         throw new NullReferenceException(nameof(conversionStorageSettings.RootDirectory));
+    }
+
+    public async Task SaveConversionAsync(Guid conversionId, string convertedFileName, Stream stream)
+    {
+        var id = conversionId.ToString();
+        EnsureDirectory(id);
+        await using var fileStream =
+            new FileStream(Path.Combine(_rootDirectory, id, convertedFileName), FileMode.Create);
+        await stream.CopyToAsync(fileStream);
+        await stream.DisposeAsync();
+        await fileStream.DisposeAsync();
+    }
+
+    public DirectoryInfo GetDirectory(string conversionId)
+    {
+        return new DirectoryInfo(Path.Combine(_rootDirectory, conversionId));
+    }
+
+    public DirectoryInfo GetRootDirectory()
+    {
+        return GetDirectory(_rootDirectory);
+    }
+
+    public void DeleteConvertedFile(Guid conversionId)
+    {
+        Directory.Delete(Path.Combine(_rootDirectory, conversionId.ToString()), true);
+    }
+
+    public Stream GetConvertedFile(Guid conversionId)
+    {
+        var id = conversionId.ToString();
+        var directory = GetDirectory(id);
+        if (!directory.Exists) throw new ConvertedFileGoneException(id);
+        try
+        {
+            return directory.GetFiles().Single().OpenRead();
+        }
+        catch (InvalidOperationException ex)
+        {
+            if (ex.Message.Equals(&quot;Sequence contains no elements&quot;)) throw new ConvertedFileGoneException(id);
+            throw;
+        }
+    }
+
+    private void EnsureDirectory(string conversionId)
+    {
+        var directory = Path.Combine(_rootDirectory, conversionId);
+        if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[11,5,11,94,1],[12,5,12,6,1],[13,9,14,108,1],[15,5,15,6,1],[18,5,18,6,1],[19,9,19,42,1],[20,9,20,29,1],[21,9,22,98,1],[23,9,23,46,1],[24,9,24,37,1],[25,9,25,41,1],[26,5,26,6,1],[29,5,29,6,1],[30,9,30,78,1],[31,5,31,6,1],[34,5,34,6,1],[35,9,35,45,1],[36,5,36,6,1],[39,5,39,6,1],[40,9,40,87,1],[41,5,41,6,1],[44,5,44,6,1],[45,9,45,42,1],[46,9,46,42,1],[47,9,47,31,1],[47,32,47,73,0],[49,9,49,10,1],[50,13,50,61,1],[52,9,52,45,0],[53,9,53,10,0],[54,13,54,68,0],[54,69,54,110,0],[55,13,55,19,0],[57,5,57,6,1],[60,5,60,6,1],[61,9,61,68,1],[62,9,62,42,1],[62,43,62,80,1],[63,5,63,6,1]]);
+    </script>
+  </body>
+</html>

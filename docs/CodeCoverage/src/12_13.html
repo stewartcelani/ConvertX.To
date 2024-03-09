@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Presentation\ConvertX.To.API\Middleware\ExceptionHandlingMiddleware.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Diagnostics.CodeAnalysis;
+using ConvertX.To.Application.Interfaces;
+
+namespace ConvertX.To.API.Middleware;
+
+public class ExceptionHandlingMiddleware
+{
+    private readonly ILoggerAdapter&lt;ExceptionHandlingMiddleware&gt; _logger;
+    private readonly RequestDelegate _request;
+
+    public ExceptionHandlingMiddleware(RequestDelegate request, ILoggerAdapter&lt;ExceptionHandlingMiddleware&gt; logger)
+    {
+        _request = request;
+        _logger = logger;
+    }
+
+    [ExcludeFromCodeCoverage]
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _request(context);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogCritical(ex, ex.Message);
+            context.Response.StatusCode = 500;
+            await context.Response.CompleteAsync();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[11,5,11,116,1],[12,5,12,6,1],[13,9,13,28,1],[14,9,14,26,1],[15,5,15,6,1]]);
+    </script>
+  </body>
+</html>

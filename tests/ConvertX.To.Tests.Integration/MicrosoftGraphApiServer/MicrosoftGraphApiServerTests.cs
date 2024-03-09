@@ -13,7 +13,7 @@ using Xunit;
 
 namespace ConvertX.To.Tests.Integration.MicrosoftGraphApiServer;
 
-[ExcludeFromCodeCoverage]
+
 [Collection(nameof(SharedTestCollection))]
 public class MicrosoftGraphApiServerTests : IDisposable
 {

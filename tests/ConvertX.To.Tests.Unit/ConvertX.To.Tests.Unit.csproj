@@ -30,4 +30,8 @@
         <ProjectReference Include="..\..\src\Presentation\ConvertX.To.API\ConvertX.To.API.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
+    </ItemGroup>
+
 </Project>

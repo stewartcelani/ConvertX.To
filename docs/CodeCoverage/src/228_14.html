@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Presentation\ConvertX.To.API.Contracts\V1\Mappers\DomainToApiContractMapper.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.API.Contracts.V1.Responses;
+using ConvertX.To.Application.Domain;
+using ConvertX.To.Domain;
+
+namespace ConvertX.To.API.Contracts.V1.Mappers;
+
+public static class DomainToApiContractMapperV1
+{
+    public static ConversionResponse ToConversionResponse(this Conversion conversion, int timeToLiveInMinutes)
+    {
+        return new ConversionResponse
+        {
+            Id = conversion.Id.ToString(),
+            SourceFormat = conversion.SourceFormat,
+            TargetFormat = conversion.TargetFormat,
+            ConvertedFormat = conversion.ConvertedFormat,
+            SourceMegabytes = conversion.SourceMegabytes,
+            ConvertedMegabytes = conversion.ConvertedMegabytes,
+            DateRequestReceived = conversion.DateRequestReceived,
+            DateRequestCompleted = conversion.DateRequestCompleted,
+            RequestSeconds =
+                Math.Round((decimal)(conversion.DateRequestCompleted - conversion.DateRequestReceived).TotalSeconds, 2),
+            DateScheduledForDeletion = DateTimeOffset.Now.AddMinutes(timeToLiveInMinutes)
+        };
+    }
+
+    public static SupportedConversionsResponse ToSupportedConversionsResponse(
+        this SupportedConversions supportedConversions)
+    {
+        return new SupportedConversionsResponse
+        {
+            TargetFormatFrom = supportedConversions.TargetFormatFrom,
+            SourceFormatTo = supportedConversions.SourceFormatTo
+        };
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[10,5,10,6,1],[11,9,24,11,1],[25,5,25,6,1],[29,5,29,6,1],[30,9,34,11,1],[35,5,35,6,1]]);
+    </script>
+  </body>
+</html>

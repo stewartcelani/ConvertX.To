@@ -8,14 +8,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Bogus;
 using ConvertX.To.API.Contracts.V1;
 using ConvertX.To.API.Contracts.V1.Mappers;
 using ConvertX.To.API.Contracts.V1.Responses;
 using ConvertX.To.Application.Converters;
-using ConvertX.To.Application.Interfaces;
-using ConvertX.To.Domain;
-using ConvertX.To.Infrastructure.Shared.Services;
 using ConvertX.To.Tests.Integration.Helpers;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,12 +19,11 @@ using Xunit;
 
 namespace ConvertX.To.Tests.Integration.Controllers;
 
-[ExcludeFromCodeCoverage]
+
 [Collection(nameof(SharedTestCollection))]
 public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, IDisposable
 {
-    private readonly Faker<Conversion> _conversionGenerator;
-    private readonly IConversionService _conversionService;
+
     private readonly HttpClient _httpClient;
     private readonly MicrosoftGraphApiServer.MicrosoftGraphApiServer _microsoftGraphApiServer;
     private readonly IServiceScope _serviceScope;
@@ -37,8 +32,6 @@ public class ConversionControllerTests : IClassFixture<ConvertXToApiFactory>, ID
     {
         _httpClient = apiFactory.CreateClient();
         _serviceScope = apiFactory.Services.CreateScope();
-        _conversionService = _serviceScope.ServiceProvider.GetRequiredService<IConversionService>();
-        _conversionGenerator = SharedTestContext.ConversionGenerator;
         _microsoftGraphApiServer = testContext.MicrosoftGraphApiServer;
     }
 

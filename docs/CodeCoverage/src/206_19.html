@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Infrastructure\ConvertX.To.Infrastructure.Persistence\DependencyInjection.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.Application.Domain.Settings;
+using ConvertX.To.Application.Helpers;
+using ConvertX.To.Application.Interfaces.Repositories;
+using ConvertX.To.Application.Validators;
+using ConvertX.To.Infrastructure.Persistence.Contexts;
+using ConvertX.To.Infrastructure.Persistence.Cron;
+using ConvertX.To.Infrastructure.Persistence.Repositories;
+using Hangfire;
+using Hangfire.PostgreSql;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ConvertX.To.Infrastructure.Persistence;
+
+public static class DependencyInjection
+{
+    public static void AddPersistenceInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
+        var ttlSettings =
+            SettingsBinder
+                .BindAndValidate&lt;ConversionLifecycleManagerSettings, ConversionLifecycleManagerSettingsValidator&gt;(
+                    configuration);
+        services.AddSingleton(ttlSettings);
+
+        var databaseSettings =
+            SettingsBinder.BindAndValidate&lt;DatabaseSettings, DatabaseSettingsValidator&gt;(configuration);
+        services.AddSingleton(databaseSettings);
+
+        services.AddScoped&lt;ApplicationDbContext&gt;(); // Config is within class as DI is required
+
+
+        // TODO: In integration test application factory remove hangfire and re-add with the test connection string.
+        services.AddHangfire(x =&gt; x.UsePostgreSqlStorage(databaseSettings.ConnectionString));
+        services.AddHangfireServer();
+
+        services.AddScoped&lt;ConversionLifecycleManagerServiceScheduledTask&gt;();
+
+        #region Repositories
+
+        services.AddTransient&lt;IConversionRepository, ConversionRepository&gt;();
+
+        #endregion
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,5,18,6,1],[19,9,22,36,1],[23,9,23,44,1],[25,9,26,104,1],[27,9,27,49,1],[29,9,29,52,1],[33,9,33,35,1],[33,35,33,92,1],[33,92,33,94,1],[34,9,34,38,1],[36,9,36,78,1],[40,9,40,78,1],[43,5,43,6,1]]);
+    </script>
+  </body>
+</html>

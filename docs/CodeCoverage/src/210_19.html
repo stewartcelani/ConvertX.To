@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Infrastructure\ConvertX.To.Infrastructure.Persistence\Migrations\20220806032714_ChangeMegabytesPrecision.Designer.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// &lt;auto-generated /&gt;
+using System;
+using ConvertX.To.Infrastructure.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
+
+namespace ConvertX.To.Infrastructure.Persistence.Migrations
+{
+    [DbContext(typeof(ApplicationDbContext))]
+    [Migration(&quot;20220806032714_ChangeMegabytesPrecision&quot;)]
+    partial class ChangeMegabytesPrecision
+    {
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        {
+#pragma warning disable 612, 618
+            modelBuilder
+                .HasAnnotation(&quot;ProductVersion&quot;, &quot;6.0.5&quot;)
+                .HasAnnotation(&quot;Relational:MaxIdentifierLength&quot;, 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity(&quot;ConvertX.To.Application.Domain.Entities.ConversionEntity&quot;, b =&gt;
+                {
+                    b.Property&lt;Guid&gt;(&quot;Id&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;uuid&quot;);
+
+                    b.Property&lt;string&gt;(&quot;ConvertedFormat&quot;)
+                        .IsRequired()
+                        .HasColumnType(&quot;text&quot;);
+
+                    b.Property&lt;decimal&gt;(&quot;ConvertedMegabytes&quot;)
+                        .HasPrecision(18, 4)
+                        .HasColumnType(&quot;numeric(18,4)&quot;);
+
+                    b.Property&lt;DateTimeOffset&gt;(&quot;DateCreated&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;timestamp with time zone&quot;)
+                        .HasDefaultValueSql(&quot;now()&quot;);
+
+                    b.Property&lt;DateTimeOffset?&gt;(&quot;DateDeleted&quot;)
+                        .HasColumnType(&quot;timestamp with time zone&quot;);
+
+                    b.Property&lt;DateTimeOffset&gt;(&quot;DateRequestCompleted&quot;)
+                        .HasColumnType(&quot;timestamp with time zone&quot;);
+
+                    b.Property&lt;DateTimeOffset&gt;(&quot;DateRequestReceived&quot;)
+                        .HasColumnType(&quot;timestamp with time zone&quot;);
+
+                    b.Property&lt;DateTimeOffset?&gt;(&quot;DateUpdated&quot;)
+                        .HasColumnType(&quot;timestamp with time zone&quot;);
+
+                    b.Property&lt;int&gt;(&quot;Downloads&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;integer&quot;)
+                        .HasDefaultValue(0);
+
+                    b.Property&lt;decimal&gt;(&quot;RequestSeconds&quot;)
+                        .HasPrecision(18, 2)
+                        .HasColumnType(&quot;numeric(18,2)&quot;);
+
+                    b.Property&lt;string&gt;(&quot;SourceFormat&quot;)
+                        .IsRequired()
+                        .HasColumnType(&quot;text&quot;);
+
+                    b.Property&lt;decimal&gt;(&quot;SourceMegabytes&quot;)
+                        .HasPrecision(18, 4)
+                        .HasColumnType(&quot;numeric(18,4)&quot;);
+
+                    b.Property&lt;string&gt;(&quot;TargetFormat&quot;)
+                        .IsRequired()
+                        .HasColumnType(&quot;text&quot;);
+
+                    b.HasKey(&quot;Id&quot;);
+
+                    b.ToTable(&quot;Conversions&quot;);
+                });
+#pragma warning restore 612, 618
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,9,19,10,1],[21,13,23,70,1],[25,13,25,84,1],[27,13,28,17,1],[28,17,28,18,1],[28,18,29,21,1],[29,21,31,48,1],[31,48,33,21,1],[33,21,35,48,1],[35,48,37,21,1],[37,21,39,57,1],[39,57,41,21,1],[41,21,44,54,1],[44,54,46,21,1],[46,21,47,68,1],[47,68,49,21,1],[49,21,50,68,1],[50,68,52,21,1],[52,21,53,68,1],[53,68,55,21,1],[55,21,56,68,1],[56,68,58,21,1],[58,21,61,45,1],[61,45,63,21,1],[63,21,65,57,1],[65,57,67,21,1],[67,21,69,48,1],[69,48,71,21,1],[71,21,73,57,1],[73,57,75,21,1],[75,21,77,48,1],[77,48,79,21,1],[79,21,79,36,1],[79,36,81,21,1],[81,21,81,46,1],[81,46,82,17,1],[82,17,82,18,1],[82,18,82,20,1],[84,9,84,10,1]]);
+    </script>
+  </body>
+</html>

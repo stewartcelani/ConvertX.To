@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Application\Logging\LoggerAdapter.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConvertX.To.Application.Interfaces;
+using Microsoft.Extensions.Logging;
+
+namespace ConvertX.To.Application.Logging;
+
+public class LoggerAdapter&lt;TType&gt; : ILoggerAdapter&lt;TType&gt;
+{
+    private readonly ILogger&lt;TType&gt; _logger;
+
+    public LoggerAdapter(ILogger&lt;TType&gt; logger)
+    {
+        _logger = logger;
+    }
+
+    public void LogTrace(string? message, params object?[] args)
+    {
+        _logger.LogTrace(message, args);
+    }
+
+    public void LogDebug(string? message, params object?[] args)
+    {
+        _logger.LogDebug(message, args);
+    }
+
+    public void LogInformation(string? message, params object?[] args)
+    {
+        _logger.LogInformation(message, args);
+    }
+
+    public void LogWarning(string? message, params object?[] args)
+    {
+        _logger.LogWarning(message, args);
+    }
+
+    public void LogError(Exception? exception, string? message, params object?[] args)
+    {
+        _logger.LogError(exception, message, args);
+    }
+
+    public void LogCritical(Exception exception, string? message, params object?[] args)
+    {
+        _logger.LogCritical(exception, message, args);
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[10,5,10,48,1],[11,5,11,6,1],[12,9,12,26,1],[13,5,13,6,1],[16,5,16,6,1],[17,9,17,41,1],[18,5,18,6,1],[21,5,21,6,1],[22,9,22,41,1],[23,5,23,6,1],[26,5,26,6,1],[27,9,27,47,1],[28,5,28,6,1],[31,5,31,6,1],[32,9,32,43,1],[33,5,33,6,1],[36,5,36,6,1],[37,9,37,52,1],[38,5,38,6,1],[41,5,41,6,1],[42,9,42,55,1],[43,5,43,6,1]]);
+    </script>
+  </body>
+</html>

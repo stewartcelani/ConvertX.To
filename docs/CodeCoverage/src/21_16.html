@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Application\Converters\ConversionEngine.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Reflection;
+using ConvertX.To.Application.Domain;
+using ConvertX.To.Application.Helpers;
+using ConvertX.To.Application.Interfaces;
+using ConvertX.To.Domain.Options;
+
+namespace ConvertX.To.Application.Converters;
+
+public class ConversionEngine : IConversionEngine
+{
+    private readonly IConverterFactory _converterFactory;
+    private readonly ILoggerAdapter&lt;ConversionEngine&gt; _logger;
+
+    public ConversionEngine(ILoggerAdapter&lt;ConversionEngine&gt; logger,
+        IConverterFactory converterFactory)
+    {
+        _logger = logger;
+        _converterFactory = converterFactory;
+    }
+
+    // TODO: MsGraph has a 250 page limit when converting to PDF so implement a ToPdfConverterBase and check if pages &gt; 250 and if so, split it
+    // TODO: Look into QuestPdf: https://www.questpdf.com/documentation/api-reference.html#static-images
+    // Could try use it to convert Jpg to Pdf and to also write .txt, .log, .json (text formats) to PDF which can then be converted into JPG
+
+    public async Task&lt;(string, Stream)&gt; ConvertAsync(string sourceFormat, string targetFormat, Stream source,
+        ConversionOptions conversionOptions)
+    {
+        _logger.LogDebug(
+            &quot;Processing new request to convert {sourceFormat} to {targetFormat}&quot;, sourceFormat, targetFormat);
+
+        var converter = _converterFactory.Create(sourceFormat, targetFormat);
+
+        return await converter.ConvertAsync(source, conversionOptions);
+    }
+
+    public static bool IsConversionSupported(string sourceFormat, string targetFormat)
+    {
+        var source = sourceFormat.ToLower().Replace(&quot;.&quot;, &quot;&quot;);
+        var target = targetFormat.ToLower().Replace(&quot;.&quot;, &quot;&quot;);
+        var supportedConversions = GetSupportedConversions();
+        return supportedConversions.SourceFormatTo.ContainsKey(source) &amp;&amp; supportedConversions.SourceFormatTo[source].Contains(target);
+    }
+
+    public static SupportedConversions GetSupportedConversions()
+    {
+        var convertersByTargetFormat = new Dictionary&lt;string, List&lt;string&gt;&gt;();
+        var convertersBySourceFormat = new Dictionary&lt;string, List&lt;string&gt;&gt;();
+
+        foreach (var converter in
+                 ReflectionHelper.GetConcreteTypesInAssembly&lt;IConverter&gt;(Assembly.GetExecutingAssembly()))
+            MapSupportedConversionsForConverter(converter, convertersByTargetFormat, convertersBySourceFormat);
+
+        return new SupportedConversions
+        {
+            TargetFormatFrom = convertersByTargetFormat,
+            SourceFormatTo = convertersBySourceFormat
+        };
+    }
+
+    private static void MapSupportedConversionsForConverter(Type converter,
+        IDictionary&lt;string, List&lt;string&gt;&gt; convertersByTargetFormat,
+        IDictionary&lt;string, List&lt;string&gt;&gt; convertersBySourceFormat)
+    {
+        var (sourceFormat, targetFormat) = ParseFormats(converter.Name);
+
+        if (!convertersByTargetFormat.ContainsKey(targetFormat))
+            convertersByTargetFormat[targetFormat] = new List&lt;string&gt;();
+        convertersByTargetFormat[targetFormat].Add(sourceFormat);
+
+        if (!convertersBySourceFormat.ContainsKey(sourceFormat))
+            convertersBySourceFormat[sourceFormat] = new List&lt;string&gt;();
+        convertersBySourceFormat[sourceFormat].Add(targetFormat);
+    }
+
+
+    private static (string, string) ParseFormats(string converterName)
+    {
+        var s = converterName.ToLower().Replace(&quot;converter&quot;, &quot;&quot;);
+        return (s.Split(&quot;to&quot;).First(), s.Split(&quot;to&quot;).Last());
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[14,5,15,44,1],[16,5,16,6,1],[17,9,17,26,1],[18,9,18,46,1],[19,5,19,6,1],[27,5,27,6,1],[28,9,29,111,1],[31,9,31,78,1],[33,9,33,72,1],[34,5,34,6,1],[37,5,37,6,1],[38,9,38,62,1],[39,9,39,62,1],[40,9,40,62,1],[41,9,41,136,1],[42,5,42,6,1],[45,5,45,6,1],[46,9,46,79,1],[47,9,47,79,1],[49,9,49,16,1],[49,18,49,31,1],[49,32,49,34,1],[50,18,50,106,1],[51,13,51,112,1],[53,9,57,11,1],[58,5,58,6,1],[63,5,63,6,1],[64,9,64,73,1],[66,9,66,65,1],[67,13,67,73,1],[68,9,68,66,1],[70,9,70,65,1],[71,13,71,73,1],[72,9,72,66,1],[73,5,73,6,1],[77,5,77,6,1],[78,9,78,66,1],[79,9,79,62,1],[80,5,80,6,1]]);
+    </script>
+  </body>
+</html>

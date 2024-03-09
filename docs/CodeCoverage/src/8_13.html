@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Presentation\ConvertX.To.API\DependencyInjection.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Reflection;
+using ConvertX.To.API.Services;
+using ConvertX.To.Application;
+using ConvertX.To.Application.Helpers;
+using ConvertX.To.Infrastructure.Persistence.Contexts;
+using ConvertX.To.Infrastructure.Persistence.Cron;
+using ConvertX.To.Infrastructure.Persistence.Cron.Helpers;
+using FluentValidation.AspNetCore;
+using Hangfire;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
+
+namespace ConvertX.To.API;
+
+public static class DependencyInjection
+{
+    public static void AddAspNetCoreServices(this IServiceCollection services)
+    {
+        services.Configure&lt;ApiBehaviorOptions&gt;(options =&gt;
+            options.SuppressModelStateInvalidFilter = true); // Using custom filter
+
+        services.AddControllers(options =&gt;
+            options.Filters.RegisterFiltersFromAssembly(Assembly.GetExecutingAssembly()));
+
+        services.AddFluentValidation(options =&gt;
+            options.RegisterValidatorsFromAssemblyContaining&lt;IApplicationMarker&gt;());
+
+        services.AddTransient&lt;IUriService&gt;(provider =&gt;
+        {
+            var accessor = provider.GetRequiredService&lt;IHttpContextAccessor&gt;();
+            var request = accessor?.HttpContext?.Request;
+            var absoluteUri = string.Concat(request?.Scheme, &quot;://&quot;, request?.Host.ToUriComponent());
+            return new UriService(absoluteUri);
+        });
+    }
+
+    private static void RegisterFiltersFromAssembly(this FilterCollection filterCollection, Assembly assembly)
+    {
+        var filters = ReflectionHelper.GetConcreteTypesInAssembly&lt;IFilterMetadata&gt;(assembly);
+        filters.ForEach(filter =&gt; filterCollection.Add(filter));
+    }
+
+    public static async Task RunPendingMigrationsAsync(this WebApplication app)
+    {
+        using var serviceScope = app.Services.CreateScope();
+        var dataContext = serviceScope.ServiceProvider.GetRequiredService&lt;ApplicationDbContext&gt;();
+
+        if ((await dataContext.Database.GetPendingMigrationsAsync()).Any())
+            await dataContext.Database.MigrateAsync();
+    }
+
+    public static void ScheduleRecurringJobs(this WebApplication app)
+    {
+        using var serviceScope = app.Services.CreateScope();
+        var recurringJobManager = serviceScope.ServiceProvider.GetRequiredService&lt;IRecurringJobManager&gt;();
+
+        recurringJobManager.AddOrUpdate&lt;ConversionLifecycleManagerServiceScheduledTask&gt;(
+            nameof(ConversionLifecycleManagerServiceScheduledTask), x =&gt; x.RunAsync(),
+            CronExpressionHelper.EveryMinutes(5));
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,5,19,6,1],[20,9,21,13,1],[21,13,21,59,1],[21,59,21,61,1],[23,9,24,13,1],[24,13,24,89,1],[24,89,24,91,1],[26,9,27,13,1],[27,13,27,83,1],[27,83,27,85,1],[29,9,30,9,1],[30,9,30,10,1],[30,10,31,13,1],[31,13,31,80,1],[31,80,32,13,1],[32,13,32,58,1],[32,58,33,13,1],[33,13,33,101,1],[33,101,34,13,1],[34,13,34,48,1],[34,48,35,9,1],[35,9,35,10,1],[35,10,35,12,1],[36,5,36,6,1],[39,5,39,6,1],[40,9,40,94,1],[41,9,41,35,1],[41,35,41,63,1],[41,63,41,65,1],[42,5,42,6,1],[45,5,45,6,1],[46,9,46,61,1],[47,9,47,99,1],[49,9,49,76,1],[50,13,50,55,1],[51,5,51,6,1],[54,5,54,6,1],[55,9,55,61,1],[56,9,56,107,1],[58,9,60,51,1],[61,5,61,6,1]]);
+    </script>
+  </body>
+</html>

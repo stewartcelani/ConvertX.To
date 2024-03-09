@@ -1,5 +1,23 @@
 This is a file conversion service I built a year ago as a learning project in an attempt to solidify knowledge after taking quite a few C# courses -- Pluralsight (design patterns, SOLID, clean code, clean architecture) [Nick Chapsas](https://www.youtube.com/@nickchapsas)/[Dometrain](https://dometrain.com/courses/) ([unit testing](https://dometrain.com/course/from-zero-to-hero-unit-testing-in-c/) and [integration testing](https://dometrain.com/course/from-zero-to-hero-integration-testing-in-asp-net-core/)).
 
+```csharp
+// ConvertX.To.API.Controllers.V1.ConversionController
+[HttpGet("/api/v1/convert")] 
+public IActionResult GetSupportedConversions()
+    
+[HttpPost("/api/v1/convert/{targetFormat}")] 
+[Consumes("multipart/form-data", )]
+[RequestSizeLimit(50000000L)] 
+public Task<IActionResult> ConvertAsync([FromRoute] string targetFormat, [FromForm] IFormFile file, [FromQuery] ConversionOptionsQuery conversionOptionsQuery)
+    
+// ConvertX.To.API.Controllers.V1.FileController
+[HttpGet("/api/v1/file/{conversionId}")] 
+public Task<IActionResult> GetFileAsync([FromRoute] Guid conversionId)
+    
+[HttpDelete("/api/v1/file/{conversionId}")] 
+public Task<IActionResult> DeleteFileAsync([FromRoute] Guid conversionId)
+```
+
 The Core of the application (src/Core/ConvertX.To.Application) is the ConversionEngine and ConverterFactory.
 
 ```csharp

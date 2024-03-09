@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\dev\ConvertX.To\src\Core\ConvertX.To.Application\Helpers\ReflectionHelper.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Reflection;
+
+namespace ConvertX.To.Application.Helpers;
+
+public static class ReflectionHelper
+{
+    public static List&lt;Type&gt; GetConcreteTypesInAssembly&lt;T&gt;(Assembly assembly)
+    {
+        return assembly.ExportedTypes
+            .Where(x =&gt; typeof(T).IsAssignableFrom(x) &amp;&amp; !x.IsInterface &amp;&amp; !x.IsAbstract)
+            .ToList();
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[8,5,8,6,1],[9,9,10,25,1],[10,25,10,89,1],[10,89,11,23,1],[12,5,12,6,1]]);
+    </script>
+  </body>
+</html>
